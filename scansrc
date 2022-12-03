@@ -1,0 +1,5 @@
+#!/bin/sh
+# Scan sources and update Makefile.am
+files=`find ./ -type f | grep -E '\.cxx$$|\.c$$|\.cc$$|\.hxx$$|\.hh$$|\.hpp$$|\.h$$' | sed 's/\.\//\\$(top_srcdir)\//g'`
+soft=AlicornCH
+sed -i '/.*_SOURCES.*/c\'"$soft"'_SOURCES='"$(echo $files | sed -e 's/\\/\\\\/g; s/\//\\\//g; s/&/\\\&/g')"'' Makefile.am
