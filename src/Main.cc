@@ -4,6 +4,7 @@
 #include <ach/sys/Schedule.hh>
 #include <ach/core/op/ProfileInstall.hh>
 #include <ach/core/op/LibrariesInstall.hh>
+#include <ach/core/op/AssetsInstall.hh>
 #include <unistd.h>
 
 int
@@ -14,7 +15,7 @@ main()
   Op::Flow flow;
   flow.data[AL_FLOWVAR_PROFILEID] = "1.19.2";
   flow.addTask(Op::installProfile);
-  flow.addTask(Op::installLibraries);
+  flow.addTask(Op::installAssetIndex);
   flow.run();
   sleep(114514);
   Sys::downSys();

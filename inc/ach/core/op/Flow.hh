@@ -15,7 +15,8 @@
 #define AL_SCANNAT 0x05
 #define AL_UNPACKNAT 0x06
 #define AL_GETLIBS 0x07
-#define AL_GETASSETS 0x08
+#define AL_GETASSETINDEX 0x08
+#define AL_GETASSETS 0x09
 
 #define AL_FLOWVAR_PROFILEID "profileID"
 #define AL_FLOWVAR_PROFILESRC "profileSrc"
