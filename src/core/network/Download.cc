@@ -74,7 +74,6 @@ DownloadPack::commit()
       cJSON_AddStringToObject(options, "out", pt.filename().string().c_str());
 
       // Control
-      cJSON_AddStringToObject(options, "allow-overwrite", "true");
       cJSON_AddStringToObject(options, "auto-file-renaming", "false");
 
       // Performance
