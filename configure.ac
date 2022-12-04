@@ -18,6 +18,13 @@ AC_CANONICAL_HOST
 build_linux=no
 build_windows=no
 build_mac=no
+build_arm=no
+
+case "${host_cpu}" in
+    arm*|aarch*)
+        build_arm=yes
+        ;;
+esac
 
 case "${host_os}" in
     linux*)
@@ -37,6 +44,7 @@ esac
 AM_CONDITIONAL([LINUX], [test "$build_linux" = "yes"])
 AM_CONDITIONAL([WINDOWS], [test "$build_windows" = "yes"])
 AM_CONDITIONAL([OSX], [test "$build_mac" = "yes"])
+AM_CONDITIONAL([ARM], [test "$build_arm" = "yes"])
 
 # Checks for libraries.
 
