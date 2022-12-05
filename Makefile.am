@@ -1,7 +1,7 @@
 AUTOMAKE_OPTIONS=foreign
 bin_PROGRAMS=AlicornCH
-AM_CXXFLAGS=-I$(top_srcdir)/inc -Os -Wall -Wno-unknown-pragmas -std=gnu++23
-AM_CFLAGS=-I$(top_srcdir)/inc -Os -Wall -Wno-unknown-pragmas -std=gnu17
+AM_CXXFLAGS=-I$(top_srcdir)/inc -Os -Wall -Wno-unknown-pragmas -Wno-enum-compare -std=gnu++23
+AM_CFLAGS=-I$(top_srcdir)/inc -Os -Wall -Wno-unknown-pragmas -Wno-enum-compare -std=gnu17
 AlicornCH_LDFLAGS=-L$(top_srcdir)/libs
 AlicornCH_LDADD=-luv -lssl -lcrypto -lminizip -lz
 
