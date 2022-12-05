@@ -20,8 +20,14 @@ AM_CXXFLAGS+=-framework WebKit
 AM_CFLAGS+=-framework WebKit
 if ARM
 # Flags for macOS ARM
+AM_CXXFLAGS+=-I/opt/homebrew/include
+AM_CFLAGS+=-I/opt/homebrew/include
+AlicornCH_LDFLAGS+=-L/opt/homebrew/lib
 else
 # Flags for macOS x86
+AM_CXXFLAGS+=-I/usr/local/include
+AM_CFLAGS+=-I/usr/local/include
+AlicornCH_LDFLAGS+=-L/usr/local/lib
 endif
 endif
 
