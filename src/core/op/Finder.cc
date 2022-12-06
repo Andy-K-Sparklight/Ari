@@ -12,6 +12,7 @@ namespace Op
 #define ACH_ROOT_NAME ".alicorn-ch"
 #define ACH_STORAGE_PATH "storage"
 #define ACH_INSTALL_PATH "installing"
+#define ACH_GAME_PATH "gamemd"
 
 static std::filesystem::path ACH_BASE_PATH;
 
@@ -78,6 +79,12 @@ std::string
 getNameHash(const std::string &name)
 {
   return "" + stringHasher(name);
+}
+
+std::string
+getRuntimePath(const std::string &name)
+{
+  return (ACH_BASE_PATH / ACH_GAME_PATH / name).string();
 }
 
 }

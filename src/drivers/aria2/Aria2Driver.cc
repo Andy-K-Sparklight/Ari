@@ -155,7 +155,6 @@ sendRPCCall(const std::string &call)
     }
   if(res->status != 200)
     {
-      std::cout << res << std::endl;
 
       throw Alicorn::Exception::ExternalException("Aria2 RPC response: ",
                                                   "" + res->status);

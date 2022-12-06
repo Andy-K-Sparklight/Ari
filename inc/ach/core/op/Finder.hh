@@ -22,6 +22,8 @@ std::string getInstallPath(const std::string &rel);
 std::string getInstallPath(const std::filesystem::path &rel);
 std::string getInstallPath(const char *rel);
 
+std::string getRuntimePath(const std::string &name);
+
 std::string getNameHash(const std::string &name);
 
 }

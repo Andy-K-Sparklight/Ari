@@ -6,7 +6,7 @@
 #include <fstream>
 #include <cstring>
 #include "ach/sys/Schedule.hh"
-#include <minizip/unzip.h>
+#include <miniz.h>
 
 namespace Alicorn
 {
@@ -119,6 +119,30 @@ writeFileAsync(const std::string &pt, const char *data, size_t dataLength,
 }
 
 void
+copyFileAsync(const std::string &src, const std::string &dest,
+              std::function<void(bool)> callback)
+{
+  uv_fs_t *copyReq = new uv_fs_t;
+  auto *funcCpy = new std::function<void(bool)>;
+  *funcCpy = callback;
+  copyReq->data = funcCpy;
+  uv_fs_copyfile(uv_default_loop(), copyReq, src.c_str(), dest.c_str(),
+                 UV_FS_COPYFILE_FICLONE, [](uv_fs_t *req) -> void {
+                   auto *cb = (std::function<void(bool)> *)req->data;
+                   if(req->result < 0)
+                     {
+                       (*cb)(false);
+                     }
+                   else
+                     {
+                       (*cb)(true);
+                     }
+                   delete cb;
+                   delete req;
+                 });
+}
+
+void
 mkParentDirs(const std::string &pt)
 {
   // We choose to use the std function.
@@ -212,72 +236,71 @@ readDirAsync(const std::string &pt,
   });
 }
 
+// Modified from https://github.com/richgel999/miniz/issues/38
 bool
-unzipFile(const std::string &f, const std::string &extractPrefix)
+unzipFile(const std::string &zipFile, const std::string &pt)
 {
-  unzFile file = unzOpen(f.c_str());
-  if(file == NULL)
-    {
-      return false;
-    }
-  unz_global_info fileInfo;
-  int e;
-  if((e = unzGetGlobalInfo(file, &fileInfo)) != UNZ_OK)
-    {
-      return false;
-    }
-  for(uint32_t i = 0; i < fileInfo.number_entry; i++)
-    {
-      char fName[256];
-      unz_file_info currentFileInfo;
-      if((e = unzGetCurrentFileInfo(file, &currentFileInfo, fName,
-                                    sizeof(fName), NULL, 0, NULL, 0))
-         != UNZ_OK)
-        {
-          unzGoToNextFile(file);
-          continue; // Just do the next one
-        };
-      std::string strFName = fName;
-      if(strFName.ends_with("/")) // Directory
-        {
-          unzGoToNextFile(file);
-          continue;
-        }
-      auto actualPt = std::filesystem::path(extractPrefix) / strFName;
-      mkParentDirs(actualPt);
-      char buf[8192];
-      e = unzOpenCurrentFile(file);
+  using namespace std;
+  using namespace filesystem;
+  std::vector<std::string> files = {};
+  mz_zip_archive zip_archive;
+  memset(&zip_archive, 0, sizeof(zip_archive));
 
-      if(e != UNZ_OK)
-        {
-          unzGoToNextFile(file);
-          continue;
-        }
-      // A sync method will be OK, not too much performance impact
-      do
-        {
-          std::ofstream outFile(actualPt);
-          e = unzReadCurrentFile(file, buf, sizeof(buf));
-          if(e > 0)
-            {
-              outFile.write(buf, e); // The e is size
-            }
-          else if(e < 0)
-            {
-              outFile.close();
-              std::filesystem::remove(actualPt); // Problem reading
-              break;
-            }
-          else
-            {
-              outFile.close(); // Finished
-              break;
-            }
-        }
-      while(e > 0);
-      unzGoToNextFile(file);
+  auto status = mz_zip_reader_init_file(&zip_archive, zipFile.c_str(), 0);
+  if(!status)
+    {
+      return false;
     }
+  int fileCount = (int)mz_zip_reader_get_num_files(&zip_archive);
+  if(fileCount == 0)
+    {
+      mz_zip_reader_end(&zip_archive);
+      return false;
+    }
+  mz_zip_archive_file_stat file_stat;
+  if(!mz_zip_reader_file_stat(&zip_archive, 0, &file_stat))
+    {
+      mz_zip_reader_end(&zip_archive);
+      return false;
+    }
+
+  string lastDir = "";
+  for(int i = 0; i < fileCount; i++)
+    {
+      if(!mz_zip_reader_file_stat(&zip_archive, i, &file_stat))
+        continue;
+      if(mz_zip_reader_is_file_a_directory(&zip_archive, i))
+        continue;
+      string fileName = file_stat.m_filename;
+      string destFile = (path(pt) / fileName).string();
+      auto newDir = path(fileName).parent_path().string();
+      if(newDir != lastDir)
+        {
+          create_directories((path(pt) / newDir).string());
+        }
+
+      if(mz_zip_reader_extract_to_file(&zip_archive, i, destFile.c_str(), 0))
+        {
+          files.emplace_back(destFile);
+        }
+    }
+
+  mz_zip_reader_end(&zip_archive);
   return true;
+}
+
+std::list<std::string>
+scanDirectory(const std::filesystem::path pt)
+{
+  std::list<std::string> out;
+  for(std::filesystem::recursive_directory_iterator i(pt), end; i != end; ++i)
+    {
+      if(i->is_regular_file())
+        {
+          out.push_back(i->path().string());
+        }
+    };
+  return out;
 }
 
 }

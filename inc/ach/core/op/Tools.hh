@@ -16,6 +16,10 @@ namespace Op
 void writeFileAsync(const std::string &pt, const char *data, size_t dataLength,
                     std::function<void(bool)> callback);
 
+// Copy a file on UV thread
+void copyFileAsync(const std::string &src, const std::string &dest,
+                   std::function<void(bool)> callback);
+
 // Create parent directories on Worker thread
 void mkParentDirs(const std::string &pt);
 
@@ -27,6 +31,9 @@ void readDirAsync(const std::string &pt,
 
 // Unzip file
 bool unzipFile(const std::string &f, const std::string &extractPrefix);
+
+// Scan directory
+std::list<std::string> scanDirectory(const std::filesystem::path pt);
 
 }
 }

@@ -17,10 +17,15 @@
 #define AL_GETLIBS 0x07
 #define AL_GETASSETINDEX 0x08
 #define AL_GETASSETS 0x09
+#define AL_GENARGS 0x10
+#define AL_SPAWNPROC 0x11
+#define AL_FLIPDIR 0x12
 
 #define AL_FLOWVAR_PROFILEID "profileID"
 #define AL_FLOWVAR_PROFILESRC "profileSrc"
 #define AL_FLOWVAR_ASSETINDEX "assetIndex"
+#define AL_FLOWVAR_LAUNCHVALS "launchValues"
+#define AL_FLOWVAR_JAVAMAIN "javaMain"
 
 #include <map>
 #include <string>

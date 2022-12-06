@@ -32,7 +32,7 @@ public:
   uv_stdio_container_t ioContainer[3];
   uv_pipe_t outPipes[2];            // The output of stdout and stderr
   std::list<std::string> outputBuf; // Buffer
-  uv_process_options_t options;
+  uv_process_options_t options = { 0 };
   GameInstanceStatus stat = GS_LOADED;
 
   // Create process with specified options
@@ -45,6 +45,10 @@ public:
   // Kill the process forcefully
   void kill();
 };
+
+// A map of all instances (PID -> Instance)
+// Should be removed manually
+extern std::map<int, GameInstance *> GAME_INSTANCES;
 
 }
 }

@@ -3,6 +3,7 @@
 #include <cstring>
 #include <csignal>
 #include "ach/util/Exception.hh"
+#include <iostream>
 
 namespace Alicorn
 {
@@ -29,14 +30,16 @@ onRead(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
     }
   if(nread > 0)
     {
+
       GameInstance *self = (GameInstance *)stream->data;
       char tmp[nread + 1];
       strncpy(tmp, buf->base, nread + 1);
-      tmp[nread] = 0; // Terminate it
+      tmp[nread] = 0;                // Terminate it
+      std::cout << tmp << std::endl; // TODO: forward output
 
       // Read two streams to one buffer
       // TODO: I guess this can hardly cause any trouble, but I'll check
-      self->outputBuf.push_back(std::string(tmp));
+      //      self->outputBuf.push_back(std::string(tmp));
     }
   if(buf->len > 0)
     {
@@ -74,6 +77,7 @@ onExit(uv_process_t *proc, int64_t code, int sig)
 void
 GameInstance::run()
 {
+
   if(stat != GS_LOADED)
     {
       return; // Already running
@@ -81,6 +85,7 @@ GameInstance::run()
   proc.data = this; // Binding
 
   // Prepare for IO
+
   uv_pipe_init(uv_default_loop(), &outPipes[0], 0);
   uv_pipe_init(uv_default_loop(), &outPipes[1], 0);
 
@@ -99,10 +104,10 @@ GameInstance::run()
   options.file = bin.c_str();
 
   // Args processing
+
   char *argsChar[args.size() + 2]; // One reserved for argv0, one for NULL
   argsChar[0] = new char[bin.length() + 1];
   strncpy(argsChar[0], bin.c_str(), bin.length() + 1);
-
   int i = 1;
   for(auto &a : args)
     {
@@ -114,17 +119,16 @@ GameInstance::run()
   argsChar[i] = NULL;
 
   options.args = argsChar;
-
   // Spawning
   int r = uv_spawn(uv_default_loop(), &proc, &options);
 
   // Cleanup
+
   for(i -= 1; i >= 0; i--)
     {
-      delete argsChar[i];
+      delete[] argsChar[i];
     }
-
-  if(r)
+  if(r != 0)
     {
       stat = GS_FAILED;
       throw Exception::ExternalException("Spawning game process: ",
@@ -132,7 +136,6 @@ GameInstance::run()
     }
 
   stat = GS_LAUNCHED;
-
   // Setup reading
   uv_read_start((uv_stream_t *)&outPipes[0], onAlloc, onRead);
   uv_read_start((uv_stream_t *)&outPipes[1], onAlloc, onRead);
@@ -158,5 +161,6 @@ GameInstance::kill()
   uv_process_kill(&proc, SIGKILL); // If you wish...
 }
 
+std::map<int, GameInstance *> GAME_INSTANCES;
 }
 }
