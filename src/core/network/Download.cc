@@ -3,6 +3,7 @@
 #include <cJSON.h>
 #include <filesystem>
 #include <algorithm>
+#include <limits>
 #include "ach/drivers/aria2/Aria2Driver.hh"
 #include "ach/sys/Schedule.hh"
 
@@ -31,6 +32,11 @@ DownloadMeta::mkFromArtifact(const Profile::Artifact &artifact,
 unsigned int
 DownloadPack::addTask(const DownloadMeta &meta)
 {
+  if(existingPaths.contains(meta.path))
+    {
+      return std::numeric_limits<unsigned int>::max(); // Prevent dup
+    }
+  existingPaths.insert(meta.path);
   DownloadProcess p;
   p.hash = meta.hash;
   p.path = meta.path;
@@ -171,16 +177,11 @@ DownloadPack::sync()
                     }
 
                   cJSON *status = cJSON_GetObjectItem(o, "status");
-                  // TODO: accept error code 13
                   if(cJSON_IsString(status))
                     {
                       std::string stat
                           = std::string(cJSON_GetStringValue(status));
                       p.stat = stat;
-                      if(stat == "error")
-                        {
-                          std::cout << cJSON_Print(o) << std::endl;
-                        }
                     }
 
                   cJSON *completedLength
@@ -271,9 +272,6 @@ setupDownloadsSync()
                 auto d = ALL_DOWNLOADS[i];
                 d.sync();
                 auto s = d.getStat();
-                std::cout << s.completedSize << "/" << s.totalSize << " | "
-                          << s.completed << "/" << s.total << " | "
-                          << (s.speed / 1000) << " KiB/s" << std::endl;
                 if((s.completed + s.failed) == s.total)
                   {
                     ALL_DOWNLOADS.erase(ALL_DOWNLOADS.begin() + i);

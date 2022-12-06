@@ -73,7 +73,7 @@ Aria2Daemon::run()
   char rpcToken[14 + ACH_DRV_ARIA2_TOKEN_LENGTH] = "--rpc-secret=";
   char rpcPort[20 + sizeof(ACH_DRV_ARIA2_LISTEN_PORT) / sizeof(char)]
       = "--rpc-listen-port=";
-  char maxConcurrent[] = "-j1024";
+  char maxConcurrent[] = "-j32";
   char memCache[] = "--disk-cache=32M";
   char downloadResult[] = "--max-download-result=32767";
   char concOptimize[] = "--optimize-concurrent-downloads=true";

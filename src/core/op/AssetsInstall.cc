@@ -93,13 +93,8 @@ installAssets(Flow *flow, FlowCallback cb)
       return;
     }
   Network::DownloadPack pak;
-  int i = 0;
   for(auto &a : assets)
     {
-      if(i++ == 2048)
-        {
-          break;
-        }
       Network::DownloadMeta meta;
       std::string ind = a.hash.substr(0, 2);
       meta.baseURL

@@ -3,6 +3,7 @@
 
 #include <list>
 #include <vector>
+#include <set>
 #include <string>
 #include <map>
 #include <functional>
@@ -52,6 +53,7 @@ typedef struct
 class DownloadPack
 {
 protected:
+  std::set<std::string> existingPaths;
   std::vector<DownloadProcess> procs;
   std::function<void(const DownloadPack *pack)> updateFunc;
 
