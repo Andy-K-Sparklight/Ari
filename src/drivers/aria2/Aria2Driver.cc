@@ -9,7 +9,7 @@ namespace AlicornDrivers
 namespace Aria2
 {
 
-#define ACH_DRV_ARIA2_TOKEN_LENGTH 128
+#define ACH_DRV_ARIA2_TOKEN_LENGTH 16
 
 #define ACH_DRV_ARIA2_LISTEN_PORT "11451"
 
@@ -77,10 +77,13 @@ Aria2Daemon::run()
   char memCache[] = "--disk-cache=32M";
   char downloadResult[] = "--max-download-result=32767";
   char concOptimize[] = "--optimize-concurrent-downloads=true";
+  char allowOverwrite[] = "--allow-overwrite=true";
+  char autoFileRenaming[] = "--auto-file-renaming=false";
+  char maxConnection[] = "--max-connection-per-server=16";
   strcat(rpcToken, token.c_str());
   strcat(rpcPort, ACH_DRV_ARIA2_LISTEN_PORT);
 
-  char *args[9];
+  char *args[12];
   args[0] = name;
   args[1] = enableRPC;
   args[2] = rpcToken;
@@ -89,7 +92,10 @@ Aria2Daemon::run()
   args[5] = memCache;
   args[6] = downloadResult;
   args[7] = concOptimize;
-  args[8] = NULL;
+  args[8] = allowOverwrite;
+  args[9] = autoFileRenaming;
+  args[10] = maxConnection;
+  args[11] = NULL;
 
   optn.exit_cb = handleProcExit;
   optn.file = name;

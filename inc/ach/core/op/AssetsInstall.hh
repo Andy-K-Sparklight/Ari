@@ -4,6 +4,8 @@
 #include "ach/core/op/Flow.hh"
 #include "ach/core/op/Finder.hh"
 
+#define ACH_MOJANG_RESOURCES_HOST "https://resources.download.minecraft.net"
+
 namespace Alicorn
 {
 namespace Op

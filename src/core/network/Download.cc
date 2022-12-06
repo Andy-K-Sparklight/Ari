@@ -73,11 +73,7 @@ DownloadPack::commit()
                               pt.parent_path().string().c_str());
       cJSON_AddStringToObject(options, "out", pt.filename().string().c_str());
 
-      // Control
-      cJSON_AddStringToObject(options, "auto-file-renaming", "false");
-
       // Performance
-      cJSON_AddStringToObject(options, "max-connection-per-server", "16");
       cJSON_AddStringToObject(options, "min-split-size",
                               "2M"); // TODO: adjust by source speed
       cJSON_AddStringToObject(options, "split", "8"); // Resonable mostly
@@ -99,7 +95,6 @@ DownloadPack::commit()
 
   // Assign GIDs
   cJSON *stat = cJSON_Parse(res.c_str());
-
   if(cJSON_IsArray(stat))
     {
       int i = 0;
@@ -176,12 +171,16 @@ DownloadPack::sync()
                     }
 
                   cJSON *status = cJSON_GetObjectItem(o, "status");
-
+                  // TODO: accept error code 13
                   if(cJSON_IsString(status))
                     {
                       std::string stat
                           = std::string(cJSON_GetStringValue(status));
                       p.stat = stat;
+                      if(stat == "error")
+                        {
+                          std::cout << cJSON_Print(o) << std::endl;
+                        }
                     }
 
                   cJSON *completedLength

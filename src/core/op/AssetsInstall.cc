@@ -5,10 +5,12 @@
 #include "ach/core/profile/GameProfile.hh"
 #include "ach/core/op/Tools.hh"
 #include "ach/sys/Schedule.hh"
+#include "ach/core/network/Download.hh"
 #include <lurl.hpp>
 #include <list>
 #include <string>
 #include <iostream>
+#include <filesystem>
 
 namespace Alicorn
 {
@@ -71,6 +73,63 @@ installAssetIndex(Flow *flow, FlowCallback cb)
           cb(AL_OK);
         }
     });
+  });
+}
+
+void
+installAssets(Flow *flow, FlowCallback cb)
+{
+  cb(AL_GETASSETS);
+  std::string assetIndexSrc = flow->data[AL_FLOWVAR_ASSETINDEX];
+  if(assetIndexSrc.size() == 0)
+    {
+      cb(AL_ERR);
+      return;
+    }
+  std::list<Profile::Asset> assets = Profile::loadAssetIndex(assetIndexSrc);
+  if(assets.size() == 0)
+    {
+      cb(AL_ERR);
+      return;
+    }
+  Network::DownloadPack pak;
+  int i = 0;
+  for(auto &a : assets)
+    {
+      if(i++ == 2048)
+        {
+          break;
+        }
+      Network::DownloadMeta meta;
+      std::string ind = a.hash.substr(0, 2);
+      meta.baseURL
+          = std::string(ACH_MOJANG_RESOURCES_HOST) + "/" + ind + "/" + a.hash;
+      meta.hash = "sha-1=" + a.hash;
+      using namespace std::filesystem;
+      meta.path = (path(getInstallPath(path("assets") / "objects")) / path(ind)
+                   / a.hash)
+                      .string();
+      meta.size = a.size;
+      pak.addTask(meta);
+    }
+  pak.assignUpdateCallback([=](const Network::DownloadPack *p) -> void {
+    auto ps = p->getStat();
+    if((ps.completed + ps.failed) == ps.total)
+      {
+        // All processed
+        if(ps.failed == 0)
+          {
+            cb(AL_OK);
+          }
+        else
+          {
+            cb(AL_ERR);
+          }
+      }
+  });
+  Sys::runOnWorkerThread([=]() mutable -> void {
+    pak.commit();
+    Network::ALL_DOWNLOADS.push_back(pak);
   });
 }
 

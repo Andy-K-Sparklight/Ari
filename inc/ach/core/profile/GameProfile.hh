@@ -108,7 +108,13 @@ public:
   VersionProfile(const cJSON *src);
 };
 
-VersionProfile *loadVersionProfile(const std::string &src);
+typedef struct
+{
+  std::string hash;
+  size_t size;
+} Asset;
+
+std::list<Asset> loadAssetIndex(const std::string &src);
 
 }
 

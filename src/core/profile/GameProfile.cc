@@ -310,18 +310,38 @@ VersionProfile::VersionProfile(const cJSON *src)
     }
 }
 
-VersionProfile *
-loadVersionProfile(const std::string &src)
+std::list<Asset>
+loadAssetIndex(const std::string &src)
 {
-  cJSON *json = cJSON_Parse(src.c_str());
-  if(json == NULL)
+  std::list<Asset> out;
+  cJSON *dat = cJSON_Parse(src.c_str());
+  if(!cJSON_IsObject(dat))
     {
-      return nullptr;
+      cJSON_Delete(dat);
+      return out;
     }
-  // TODO: Older profiles must be converted
-  VersionProfile *v = new VersionProfile(json);
-  cJSON_Delete(json);
-  return v;
+  cJSON *objects = cJSON_GetObjectItem(dat, "objects");
+  if(!cJSON_IsObject(objects))
+    {
+      cJSON_Delete(dat);
+      return out;
+    }
+  cJSON *currentChild = objects->child;
+  while(cJSON_IsObject(currentChild))
+    {
+      cJSON *hash = cJSON_GetObjectItem(currentChild, "hash");
+      cJSON *size = cJSON_GetObjectItem(currentChild, "size");
+      if(cJSON_IsString(hash) && cJSON_IsNumber(size))
+        {
+          Asset a;
+          a.hash = cJSON_GetStringValue(hash);
+          a.size = (size_t)cJSON_GetNumberValue(size);
+          out.push_back(a);
+        }
+      currentChild = currentChild->next;
+    }
+  cJSON_Delete(dat);
+  return out;
 }
 }
 
