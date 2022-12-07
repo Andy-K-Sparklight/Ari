@@ -1,5 +1,7 @@
 #include "ach/util/Commons.hh"
 
+#include <string>
+
 namespace Alicorn
 {
 namespace Commons
@@ -20,6 +22,16 @@ splitStr(const std::string &s, const std::string &delimiter)
 
   res.push_back(s.substr(pos_start));
   return res;
+}
+
+std::string
+normalizePath(const std::filesystem::path &pt)
+{
+  std::filesystem::path path(pt);
+  std::filesystem::path canonicalPath
+      = std::filesystem::weakly_canonical(path);
+  std::string npath = canonicalPath.make_preferred().string();
+  return npath;
 }
 
 }

@@ -6,6 +6,7 @@
 #include <limits>
 #include "ach/drivers/aria2/Aria2Driver.hh"
 #include "ach/sys/Schedule.hh"
+#include "ach/util/Commons.hh"
 
 namespace Alicorn
 {
@@ -23,9 +24,10 @@ DownloadMeta::mkFromArtifact(const Profile::Artifact &artifact,
       m.hash = "sha-1=" + artifact.sha1;
     }
   m.size = artifact.size;
-  m.path = std::filesystem::absolute(std::filesystem::path(pathPrefix)
-                                     / artifact.path)
-               .string();
+  m.path = Commons::normalizePath(
+      std::filesystem::absolute(std::filesystem::path(pathPrefix)
+                                / artifact.path)
+          .string());
   return m;
 }
 
@@ -74,7 +76,8 @@ DownloadPack::commit()
         }
 
       // Path
-      auto pt = std::filesystem::absolute(std::filesystem::path(p.path));
+      auto pt = std::filesystem::path(Commons::normalizePath(
+          std::filesystem::absolute(std::filesystem::path(p.path))));
       cJSON_AddStringToObject(options, "dir",
                               pt.parent_path().string().c_str());
       cJSON_AddStringToObject(options, "out", pt.filename().string().c_str());

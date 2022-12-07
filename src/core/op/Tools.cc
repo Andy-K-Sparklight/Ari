@@ -7,6 +7,7 @@
 #include <cstring>
 #include "ach/sys/Schedule.hh"
 #include <miniz.h>
+#include "ach/util/Commons.hh"
 
 namespace Alicorn
 {
@@ -148,17 +149,15 @@ mkParentDirs(const std::string &pt)
   // We choose to use the std function.
   // It might be a bit slower, but are less likely to cause bugs than
   // implementing the uv version on our own
-  auto pat = std::filesystem::absolute(std::filesystem::path(pt));
+  auto pat = std::filesystem::path(
+      Commons::normalizePath(std::filesystem::path(pt)));
   std::filesystem::create_directories(pat.parent_path());
 }
 
 void
 mkParentDirs(const std::filesystem::path &pt)
 {
-  // We choose to use the std function.
-  // It might be a bit slower, but are less likely to cause bugs than
-  // implementing the uv version on our own
-  auto pat = std::filesystem::absolute(pt);
+  auto pat = std::filesystem::path(Commons::normalizePath(pt));
   std::filesystem::create_directories(pat.parent_path());
 }
 
