@@ -276,7 +276,14 @@ unzipFile(const std::string &zipFile, const std::string &pt)
       auto newDir = path(fileName).parent_path().string();
       if(newDir != lastDir)
         {
-          create_directories((path(pt) / newDir).string());
+          try
+            {
+              create_directories((path(pt) / newDir).string());
+            }
+          catch(std::exception &e)
+            {
+              continue;
+            }
         }
 
       if(mz_zip_reader_extract_to_file(&zip_archive, i, destFile.c_str(), 0))

@@ -38,6 +38,12 @@ initBasePath()
 }
 
 std::string
+getStoragePath()
+{
+  return (ACH_BASE_PATH / ACH_STORAGE_PATH).string();
+}
+
+std::string
 getStoragePath(const std::string &rel)
 {
   return (ACH_BASE_PATH / ACH_STORAGE_PATH / rel).string();
@@ -56,6 +62,12 @@ getStoragePath(const char *rel)
 }
 
 static std::hash<std::string> stringHasher;
+
+std::string
+getInstallPath()
+{
+  return (ACH_BASE_PATH / ACH_INSTALL_PATH).string();
+}
 
 std::string
 getInstallPath(const std::string &rel)

@@ -100,7 +100,11 @@ GameInstance::run()
 
   // Binary exec
   options.file = bin.c_str();
-  options.cwd = cwd.c_str();
+
+  if(cwd.size() > 0)
+    {
+      options.cwd = cwd.c_str();
+    }
 
   // Args processing
 

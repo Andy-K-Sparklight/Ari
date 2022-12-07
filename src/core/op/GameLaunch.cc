@@ -383,7 +383,15 @@ launchGame(Flow *flow, FlowCallback cb)
         game->bin = "java"; // Use system
       }
     game->cwd = getRuntimePath(optn.runtimeName);
-    std::filesystem::create_directories(game->cwd);
+    try
+      {
+
+        std::filesystem::create_directories(game->cwd);
+      }
+    catch(std::exception &e)
+      {
+        game->cwd = "";
+      }
 
     if(game->run())
       {
