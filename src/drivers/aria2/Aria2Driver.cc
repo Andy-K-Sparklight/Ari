@@ -11,8 +11,6 @@ namespace Aria2
 
 #define ACH_DRV_ARIA2_TOKEN_LENGTH 16
 
-#define ACH_DRV_ARIA2_LISTEN_PORT "6801"
-
 #if defined(_WIN32)
 #define ACH_DRV_ARIA2_PROG_NAME "aria2c.prog"
 #else
@@ -45,18 +43,17 @@ Aria2Daemon::Aria2Daemon()
 void
 handleProcExit(uv_process_t *proc, int64_t exit_status, int term_signal)
 {
-  proc->pid = 0;
-  auto self = (Aria2Daemon *)proc->data;
-
   // Cleanup
-  uv_close((uv_handle_t *)proc, NULL);
-
-  // Reboot if necessary
-  if(!self->stopFlag)
-    {
-      // Not ended yet
-      self->run();
-    }
+  uv_close((uv_handle_t *)proc, [](uv_handle_t *proc) -> void {
+    ((uv_process_t *)proc)->pid = 0; // Assign 0 PID
+    auto self = (Aria2Daemon *)proc->data;
+    // Reboot if necessary
+    if(!self->stopFlag)
+      {
+        // Not ended yet
+        self->run();
+      }
+  });
 };
 
 void
@@ -68,11 +65,11 @@ Aria2Daemon::run()
       return;
     }
 
+  auto cPort = std::to_string(port);
   char name[] = ACH_DRV_ARIA2_PROG_NAME;
   char enableRPC[] = "--enable-rpc=true";
   char rpcToken[14 + ACH_DRV_ARIA2_TOKEN_LENGTH] = "--rpc-secret=";
-  char rpcPort[20 + sizeof(ACH_DRV_ARIA2_LISTEN_PORT) / sizeof(char)]
-      = "--rpc-listen-port=";
+  char rpcPort[19 + cPort.size()] = "--rpc-listen-port=";
   char maxConcurrent[] = "-j32";
   char memCache[] = "--disk-cache=32M";
   char downloadResult[] = "--max-download-result=32767";
@@ -81,7 +78,12 @@ Aria2Daemon::run()
   char autoFileRenaming[] = "--auto-file-renaming=false";
   char maxConnection[] = "--max-connection-per-server=16";
   strcat(rpcToken, token.c_str());
-  strcat(rpcPort, ACH_DRV_ARIA2_LISTEN_PORT);
+  strcat(rpcPort, cPort.c_str());
+  port++;
+  if(port >= 65536)
+    {
+      port = 1025;
+    }
 
   char *args[12];
   args[0] = name;
@@ -104,6 +106,7 @@ Aria2Daemon::run()
   int r;
   if((r = uv_spawn(uvLoop, &proc, &optn)))
     {
+      std::cout << uv_strerror(r) << std::endl;
       throw Alicorn::Exception::ExternalException("Starting aria2c: ",
                                                   uv_strerror(r));
     }
@@ -142,10 +145,10 @@ buildReqCall(const std::string &method, const std::list<cJSON *> &args,
 }
 
 static std::string
-sendRPCCall(const std::string &call)
+sendRPCCall(const std::string &call, unsigned int port)
 {
   httplib::Client rpcClient(std::string("http://localhost:")
-                            + ACH_DRV_ARIA2_LISTEN_PORT);
+                            + std::to_string(port));
 
   auto res = rpcClient.Post("/jsonrpc", call, "application/json");
   if(!res)
@@ -168,7 +171,7 @@ sendRPCCall(const std::string &call)
 std::string
 Aria2Daemon::invoke(const std::string &method, const std::list<cJSON *> &args)
 {
-  return sendRPCCall(buildReqCall(method, args, token));
+  return sendRPCCall(buildReqCall(method, args, token), port);
 }
 std::string
 Aria2Daemon::invokeMulti(
@@ -187,15 +190,10 @@ Aria2Daemon::invokeMulti(
   arrStr.pop_back();
   arrStr += "]";
 
-  return sendRPCCall(arrStr);
+  return sendRPCCall(arrStr, port);
 }
 
 Aria2Daemon ARIA2_DAEMON; // The global unique one
 
-void
-driverInit()
-{
-  ARIA2_DAEMON.run();
-}
 }
 }

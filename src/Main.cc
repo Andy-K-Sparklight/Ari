@@ -36,13 +36,13 @@ main()
   f.data[AL_FLOWVAR_LAUNCHVALS] = s;
   f.data[AL_FLOWVAR_JAVAMAIN] = "java";
   f.addTask(Op::installProfile);
-  // f.addTask(Op::installClient);
-  // f.addTask(Op::installLibraries);
-  // f.addTask(Op::flipInstall);
-  // f.addTask(Op::checkNatives);
-  // f.addTask(Op::installAssetIndex);
-  // f.addTask(Op::installAssets);
-  //  f.addTask(Op::flipInstall);
+  f.addTask(Op::installClient);
+  f.addTask(Op::installLibraries);
+  f.addTask(Op::flipInstall);
+  f.addTask(Op::checkNatives);
+  f.addTask(Op::installAssetIndex);
+  f.addTask(Op::installAssets);
+  f.addTask(Op::flipInstall);
 
   f.addTask(Op::launchGame);
   f.run();

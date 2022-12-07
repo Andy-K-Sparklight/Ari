@@ -18,6 +18,7 @@ protected:
   uv_loop_t *uvLoop;
   uv_process_t proc; // The data member carries the stop flag
   uv_process_options_t optn = { 0 };
+  unsigned int port = 6800;
   std::string token;
   bool stopFlag = false;
   friend void handleProcExit(uv_process_t *proc, int64_t exit_status,
@@ -43,10 +44,6 @@ public:
 };
 
 extern Aria2Daemon ARIA2_DAEMON; // The global unique one
-
-// Initialize the driver
-// Note that this should be called on uv thread
-void driverInit();
 
 }
 }
