@@ -11,7 +11,7 @@ namespace Aria2
 
 #define ACH_DRV_ARIA2_TOKEN_LENGTH 16
 
-#define ACH_DRV_ARIA2_LISTEN_PORT "11451"
+#define ACH_DRV_ARIA2_LISTEN_PORT "6801"
 
 #if defined(_WIN32)
 #define ACH_DRV_ARIA2_PROG_NAME "aria2c.prog"
