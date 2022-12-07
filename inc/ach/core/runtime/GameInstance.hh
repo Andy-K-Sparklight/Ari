@@ -34,6 +34,7 @@ public:
   std::list<std::string> outputBuf; // Buffer
   uv_process_options_t options = { 0 };
   GameInstanceStatus stat = GS_LOADED;
+  std::string cwd;
 
   // Create process with specified options
   // Always run this on UV thread!

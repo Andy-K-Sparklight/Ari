@@ -383,7 +383,7 @@ launchGame(Flow *flow, FlowCallback cb)
       {
         game->bin = "java"; // Use system
       }
-    // game.options.cwd = getRuntimePath(optn.runtimeName).c_str();
+    game->cwd = getRuntimePath(optn.runtimeName);
     try
       {
         game->run(); // The spawn function is sync
