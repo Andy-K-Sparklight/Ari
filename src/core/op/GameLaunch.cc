@@ -5,7 +5,6 @@
 #include "ach/core/op/Finder.hh"
 #include "ach/core/profile/GameProfile.hh"
 #include "ach/core/runtime/GameInstance.hh"
-#include "ach/util/Exception.hh"
 #include "ach/sys/Schedule.hh"
 #include <regex>
 #include <sstream>
@@ -386,14 +385,14 @@ launchGame(Flow *flow, FlowCallback cb)
     game->cwd = getRuntimePath(optn.runtimeName);
     std::filesystem::create_directories(game->cwd);
 
-    try
+    if(game->run())
       {
-        game->run(); // The spawn function is sync
         Runtime::GAME_INSTANCES[game->proc.pid] = game;
         cb(AL_OK);
       }
-    catch(Exception::ExternalException &e)
+    else
       {
+        delete game;
         cb(AL_ERR);
       }
   });

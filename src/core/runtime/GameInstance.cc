@@ -2,7 +2,6 @@
 
 #include <cstring>
 #include <csignal>
-#include "ach/util/Exception.hh"
 #include <iostream>
 
 namespace Alicorn
@@ -30,14 +29,11 @@ onRead(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
     }
   if(nread > 0)
     {
-
       GameInstance *self = (GameInstance *)stream->data;
       char tmp[nread + 1];
       strncpy(tmp, buf->base, nread + 1);
-      tmp[nread] = 0;                // Terminate it
-      std::cout << tmp << std::endl; // TODO: forward output
-
-      //      self->outputBuf.push_back(std::string(tmp));
+      tmp[nread] = 0; // Terminate it
+      self->outputBuf << tmp;
     }
   if(buf->len > 0)
     {
@@ -73,13 +69,13 @@ onExit(uv_process_t *proc, int64_t code, int sig)
 }
 
 // Not reusable!
-void
+bool
 GameInstance::run()
 {
 
   if(stat != GS_LOADED)
     {
-      return; // Already running
+      return false; // Already running
     }
   proc.data = this; // Binding
 
@@ -93,6 +89,9 @@ GameInstance::run()
   ioContainer[2].flags = (uv_stdio_flags)(UV_CREATE_PIPE | UV_WRITABLE_PIPE);
   ioContainer[1].data.stream = (uv_stream_t *)&outPipes[0]; // stdout
   ioContainer[2].data.stream = (uv_stream_t *)&outPipes[1]; // stderr
+
+  outPipes[0].data = this; // Bindings
+  outPipes[1].data = this;
 
   options.stdio = ioContainer;
   options.stdio_count = 3;
@@ -131,14 +130,16 @@ GameInstance::run()
   if(r != 0)
     {
       stat = GS_FAILED;
-      throw Exception::ExternalException("Spawning game process: ",
-                                         uv_strerror(r));
+      uv_close((uv_handle_t *)&outPipes[0], NULL);
+      uv_close((uv_handle_t *)&outPipes[1], NULL);
+      return false;
     }
 
   stat = GS_LAUNCHED;
   // Setup reading
   uv_read_start((uv_stream_t *)&outPipes[0], onAlloc, onRead);
   uv_read_start((uv_stream_t *)&outPipes[1], onAlloc, onRead);
+  return true;
 }
 
 void

@@ -89,7 +89,6 @@ DownloadPack::commit()
       args.push_back(options);
       batchOps.push_back({ "addUri", args });
     }
-  // TODO: Exception catch
   std::string res = daemon.invokeMulti(batchOps);
   for(auto &b : batchOps)
     {
@@ -138,12 +137,11 @@ DownloadPack::sync()
     }
 
   std::string res;
-  try
+
+  res = daemon.invokeMulti(batchOps);
+  if(res.size() == 0)
     {
-      res = daemon.invokeMulti(batchOps);
-    }
-  catch(std::exception &ignored)
-    {
+      return; // Abort
     }
 
   for(auto &b : batchOps)

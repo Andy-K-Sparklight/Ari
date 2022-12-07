@@ -2,7 +2,6 @@
 
 #include <algorithm>
 #include <csignal>
-#include "ach/util/Exception.hh"
 
 namespace AlicornDrivers
 {
@@ -56,13 +55,19 @@ handleProcExit(uv_process_t *proc, int64_t exit_status, int term_signal)
   });
 };
 
-void
+bool
 Aria2Daemon::run()
 {
   if(proc.pid != 0)
     {
       // Already running
-      return;
+      return false;
+    }
+
+  port++;
+  if(port >= 65536)
+    {
+      port = 1025;
     }
 
   auto cPort = std::to_string(port);
@@ -79,11 +84,6 @@ Aria2Daemon::run()
   char maxConnection[] = "--max-connection-per-server=16";
   strcat(rpcToken, token.c_str());
   strcat(rpcPort, cPort.c_str());
-  port++;
-  if(port >= 65536)
-    {
-      port = 1025;
-    }
 
   char *args[12];
   args[0] = name;
@@ -106,10 +106,9 @@ Aria2Daemon::run()
   int r;
   if((r = uv_spawn(uvLoop, &proc, &optn)))
     {
-      std::cout << uv_strerror(r) << std::endl;
-      throw Alicorn::Exception::ExternalException("Starting aria2c: ",
-                                                  uv_strerror(r));
+      return false;
     }
+  return true;
 }
 
 void
@@ -149,18 +148,10 @@ sendRPCCall(const std::string &call, unsigned int port)
 {
   httplib::Client rpcClient(std::string("http://localhost:")
                             + std::to_string(port));
-
   auto res = rpcClient.Post("/jsonrpc", call, "application/json");
-  if(!res)
+  if(res == nullptr || res->status != 200)
     {
-      throw Alicorn::Exception::ExternalException("Aria2 RPC response: ",
-                                                  "Failed to connect");
-    }
-  if(res->status != 200)
-    {
-
-      throw Alicorn::Exception::ExternalException("Aria2 RPC response: ",
-                                                  "" + res->status);
+      return "";
     }
   else
     {

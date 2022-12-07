@@ -29,7 +29,7 @@ public:
   Aria2Daemon();
 
   // Run daemon
-  void run();
+  bool run();
 
   // Stop daemon
   void stop();
