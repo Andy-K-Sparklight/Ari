@@ -31,7 +31,10 @@ flipInstall(Flow *flow, FlowCallback cb)
             {
               delete count;
               delete total;
-              cb(AL_OK);
+              Sys::runOnWorkerThread([=]() -> void {
+                std::filesystem::remove_all(base); // Delete source
+                cb(AL_OK);
+              });
             }
         });
       }
