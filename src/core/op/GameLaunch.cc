@@ -384,6 +384,8 @@ launchGame(Flow *flow, FlowCallback cb)
         game->bin = "java"; // Use system
       }
     game->cwd = getRuntimePath(optn.runtimeName);
+    std::filesystem::create_directories(game->cwd);
+
     try
       {
         game->run(); // The spawn function is sync
