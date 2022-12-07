@@ -25,7 +25,7 @@ onRead(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
   if(nread < 0 || nread == UV_EOF) // Actually EOF < 0, just do this explictly
     {
       uv_read_stop(stream); // Stop reading
-      uv_close((uv_handle_t *)stream, NULL);
+      // DO NOT close here they will be closed on exit cb
       return;
     }
   if(nread > 0)
@@ -37,8 +37,6 @@ onRead(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
       tmp[nread] = 0;                // Terminate it
       std::cout << tmp << std::endl; // TODO: forward output
 
-      // Read two streams to one buffer
-      // TODO: I guess this can hardly cause any trouble, but I'll check
       //      self->outputBuf.push_back(std::string(tmp));
     }
   if(buf->len > 0)
@@ -74,6 +72,7 @@ onExit(uv_process_t *proc, int64_t code, int sig)
   uv_close((uv_handle_t *)&self->outPipes[1], NULL);
 }
 
+// Not reusable!
 void
 GameInstance::run()
 {
@@ -102,6 +101,7 @@ GameInstance::run()
 
   // Binary exec
   options.file = bin.c_str();
+  options.cwd = cwd.c_str();
 
   // Args processing
 
