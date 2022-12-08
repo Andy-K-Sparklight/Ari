@@ -60,6 +60,10 @@ DownloadPack::addTask(const DownloadMeta &meta)
     {
       return std::numeric_limits<unsigned int>::max(); // Prevent dup
     }
+  if(meta.baseURL.size() == 0 || meta.path.size() == 0)
+    {
+      return std::numeric_limits<unsigned int>::max();
+    }
   existingPaths.insert(meta.path);
   DownloadProcess p;
   p.hash = meta.hash;
