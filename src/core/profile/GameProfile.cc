@@ -31,9 +31,10 @@ Rule::Rule(const cJSON *src)
     {
       cJSON *actionItem = cJSON_GetObjectItem(src, "action");
 
-      if(cJSON_IsBool(actionItem))
+      if(cJSON_IsString(actionItem))
         {
-          action = cJSON_IsTrue(actionItem);
+          std::string act = cJSON_GetStringValue(actionItem);
+          action = act == "allow";
         }
 
       // Criteria
