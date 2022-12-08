@@ -244,7 +244,13 @@ unzipFile(const std::string &zipFile, const std::string &pt)
   std::vector<std::string> files = {};
   mz_zip_archive zip_archive;
   memset(&zip_archive, 0, sizeof(zip_archive));
-
+  try
+    {
+      create_directories(pt);
+    }
+  catch(std::exception &ignored)
+    {
+    }
   auto status = mz_zip_reader_init_file(&zip_archive, zipFile.c_str(), 0);
   if(!status)
     {
