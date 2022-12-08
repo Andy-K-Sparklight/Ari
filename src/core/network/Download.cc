@@ -31,6 +31,28 @@ DownloadMeta::mkFromArtifact(const Profile::Artifact &artifact,
   return m;
 }
 
+DownloadMeta
+DownloadMeta::mkFromLibrary(const Profile::Library &lib,
+                            const std::string &pathPrefix)
+{
+  DownloadMeta m;
+  m.baseURL = lib.artifact.url;
+  if(lib.artifact.sha1.size() > 0)
+    {
+      m.hash = "sha-1=" + lib.artifact.sha1;
+    }
+  m.size = lib.artifact.size;
+  m.path = Commons::normalizePath(
+      std::filesystem::absolute(std::filesystem::path(pathPrefix)
+                                / lib.artifact.path)
+          .string());
+  if(lib.isNative)
+    {
+      m.path += "n"; // .jarn: natives
+    }
+  return m;
+}
+
 unsigned int
 DownloadPack::addTask(const DownloadMeta &meta)
 {

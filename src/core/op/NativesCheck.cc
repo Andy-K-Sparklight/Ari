@@ -27,14 +27,12 @@ checkNatives(Flow *flow, FlowCallback cb)
     for(auto &l : retLibs)
       {
         auto fileName = std::filesystem::path(l).filename().string();
-        if(fileName.contains("natives-linux")
-           || fileName.contains("natives-windows")
-           || fileName.contains("natives-macos"))
+        // We changed the .jar to .zip, to identify native
+        if(fileName.ends_with(".jarn"))
           {
             auto currentPt = std::filesystem::path(l).replace_extension("");
             auto unzipPrefix = std::filesystem::path(targetPt)
                                / std::filesystem::relative(currentPt, pt);
-
             if(!unzipFile(l, unzipPrefix.string()))
               {
                 allPassed = false;

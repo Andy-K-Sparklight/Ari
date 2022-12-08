@@ -88,8 +88,8 @@ installLibraries(Flow *flow, FlowCallback cb)
     {
       if(parseLibRule(lib.rules))
         {
-          auto meta = Network::DownloadMeta::mkFromArtifact(
-              lib.artifact, getInstallPath("libraries"));
+          auto meta = Network::DownloadMeta::mkFromLibrary(
+              lib, getInstallPath("libraries"));
           librariesPack.addTask(meta);
         }
     }

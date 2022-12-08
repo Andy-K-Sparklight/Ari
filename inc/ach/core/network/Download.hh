@@ -24,8 +24,12 @@ public:
   std::string hash;    // Hash, in the format <TYPE>=<HEX>
   size_t size = 0;     // Total size
 
+  // DO NOT use this for library!
   static DownloadMeta mkFromArtifact(const Profile::Artifact &artifact,
                                      const std::string &pathPrefix);
+  // For library only
+  static DownloadMeta mkFromLibrary(const Profile::Library &lib,
+                                    const std::string &pathPrefix);
 };
 
 // Just like a process, but in the download env

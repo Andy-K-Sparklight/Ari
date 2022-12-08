@@ -1,5 +1,7 @@
 #include "ach/core/profile/GameProfile.hh"
+
 #include <iostream>
+#include "ach/util/Commons.hh"
 
 namespace Alicorn
 {
@@ -134,19 +136,8 @@ Library::Library(const cJSON *src)
   if(cJSON_IsString(nameItem))
     {
       name = cJSON_GetStringValue(nameItem);
-      nativesType = NA_GENERIC;
-      if(name.contains("natives-windows"))
-        {
-          nativesType = NA_MSDOS;
-        }
-      if(name.contains("natives-macos"))
-        {
-          nativesType = NA_MACOS;
-        }
-      if(name.contains("natives-linux"))
-        {
-          nativesType = NA_UNIX;
-        }
+      auto parts = Commons::splitStr(name, ":");
+      isNative = parts.size() == 4; // If it has 4 parts
     }
 
   cJSON *downloadsItem = cJSON_GetObjectItem(src, "downloads");

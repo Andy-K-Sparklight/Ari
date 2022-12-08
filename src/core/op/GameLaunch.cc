@@ -228,6 +228,8 @@ genClassPath(const Profile::VersionProfile &prof, const LaunchValues &ext)
           if(s.first)
             {
               nativeLibs << s.second << split;
+              commonLibs << s.second + ".jarn"
+                         << split; // Also copy one for some libs
             }
           else
             {

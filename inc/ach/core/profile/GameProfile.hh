@@ -31,15 +31,6 @@ enum ReleaseType
   RT_BETA
 };
 
-// OS Type
-enum NativesType
-{
-  NA_GENERIC,
-  NA_MSDOS,
-  NA_MACOS,
-  NA_UNIX
-};
-
 // Judge rule
 class Rule
 {
@@ -70,10 +61,9 @@ class Library
 {
 public:
   std::string name;
-  NativesType nativesType
-      = NA_GENERIC; // This hasn't been recorded, we just infer it by name
   Artifact artifact;
   std::list<Rule> rules;
+  bool isNative;
 
   Library(const cJSON *src);
 };

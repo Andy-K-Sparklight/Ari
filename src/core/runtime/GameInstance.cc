@@ -33,6 +33,7 @@ onRead(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
       char tmp[nread + 1];
       strncpy(tmp, buf->base, nread + 1);
       tmp[nread] = 0; // Terminate it
+      puts(tmp);
       self->outputBuf << tmp;
     }
   if(buf->len > 0)
