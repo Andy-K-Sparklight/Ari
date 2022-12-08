@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include "ach/util/Commons.hh"
+#include "ach/core/profile/Transform.hh"
 
 namespace Alicorn
 {
@@ -198,13 +199,14 @@ Argument::Argument(const cJSON *src)
 
 VersionProfile::VersionProfile(const cJSON *src)
 {
-  cJSON *idItem = cJSON_GetObjectItem(src, "id");
+  cJSON *trans = transformProfile(src);
+  cJSON *idItem = cJSON_GetObjectItem(trans, "id");
   if(cJSON_IsString(idItem))
     {
       id = cJSON_GetStringValue(idItem);
     }
 
-  cJSON *argsItem = cJSON_GetObjectItem(src, "arguments");
+  cJSON *argsItem = cJSON_GetObjectItem(trans, "arguments");
   if(cJSON_IsObject(argsItem))
     {
       cJSON *gameArgsItem = cJSON_GetObjectItem(argsItem, "game");
@@ -212,10 +214,10 @@ VersionProfile::VersionProfile(const cJSON *src)
       cJSON *jvmArgsItem = cJSON_GetObjectItem(argsItem, "jvm");
       parseList(jvmArgs, jvmArgsItem);
     }
-  cJSON *assetIndexItem = cJSON_GetObjectItem(src, "assetIndex");
+  cJSON *assetIndexItem = cJSON_GetObjectItem(trans, "assetIndex");
   assetIndexArtifact = Artifact(assetIndexItem);
 
-  cJSON *downloadsItem = cJSON_GetObjectItem(src, "downloads");
+  cJSON *downloadsItem = cJSON_GetObjectItem(trans, "downloads");
   if(cJSON_IsObject(downloadsItem))
     {
       cJSON *clientItem = cJSON_GetObjectItem(downloadsItem, "client");
@@ -229,7 +231,7 @@ VersionProfile::VersionProfile(const cJSON *src)
       clientMappingsArtifact.path = id + "/" + id + ".mappings";
     }
 
-  cJSON *javaVersionStructItem = cJSON_GetObjectItem(src, "javaVersion");
+  cJSON *javaVersionStructItem = cJSON_GetObjectItem(trans, "javaVersion");
   if(cJSON_IsObject(javaVersionStructItem))
     {
       cJSON *javaVersionNumberItem
@@ -241,10 +243,10 @@ VersionProfile::VersionProfile(const cJSON *src)
         }
     }
 
-  cJSON *librariesItem = cJSON_GetObjectItem(src, "libraries");
+  cJSON *librariesItem = cJSON_GetObjectItem(trans, "libraries");
   parseList(libraries, librariesItem);
 
-  cJSON *logItem = cJSON_GetObjectItem(src, "logging");
+  cJSON *logItem = cJSON_GetObjectItem(trans, "logging");
   if(cJSON_IsObject(logItem))
     {
       cJSON *logClientItem = cJSON_GetObjectItem(logItem, "client");
@@ -261,25 +263,25 @@ VersionProfile::VersionProfile(const cJSON *src)
         }
     }
 
-  cJSON *mainClassItem = cJSON_GetObjectItem(src, "mainClass");
+  cJSON *mainClassItem = cJSON_GetObjectItem(trans, "mainClass");
   if(cJSON_IsString(mainClassItem))
     {
       mainClass = cJSON_GetStringValue(mainClassItem);
     }
 
-  cJSON *releaseTimeItem = cJSON_GetObjectItem(src, "releaseTime");
+  cJSON *releaseTimeItem = cJSON_GetObjectItem(trans, "releaseTime");
   if(cJSON_IsString(releaseTimeItem))
     {
       releaseTime = cJSON_GetStringValue(releaseTimeItem);
     }
 
-  cJSON *installTimeItem = cJSON_GetObjectItem(src, "time");
+  cJSON *installTimeItem = cJSON_GetObjectItem(trans, "time");
   if(cJSON_IsString(installTimeItem))
     {
       installTime = cJSON_GetStringValue(installTimeItem);
     }
 
-  cJSON *releaseTypeItem = cJSON_GetObjectItem(src, "type");
+  cJSON *releaseTypeItem = cJSON_GetObjectItem(trans, "type");
   if(cJSON_IsString(releaseTypeItem))
     {
       std::string rel = cJSON_GetStringValue(releaseTypeItem);
@@ -300,6 +302,7 @@ VersionProfile::VersionProfile(const cJSON *src)
           type = RT_BETA;
         }
     }
+  cJSON_Delete(trans);
 }
 
 std::list<Asset>
