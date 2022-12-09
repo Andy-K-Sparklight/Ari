@@ -46,10 +46,6 @@ DownloadMeta::mkFromLibrary(const Profile::Library &lib,
       std::filesystem::absolute(std::filesystem::path(pathPrefix)
                                 / lib.artifact.path)
           .string());
-  if(lib.isNative)
-    {
-      m.path += "n"; // .jarn: natives
-    }
   return m;
 }
 

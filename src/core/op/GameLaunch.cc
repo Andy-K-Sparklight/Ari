@@ -207,7 +207,7 @@ parseRule(const std::list<Profile::Rule> &rules, const LaunchValues &ext)
 }
 
 // Generate both natives and common libs
-static std::pair<std::string, std::string>
+static std::string
 genClassPath(const Profile::VersionProfile &prof, const LaunchValues &ext)
 {
   using namespace std::filesystem;
@@ -225,28 +225,12 @@ genClassPath(const Profile::VersionProfile &prof, const LaunchValues &ext)
       if(parseRule(l.rules, ext))
         {
           auto s = getLibraryPath(l.name);
-          if(s.first)
-            {
-              nativeLibs << s.second << split;
-              commonLibs << s.second + ".jarn"
-                         << split; // Also copy one for some libs
-            }
-          else
-            {
-              commonLibs << s.second << split;
-            }
+          commonLibs << s.second << split;
         }
     }
-  commonLibs << Op::getStoragePath(path("versions") / prof.id
-                                   / (prof.id + ".jar"));
+  commonLibs << getStoragePath("versions/" + prof.id + "/" + prof.id + ".jar");
   std::string classPathCommon = commonLibs.str();
-  std::string classPathNative = nativeLibs.str();
-
-  if(classPathNative.ends_with(split))
-    {
-      classPathNative.pop_back();
-    }
-  return { classPathCommon, classPathNative };
+  return classPathCommon;
 }
 
 static std::string
@@ -272,8 +256,8 @@ genArgs(const Profile::VersionProfile &prof, const LaunchValues &ev)
   // Vars assemble
   varMap["auth_player_name"] = ev.playerName;
   varMap["version_name"] = prof.id;
-  varMap["game_directory"] = Op::getRuntimePath(ev.runtimeName);
-  varMap["assets_root"] = Op::getStoragePath("assets");
+  varMap["game_directory"] = getRuntimePath(ev.runtimeName);
+  varMap["assets_root"] = getStoragePath("assets");
   varMap["assets_index_name"]
       = prof.assetIndexArtifact.path; // This is actually id
   varMap["auth_uuid"] = ev.uuid;
@@ -287,11 +271,11 @@ genArgs(const Profile::VersionProfile &prof, const LaunchValues &ev)
   varMap["launcher_name"] = "Alicorn The Corrupted Heart";
   varMap["launcher_version"] = "Lost";
   auto classPaths = genClassPath(prof, ev);
-  varMap["classpath"] = classPaths.first;
-  varMap["natives_directory"] = classPaths.second;
+  varMap["classpath"] = classPaths;
+  varMap["natives_directory"]
+      = getStoragePath("versions/" + prof.id + "/.natives");
   varMap["user_properties"] = "[]"; // Nothing, for 1.7
-  varMap["game_assets"]
-      = Op::getStoragePath(std::filesystem::path("assets") / "legacy");
+  varMap["game_assets"] = getStoragePath("assets/legacy");
 
   // Args processing
   // VM Args
@@ -364,15 +348,7 @@ launchGame(Flow *flow, FlowCallback cb)
       cb(AL_ERR);
       return;
     }
-  cJSON *profileObj = cJSON_Parse(profileSrc.c_str());
-  if(!cJSON_IsObject(profileObj))
-    {
-      cJSON_Delete(profileObj);
-      cb(AL_ERR);
-      return;
-    }
-  Profile::VersionProfile profile(profileObj);
-  cJSON_Delete(profileObj);
+  Profile::VersionProfile profile(profileSrc);
 
   auto args = genArgs(profile, optn);
   Sys::runOnUVThread([=]() -> void {

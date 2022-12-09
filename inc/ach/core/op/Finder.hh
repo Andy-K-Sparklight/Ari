@@ -19,6 +19,8 @@ std::string getStoragePath(const std::string &rel);
 std::string getStoragePath(const std::filesystem::path &rel);
 std::string getStoragePath(const char *rel);
 
+std::string getTempPath(const std::string &rel);
+
 std::string getInstallPath();
 std::string getInstallPath(const std::string &rel);
 std::string getInstallPath(const std::filesystem::path &rel);

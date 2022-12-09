@@ -32,14 +32,14 @@ main()
   cJSON_AddBoolToObject(json, "hasCustomRes", true);
   std::string s = cJSON_Print(json);
   cJSON_Delete(json);
-  f.data[AL_FLOWVAR_PROFILEID] = "1.19.2";
+  f.data[AL_FLOWVAR_PROFILEID] = "1.12.2";
   f.data[AL_FLOWVAR_LAUNCHVALS] = s;
   f.data[AL_FLOWVAR_JAVAMAIN] = "java";
   f.addTask(Op::installProfile);
   f.addTask(Op::installClient);
   f.addTask(Op::installLibraries);
   f.addTask(Op::flipInstall);
-  f.addTask(Op::checkNatives);
+  f.addTask(Op::collectNatives);
   f.addTask(Op::installAssetIndex);
   f.addTask(Op::installAssets);
   f.addTask(Op::flipInstall);

@@ -6,6 +6,8 @@
 #include "ach/core/op/Tools.hh"
 #include "ach/sys/Schedule.hh"
 #include "ach/core/op/Finder.hh"
+#include "ach/core/profile/GameProfile.hh"
+#include "ach/util/Commons.hh"
 #include <iostream>
 #include <fstream>
 
@@ -15,31 +17,51 @@ namespace Op
 {
 
 void
-checkNatives(Flow *flow, FlowCallback cb)
+collectNatives(Flow *flow, FlowCallback cb)
 {
-  auto pt = getStoragePath("libraries");
-  auto targetPt = getInstallPath("libraries");
-  cb(AL_SCANNAT);
-  std::list<std::string> retLibs = scanDirectory(pt);
+  cb(AL_UNPACKNAT);
+  auto profileSrc = flow->data[AL_FLOWVAR_PROFILESRC];
+  if(profileSrc.size() == 0)
+    {
+      cb(AL_ERR);
+      return;
+    }
   Sys::runOnWorkerThread([=]() -> void {
-    cb(AL_UNPACKNAT);
-    bool allPassed = true;
-    for(auto &l : retLibs)
+    Profile::VersionProfile profile(profileSrc);
+    auto base = getStoragePath("libraries");
+    auto target = getStoragePath("versions/" + profile.id + "/.natives");
+    auto unpackwd = getTempPath("unpack/" + profile.id);
+    std::filesystem::create_directories(unpackwd);
+    std::filesystem::create_directories(target);
+    for(auto &l : profile.libraries)
       {
-        auto fileName = std::filesystem::path(l).filename().string();
-        // We changed the .jar to .zip, to identify native
-        if(fileName.ends_with(".jarn"))
+        if(l.isNative)
           {
-            auto currentPt = std::filesystem::path(l).replace_extension("");
-            auto unzipPrefix = std::filesystem::path(targetPt)
-                               / std::filesystem::relative(currentPt, pt);
-            if(!unzipFile(l, unzipPrefix.string()))
+            auto libJarPath = Commons::normalizePath(
+                std::filesystem::path(base) / l.artifact.path);
+            unzipFile(libJarPath, unpackwd);
+          }
+      }
+    cb(AL_COLNAT);
+    auto files = scanDirectory(unpackwd);
+    for(auto &f : files)
+      {
+        if(f.ends_with(".dll") || f.ends_with(".so") || f.ends_with(".dylib"))
+          {
+            // Use the sync method to avoid any conflict
+            try
               {
-                allPassed = false;
+                std::filesystem::copy_file(
+                    f, std::filesystem::path(target)
+                           / std::filesystem::path(f).filename());
+              }
+            catch(std::exception &ignored)
+              {
               }
           }
       }
-    cb(allPassed ? AL_OK : AL_ERR);
+    std::filesystem::remove_all(unpackwd);
+    cb(AL_OK);
   });
 }
 

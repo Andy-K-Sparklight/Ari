@@ -27,15 +27,7 @@ installAssetIndex(Flow *flow, FlowCallback cb)
       cb(AL_ERR);
       return;
     }
-  cJSON *profileObj = cJSON_Parse(src.c_str());
-  if(!cJSON_IsObject(profileObj))
-    {
-      cJSON_Delete(profileObj);
-      cb(AL_ERR);
-      return;
-    }
-  Profile::VersionProfile profile(profileObj);
-  cJSON_Delete(profileObj);
+  Profile::VersionProfile profile(src);
   auto u = LUrlParser::ParseURL::parseURL(profile.assetIndexArtifact.url);
   httplib::Client cli(u.connectionName_);
   auto res = cli.Get(u.pathName_);

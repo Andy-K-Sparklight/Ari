@@ -63,6 +63,13 @@ getStoragePath(const char *rel)
   return Commons::normalizePath(ACH_BASE_PATH / ACH_STORAGE_PATH / rel);
 }
 
+std::string
+getTempPath(const std::string &rel)
+{
+  return Commons::normalizePath(std::filesystem::temp_directory_path()
+                                / ACH_ROOT_NAME / rel);
+}
+
 static std::hash<std::string> stringHasher;
 
 std::string

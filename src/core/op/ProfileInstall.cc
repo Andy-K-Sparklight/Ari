@@ -189,15 +189,7 @@ installClient(Flow *flow, FlowCallback sender)
         sender(AL_ERR);
         return;
       }
-    cJSON *prof = cJSON_Parse(profileSrc.c_str());
-    if(!cJSON_IsObject(prof))
-      {
-        sender(AL_ERR);
-        cJSON_Delete(prof);
-        return;
-      }
-    Profile::VersionProfile profile(prof);
-    cJSON_Delete(prof);
+    Profile::VersionProfile profile(profileSrc);
 
     // Create tasks
     using namespace Network;

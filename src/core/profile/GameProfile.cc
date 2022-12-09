@@ -197,7 +197,8 @@ Argument::Argument(const cJSON *src)
     }
 }
 
-VersionProfile::VersionProfile(const cJSON *src)
+void
+VersionProfile::setup(const cJSON *src)
 {
   cJSON *trans = transformProfile(src);
   cJSON *idItem = cJSON_GetObjectItem(trans, "id");
@@ -303,6 +304,15 @@ VersionProfile::VersionProfile(const cJSON *src)
         }
     }
   cJSON_Delete(trans);
+}
+
+VersionProfile::VersionProfile(const cJSON *src) { setup(src); }
+
+VersionProfile::VersionProfile(const std::string &s)
+{
+  cJSON *obj = cJSON_Parse(s.c_str());
+  setup(obj);
+  cJSON_Delete(obj);
 }
 
 std::list<Asset>

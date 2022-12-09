@@ -9,10 +9,8 @@ namespace Alicorn
 namespace Op
 {
 
-// Scan the library directory and extract necessary libs
-// It does not rely on the profile!
-// Flow task
-void checkNatives(Flow *flow, FlowCallback cb);
+// Collect the native libraries to the profile root
+void collectNatives(Flow *flow, FlowCallback cb);
 
 }
 }

@@ -75,14 +75,9 @@ installLibraries(Flow *flow, FlowCallback cb)
       cb(AL_ERR);
       return;
     }
-  cJSON *profileJ = cJSON_Parse(profileSrc.c_str());
 
-  if(!cJSON_IsObject(profileJ))
-    {
-      cb(AL_ERR);
-      return;
-    }
-  Profile::VersionProfile profile(profileJ);
+  Profile::VersionProfile profile(profileSrc);
+
   Network::DownloadPack librariesPack;
   for(auto &lib : profile.libraries)
     {

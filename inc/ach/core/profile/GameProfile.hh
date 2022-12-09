@@ -95,7 +95,12 @@ public:
   std::string installTime;
   ReleaseType type = RT_RELEASE;
 
+protected:
+  void setup(const cJSON *src);
+
+public:
   VersionProfile(const cJSON *src);
+  VersionProfile(const std::string &s);
 };
 
 typedef struct
