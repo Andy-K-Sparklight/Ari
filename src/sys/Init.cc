@@ -3,6 +3,7 @@
 #include "ach/drivers/aria2/Aria2Driver.hh"
 #include "ach/sys/Schedule.hh"
 #include "ach/core/op/Finder.hh"
+#include "ach/sys/Options.hh"
 #include "ach/core/network/Download.hh"
 
 namespace Alicorn
@@ -13,6 +14,7 @@ namespace Sys
 void
 initSys()
 {
+  Sys::loadConfig();
   Sys::setupUVThread();
   Op::initBasePath();
   Network::setupDownloadsSync();
@@ -27,6 +29,7 @@ downSys()
   Sys::runOnUVThread(
       []() -> void { AlicornDrivers::Aria2::ARIA2_DAEMON.stop(); });
   Sys::stopUVThread();
+  Sys::saveConfig();
 }
 
 }
