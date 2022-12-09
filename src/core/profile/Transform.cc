@@ -52,11 +52,7 @@ transformProfile(const cJSON *src)
       cJSON_AddItemToObject(argumentsBase, "game", arguments);
 
       cJSON *jvmObj = cJSON_Parse(
-          "[{\"rules\":[{\"action\":\"allow\",\"os\":{\"name\":\"osx\"}}],"
-          "\"value\":[\"-XstartOnFirstThread\"]},{\"rules\":[{\"action\":"
-          "\"allow\",\"os\":{\"name\":\"windows\"}}],\"value\":\"-XX:"
-          "HeapDumpPath=MojangTricksIntelDriversForPerformance_javaw.exe_"
-          "minecraft.exe.heapdump\"},{\"rules\":[{\"action\":"
+          "[{\"rules\":[{\"action\":"
           "\"allow\",\"os\":{\"arch\":\"x86\"}}],\"value\":\"-Xss1M\"},\"-"
           "Djava.library.path=${natives_directory}\",\"-Dminecraft.launcher."
           "brand=${launcher_name}\",\"-Dminecraft.launcher.version=${launcher_"

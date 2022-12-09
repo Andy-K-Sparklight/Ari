@@ -112,42 +112,6 @@ parseLaunchValues(const std::string &src, LaunchValues &ev)
   cJSON_Delete(obj);
 }
 
-static std::pair<bool, std::string>
-getLibraryPath(const std::string &name)
-{
-  using namespace std::filesystem;
-  path outPath;
-  bool isNative;
-  // Assemble name
-  std::vector<std::string> nameParts = Commons::splitStr(name, ":");
-  std::string libName;
-
-  if(nameParts.size() == 4)
-    {
-      // Has natives, target is a folder
-      isNative = true;
-      libName = nameParts[1] + '-' + nameParts[2] + '-' + nameParts[3];
-    }
-  else
-    {
-      // No natives, target is a jar
-      isNative = false;
-      libName = nameParts[1] + '-' + nameParts[2] + ".jar";
-    }
-
-  // Assemble pkg path
-  std::vector<std::string> pathParts = Commons::splitStr(nameParts[0], ".");
-  outPath = getStoragePath("libraries");
-  for(auto &p : pathParts)
-    {
-      outPath /= p;
-    }
-
-  // Pkg/Name/Ver
-  outPath = outPath / nameParts[1] / nameParts[2] / libName;
-  return { isNative, outPath.string() };
-}
-
 static bool
 parseRule(const std::list<Profile::Rule> &rules, const LaunchValues &ext)
 {
@@ -224,8 +188,8 @@ genClassPath(const Profile::VersionProfile &prof, const LaunchValues &ext)
     {
       if(parseRule(l.rules, ext))
         {
-          auto s = getLibraryPath(l.name);
-          commonLibs << s.second << split;
+          commonLibs << getStoragePath("libraries/" + l.artifact.path)
+                     << split;
         }
     }
   commonLibs << getStoragePath("versions/" + prof.id + "/" + prof.id + ".jar");
