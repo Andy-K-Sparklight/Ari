@@ -81,15 +81,6 @@ saveJVMProfiles()
 bool
 appendJVM(const std::string &bin)
 {
-
-#ifndef popen
-#ifdef _popen
-#define popen _popen
-#else
-#error "No popen found! Please define one."
-#endif
-#endif
-
   JVMProfile prof;
 
   // Read output
