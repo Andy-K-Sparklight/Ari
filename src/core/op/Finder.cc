@@ -70,8 +70,6 @@ getTempPath(const std::string &rel)
                                 / ACH_ROOT_NAME / rel);
 }
 
-static std::hash<std::string> stringHasher;
-
 std::string
 getInstallPath()
 {
@@ -94,12 +92,6 @@ std::string
 getInstallPath(const char *rel)
 {
   return Commons::normalizePath(ACH_BASE_PATH / ACH_INSTALL_PATH / rel);
-}
-
-std::string
-getNameHash(const std::string &name)
-{
-  return "" + stringHasher(name);
 }
 
 std::string

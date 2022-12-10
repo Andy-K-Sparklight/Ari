@@ -13,6 +13,11 @@ std::vector<std::string> splitStr(const std::string &str,
                                   const std::string &del);
 
 std::string normalizePath(const std::filesystem::path &pt);
+
+std::string getNameHash(const std::string &name);
+
+std::string genUUID();
+
 }
 }
 

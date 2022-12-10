@@ -2,6 +2,7 @@
 #define INCLUDE_ALICORN_CH_ACH_SYS_OPTIONS
 
 #include <map>
+#include <vector>
 #include <string>
 
 namespace Alicorn
@@ -18,6 +19,15 @@ std::string getValue(const std::string &k, const std::string &dv);
 void setValue(const std::string &k, const std::string &v);
 
 void saveConfig();
+
+// Load KV Group
+std::vector<std::map<std::string, std::string> >
+loadKVG(const std::string &rel);
+
+// Save KV Group
+void saveKVG(const std::string &rel,
+             const std::vector<std::map<std::string, std::string> > &data);
+
 }
 }
 #endif /* INCLUDE_ALICORN_CH_ACH_SYS_OPTIONS */

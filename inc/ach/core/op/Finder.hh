@@ -28,8 +28,6 @@ std::string getInstallPath(const char *rel);
 
 std::string getRuntimePath(const std::string &name);
 
-std::string getNameHash(const std::string &name);
-
 }
 }
 
