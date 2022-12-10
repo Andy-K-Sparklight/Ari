@@ -1,6 +1,7 @@
 #include "ach/util/Proc.hh"
 
 #include <uv.h>
+#include <cstring>
 
 namespace Alicorn
 {

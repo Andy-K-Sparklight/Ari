@@ -93,9 +93,9 @@ stopUVThread()
 
   runOnUVThread([]() -> void {
     // The last run has completed, destroy the lock, close the caller.
-    uv_rwlock_destroy(
-        &((UVAsyncCallerCarry *)ACH_UV_ASYNC_HANDLER.data)->lock);
     uv_close((uv_handle_t *)&ACH_UV_ASYNC_HANDLER, [](uv_handle_t *t) -> void {
+      uv_rwlock_destroy(
+          &((UVAsyncCallerCarry *)ACH_UV_ASYNC_HANDLER.data)->lock);
       uvRunningFlag = false; // Avoid stopping the loop too early
       // The loop will stop itself, no need to use uv_stop.
       // Friendly!
