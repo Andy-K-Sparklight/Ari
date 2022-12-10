@@ -30,7 +30,7 @@ public:
 
 // Gets information automatically
 // Uses sync method
-bool appendJVM(const std::string &bin);
+void appendJVM(const std::string &bin, std::function<void(bool)> cb);
 
 void loadJVMProfiles();
 

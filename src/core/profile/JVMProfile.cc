@@ -2,6 +2,7 @@
 
 #include "ach/sys/Storage.hh"
 #include "ach/util/Commons.hh"
+#include "ach/util/Proc.hh"
 #include "ach/sys/Schedule.hh"
 #include <cstdio>
 #include <iostream>
@@ -78,81 +79,81 @@ saveJVMProfiles()
   Sys::saveKVG(ACH_JVM_PROFILE, vec);
 }
 
-bool
-appendJVM(const std::string &bin)
+void
+appendJVM(const std::string &bin, std::function<void(bool)> cb)
 {
-  JVMProfile prof;
-
   // Read output
-  std::string cmd = "\"" + bin + "\" -version 2>&1";
-  std::array<char, 128> buffer;
-  std::string result;
-  std::unique_ptr<FILE, decltype(&pclose)> pipe(popen(cmd.c_str(), "rb"),
-                                                pclose);
-  if(!pipe)
-    {
-      return false;
-    }
-  while(fgets(buffer.data(), buffer.size(), pipe.get()) != nullptr)
-    {
-      result += buffer.data();
-    }
+  Sys::runOnUVThread([=]() -> void {
+    std::list<std::string> args;
+    args.push_back("-version");
+    Commons::runCommand(
+        bin, args,
+        [=](std::string result) -> void {
+          JVMProfile prof;
+          if(result.size() == 0)
+            {
+              cb(false);
+              return;
+            }
+          // Extract version info
+          std::regex javaVersionRegex("[\"']([0-9._\\-a-z]+?)[\"']",
+                                      std::regex_constants::icase);
+          std::regex javaLegacyRegex("^1\\.([0-9])",
+                                     std::regex_constants::icase);
+          std::regex javaNewRegex("^([0-9]{2,})[.-]+?",
+                                  std::regex_constants::icase);
+          std::smatch match;
+          if(std::regex_search(result, match, javaVersionRegex))
+            {
+              std::string javaVersion = match[1];
 
-  // Extract version info
-  std::regex javaVersionRegex("[\"']([0-9._\\-a-z]+?)[\"']",
-                              std::regex_constants::icase);
-  std::regex javaLegacyRegex("^1\\.([0-9])", std::regex_constants::icase);
-  std::regex javaNewRegex("^([0-9]{2,})[.-]+?", std::regex_constants::icase);
-  std::smatch match;
-  if(std::regex_search(result, match, javaVersionRegex))
-    {
-      std::string javaVersion = match[1];
+              // 1.0 - 1.9
+              if(std::regex_search(javaVersion, match, javaLegacyRegex))
+                {
+                }
+              // 10+
+              else if(std::regex_search(javaVersion, match, javaNewRegex))
+                {
+                }
 
-      // 1.0 - 1.9
-      if(std::regex_search(javaVersion, match, javaLegacyRegex))
-        {
-        }
-      // 10+
-      else if(std::regex_search(javaVersion, match, javaNewRegex))
-        {
-        }
+              std::string javaFinalVersion = match[1];
+              if(javaFinalVersion.size() > 0)
+                {
+                  prof.specVersion = std::stoi(javaFinalVersion);
+                }
+              else
+                {
+                  cb(false);
+                }
+            }
 
-      std::string javaFinalVersion = match[1];
-      if(javaFinalVersion.size() > 0)
-        {
-          prof.specVersion = std::stoi(javaFinalVersion);
-        }
-      else
-        {
-          return false;
-        }
-    }
+          // Collect info
+          auto lines = Commons::splitStr(result, "\n");
+          for(auto &l : lines)
+            {
+              if(l.size() > 0)
+                {
+                  prof.versionStrings.push_back(l);
+                }
+            }
 
-  // Collect info
-  auto lines = Commons::splitStr(result, "\n");
-  for(auto &l : lines)
-    {
-      if(l.size() > 0)
-        {
-          prof.versionStrings.push_back(l);
-        }
-    }
+          // Getting performance
+          prof.is64 = !std::regex_search(
+              result, std::regex("32-bit", std::regex_constants::icase));
+          prof.isServer = !std::regex_search(
+              result, std::regex("client", std::regex_constants::icase));
 
-  // Getting performance
-  prof.is64 = !std::regex_search(
-      result, std::regex("32-bit", std::regex_constants::icase));
-  prof.isServer = !std::regex_search(
-      result, std::regex("client", std::regex_constants::icase));
+          // Executable
+          prof.bin = bin;
 
-  // Executable
-  prof.bin = bin;
+          // A random one will be fine
+          prof.id = Commons::genUUID();
 
-  // A random one will be fine
-  prof.id = Commons::genUUID();
-
-  JVM_PROFILES.push_back(prof);
-
-  return true;
+          JVM_PROFILES.push_back(prof);
+          cb(true);
+        },
+        2);
+  });
 }
 
 std::vector<JVMProfile> JVM_PROFILES;
