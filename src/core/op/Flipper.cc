@@ -6,6 +6,7 @@
 
 #include <iostream>
 #include <filesystem>
+#include <log.hh>
 
 namespace Alicorn
 {
@@ -18,6 +19,7 @@ flipInstall(Flow *flow, FlowCallback cb)
   cb(AL_FLIPDIR);
   Sys::runOnWorkerThread([=]() -> void {
     auto base = getInstallPath();
+    LOG("Flipping dir " << base);
     std::list<std::string> files = scanDirectory(base);
     int *total = new int(files.size());
     int *count = new int(0);
@@ -36,6 +38,7 @@ flipInstall(Flow *flow, FlowCallback cb)
             (*count)++;
             if(*count == *total)
               {
+                LOG("Successfully flipped " << *count << " files in " << base);
                 delete count;
                 delete total;
                 Sys::runOnWorkerThread([=]() -> void {

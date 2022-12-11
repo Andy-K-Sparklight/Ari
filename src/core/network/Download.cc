@@ -7,6 +7,7 @@
 #include "ach/drivers/aria2/Aria2Driver.hh"
 #include "ach/sys/Schedule.hh"
 #include "ach/util/Commons.hh"
+#include <log.hh>
 
 namespace Alicorn
 {
@@ -144,6 +145,7 @@ DownloadPack::commit()
     }
 
   cJSON_Delete(stat);
+  LOG("Commited one download task with " << procs.size() << " procs.");
   return;
 }
 
@@ -279,6 +281,7 @@ static uv_timer_t syncTimer;
 void
 setupDownloadsSync()
 {
+  LOG("Setting up download sync service.")
   Sys::runOnUVThread([&]() -> void {
     uv_timer_init(uv_default_loop(), &syncTimer);
     uv_timer_start(
@@ -298,6 +301,7 @@ setupDownloadsSync()
                 if((s.completed + s.failed) == s.total)
                   {
                     ALL_DOWNLOADS.erase(ALL_DOWNLOADS.begin() + i);
+                    LOG("Erased one finished download.")
                     i--;
                   }
               }
@@ -305,13 +309,13 @@ setupDownloadsSync()
           });
         },
         0, 500);
-    // TODO: stop timer on exit
   });
 }
 
 void
 stopDownloadsSync()
 {
+  LOG("Stopping download sync service.")
   Sys::runOnUVThread(
       []() -> void { uv_close((uv_handle_t *)&syncTimer, NULL); });
 }

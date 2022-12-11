@@ -11,6 +11,7 @@
 #include <array>
 #include <regex>
 #include <uuid.h>
+#include <log.hh>
 
 namespace Alicorn
 {
@@ -83,6 +84,7 @@ void
 appendJVM(const std::string &bin, std::function<void(bool)> cb)
 {
   // Read output
+  LOG("Collecting JVM info from " << bin);
   Sys::runOnUVThread([=]() -> void {
     std::list<std::string> args;
     args.push_back("-version");
@@ -92,6 +94,7 @@ appendJVM(const std::string &bin, std::function<void(bool)> cb)
           JVMProfile prof;
           if(result.size() == 0)
             {
+              LOG("No valid JVM info from " << bin);
               cb(false);
               return;
             }
@@ -123,6 +126,7 @@ appendJVM(const std::string &bin, std::function<void(bool)> cb)
                 }
               else
                 {
+                  LOG("Could not detect version from " << bin);
                   cb(false);
                 }
             }
@@ -150,6 +154,8 @@ appendJVM(const std::string &bin, std::function<void(bool)> cb)
           prof.id = Commons::genUUID();
 
           JVM_PROFILES.push_back(prof);
+          LOG("Registered new JVM with version " << prof.specVersion
+                                                 << " from " << bin);
           cb(true);
         },
         2);

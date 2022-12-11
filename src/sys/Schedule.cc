@@ -3,6 +3,7 @@
 #include <list>
 #include <functional>
 #include <iostream>
+#include <log.hh>
 
 namespace Alicorn
 {
@@ -54,10 +55,12 @@ uvAsyncCaller(uv_async_t *handler)
 void
 setupUVThread()
 {
+  LOG("Setting up UV thread.");
   ACH_UV_ASYNC_HANDLER.data = new UVAsyncCallerCarry;
   uv_rwlock_init(&((UVAsyncCallerCarry *)ACH_UV_ASYNC_HANDLER.data)->lock);
   uv_thread_create(&ACH_UV_THREAD, uvMain, (void *)NULL);
   uv_async_init(uv_default_loop(), &ACH_UV_ASYNC_HANDLER, uvAsyncCaller);
+  LOG("UV thread created.");
 }
 
 void
@@ -90,18 +93,21 @@ runOnWorkerThread(std::function<void()> func)
 void
 stopUVThread()
 {
-
+  LOG("Stopping UV thread!");
   runOnUVThread([]() -> void {
     // The last run has completed, destroy the lock, close the caller.
     uv_close((uv_handle_t *)&ACH_UV_ASYNC_HANDLER, [](uv_handle_t *t) -> void {
       uv_rwlock_destroy(
           &((UVAsyncCallerCarry *)ACH_UV_ASYNC_HANDLER.data)->lock);
+      LOG("Destroyed lock, UV loop is closing.");
       uvRunningFlag = false; // Avoid stopping the loop too early
       // The loop will stop itself, no need to use uv_stop.
       // Friendly!
     });
   });
+  LOG("Waiting for UV thread to join...");
   uv_thread_join(&ACH_UV_THREAD); // Block and wait
+  LOG("UV thread joined.");
 }
 }
 }

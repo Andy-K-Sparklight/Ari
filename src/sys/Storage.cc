@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include "ach/util/Commons.hh"
+#include <log.hh>
 
 namespace Alicorn
 {
@@ -48,6 +49,7 @@ void
 loadConfig()
 {
   auto f = getCfgPath(ACH_CONFIG_FILE);
+  LOG("Loading config from " << f);
   std::ifstream file(f);
   std::stringstream ss;
   ss << file.rdbuf();
@@ -90,6 +92,7 @@ saveConfig()
 {
   mkConfigDir();
   auto f = getCfgPath(ACH_CONFIG_FILE);
+  LOG("Saving config to " << f);
   std::ofstream file(f);
   for(auto &p : ACH_CONFIG)
     {

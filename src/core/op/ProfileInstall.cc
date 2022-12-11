@@ -13,6 +13,7 @@
 #include <filesystem>
 #include <fstream>
 #include <sstream>
+#include <log.hh>
 
 namespace Alicorn
 {
@@ -24,10 +25,12 @@ fetchVersionManifest()
 {
   httplib::Client cli(ACH_MOJANG_VERSION_MANIFEST_HOST);
   auto res = cli.Get(ACH_MOJANG_VERSION_MANIFEST_PATH);
-  if(res->status != 200)
+  if(res == nullptr || res->status != 200)
     {
+      LOG("Failed to fetch version manifest!");
       return "";
     }
+  LOG("Successfully fetched version manifest.");
   return res->body;
 }
 
@@ -35,7 +38,7 @@ void
 installProfile(Flow *flow, FlowCallback sender)
 {
   std::string id = flow->data[AL_FLOWVAR_PROFILEID];
-
+  LOG("Installing profile with required id " << id);
   Sys::runOnWorkerThread([=]() -> void {
     // Fetch the version manifest
     sender(AL_MANIFEST);
@@ -102,6 +105,7 @@ installProfile(Flow *flow, FlowCallback sender)
 
     if(profArtifact == nullptr)
       {
+        LOG("Could not find specified id " << id);
         cJSON_Delete(mf);
         sender(AL_ERR);
         return;
@@ -117,16 +121,18 @@ installProfile(Flow *flow, FlowCallback sender)
     cJSON_Delete(mf);
     if(!u.isValid())
       {
+        LOG("No url available for id " << id);
         sender(AL_ERR);
         return;
       }
-
+    LOG("Found matching version with url " << url);
     // Download profile
     sender(AL_GETPROF);
     httplib::Client cli(u.connectionName_);
     auto res = cli.Get(u.pathName_);
     if(res->status != 200)
       {
+        LOG("Could not fetch profile from " << url);
         sender(AL_ERR);
         return;
       }
@@ -135,6 +141,7 @@ installProfile(Flow *flow, FlowCallback sender)
     cJSON *profileObj = cJSON_Parse(profileSrc.c_str());
     if(!cJSON_IsObject(profileObj))
       {
+        LOG("Invalid profile content from " << url);
         cJSON_Delete(profileObj);
         sender(AL_ERR);
         return;
@@ -145,6 +152,7 @@ installProfile(Flow *flow, FlowCallback sender)
     // A simple check, if passed, possibly it's not corrupted
     if(profile.id != targetID)
       {
+        LOG("Invalid profile content from " << url);
         sender(AL_ERR);
         return;
       }
@@ -166,10 +174,12 @@ installProfile(Flow *flow, FlowCallback sender)
         delete[] rbuf;
         if(err < 0)
           {
+            LOG("Could not write profile to " << tempPath);
             sender(AL_ERR);
           }
         else
           {
+            LOG("Successfully fetched profile with id " << profile.id);
             sender(AL_OK);
           }
       });
@@ -202,6 +212,7 @@ installClient(Flow *flow, FlowCallback sender)
         profile.clientMappingsArtifact, installPrefix);
     clientPack.addTask(clientMeta);
     clientPack.addTask(clientMappingsMeta);
+    LOG("Starting download client for " << profile.id);
 
     clientPack.assignUpdateCallback([=](const DownloadPack *p) -> void {
       auto ps = p->getStat();
@@ -210,16 +221,19 @@ installClient(Flow *flow, FlowCallback sender)
           // All processed
           if(ps.failed == 0)
             {
+              LOG("Successfully downloaded client.");
               sender(AL_OK);
             }
           else
             {
+              LOG("Failed to download client!");
               sender(AL_ERR);
             }
         }
     });
     // Start download
     Sys::runOnWorkerThread([=]() mutable -> void {
+      LOG("Started downloading client.");
       clientPack.commit();
       ALL_DOWNLOADS.push_back(clientPack);
     });

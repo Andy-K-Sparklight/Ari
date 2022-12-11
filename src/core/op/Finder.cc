@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include "ach/util/Commons.hh"
+#include <log.hh>
 
 namespace Alicorn
 {
@@ -37,6 +38,7 @@ initBasePath()
   ACH_BASE_PATH
       = std::filesystem::path(Commons::normalizePath(std::filesystem::absolute(
           std::filesystem::path(base == NULL ? "." : base) / ACH_ROOT_NAME)));
+  LOG("Configured base path as " << ACH_BASE_PATH);
 }
 
 std::string

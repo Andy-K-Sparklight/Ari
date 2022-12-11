@@ -3,6 +3,7 @@
 #include <cstring>
 #include <csignal>
 #include <iostream>
+#include <log.hh>
 
 namespace Alicorn
 {
@@ -43,7 +44,7 @@ static void
 onExit(uv_process_t *proc, int64_t code, int sig)
 {
   GameInstance *self = (GameInstance *)proc->data;
-
+  LOG("Game process exited with code/sig " << (code ? code : sig));
   // Cleanup
   uv_close((uv_handle_t *)proc, NULL);
   if(self->stat != GS_KILLED)
@@ -59,6 +60,7 @@ onExit(uv_process_t *proc, int64_t code, int sig)
     }
 
   // Gracefully
+  LOG("Closing related streams for game.");
   uv_read_stop((uv_stream_t *)&self->outPipes[0]);
   uv_read_stop((uv_stream_t *)&self->outPipes[1]);
   uv_close((uv_handle_t *)&self->outPipes[0], NULL);
@@ -77,7 +79,7 @@ GameInstance::run()
   proc.data = this; // Binding
 
   // Prepare for IO
-
+  LOG("Preparing to launch game.");
   uv_pipe_init(uv_default_loop(), &outPipes[0], 0);
   uv_pipe_init(uv_default_loop(), &outPipes[1], 0);
 
@@ -117,6 +119,7 @@ GameInstance::run()
       i++;
     }
   argsChar[i] = NULL;
+  LOG(args.size() << " args registered for game.");
 
   options.args = argsChar;
   // Spawning
@@ -130,16 +133,19 @@ GameInstance::run()
     }
   if(r != 0)
     {
+      LOG("Failed to spawn game process: " << uv_strerror(r));
       stat = GS_FAILED;
       uv_close((uv_handle_t *)&outPipes[0], NULL);
       uv_close((uv_handle_t *)&outPipes[1], NULL);
       return false;
     }
 
+  LOG("Spawned game process with pid " << proc.pid);
   stat = GS_LAUNCHED;
   // Setup reading
   uv_read_start((uv_stream_t *)&outPipes[0], onAlloc, onRead);
   uv_read_start((uv_stream_t *)&outPipes[1], onAlloc, onRead);
+  LOG("Started piping game output.");
   return true;
 }
 
@@ -150,6 +156,7 @@ GameInstance::stop()
     {
       return;
     }
+  LOG("Stopping game process " << proc.pid << " gracefully.");
   uv_process_kill(&proc, SIGTERM); // Be nice!
 }
 
@@ -160,6 +167,7 @@ GameInstance::kill()
     {
       return;
     }
+  LOG("Stopping game process " << proc.pid << " forcefullly!");
   uv_process_kill(&proc, SIGKILL); // If you wish...
 }
 

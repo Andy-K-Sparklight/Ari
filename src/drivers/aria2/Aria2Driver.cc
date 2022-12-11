@@ -2,6 +2,7 @@
 
 #include <algorithm>
 #include <csignal>
+#include <log.hh>
 
 namespace AlicornDrivers
 {
@@ -102,18 +103,21 @@ Aria2Daemon::run()
   optn.exit_cb = handleProcExit;
   optn.file = name;
   optn.args = args;
-
+  LOG("Starting aria2 daemon with port " << port);
   int r;
   if((r = uv_spawn(uvLoop, &proc, &optn)))
     {
+      LOG("Could not start aria2 daemon: " << uv_strerror(r));
       return false;
     }
+  LOG("Successfully started aria2 daemon with pid " << proc.pid);
   return true;
 }
 
 void
 Aria2Daemon::stop()
 {
+  LOG("Stopping aria2 daemon!");
   stopFlag = true;
   uv_process_kill(&proc, SIGTERM); // Friendly!
 }
@@ -151,6 +155,7 @@ sendRPCCall(const std::string &call, unsigned int port)
   auto res = rpcClient.Post("/jsonrpc", call, "application/json");
   if(res == nullptr || res->status != 200)
     {
+      LOG("Aria2 responded with unexpected result!");
       return "";
     }
   else

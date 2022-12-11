@@ -11,6 +11,7 @@
 #include <string>
 #include <iostream>
 #include <filesystem>
+#include <log.hh>
 
 namespace Alicorn
 {
@@ -28,21 +29,26 @@ installAssetIndex(Flow *flow, FlowCallback cb)
       return;
     }
   Profile::VersionProfile profile(src);
+  LOG("Getting asset index " << profile.assetIndexArtifact.path);
   auto u = LUrlParser::ParseURL::parseURL(profile.assetIndexArtifact.url);
   httplib::Client cli(u.connectionName_);
   auto res = cli.Get(u.pathName_);
-  if(res->status != 200)
+  if(res == nullptr || res->status != 200)
     {
+      LOG("Could not download asset index " << profile.assetIndexArtifact.url)
       cb(AL_ERR);
       return;
     }
   std::string assetIndexSrc = res->body;
   if(assetIndexSrc.size() == 0)
     {
+      LOG("No valid content for asset index "
+          << profile.assetIndexArtifact.url)
       cb(AL_ERR);
       return;
     }
   flow->data[AL_FLOWVAR_ASSETINDEX] = assetIndexSrc;
+
   // Write the profile to temp install path
   std::string fileName = profile.assetIndexArtifact.path + ".json";
   std::string tempPath
@@ -58,10 +64,12 @@ installAssetIndex(Flow *flow, FlowCallback cb)
       delete[] rbuf;
       if(err < 0)
         {
+          LOG("Failed to write asset index file to " << tempPath);
           cb(AL_ERR);
         }
       else
         {
+          LOG("Successfully written asset index.");
           cb(AL_OK);
         }
     });
@@ -85,6 +93,7 @@ installAssets(Flow *flow, FlowCallback cb)
       return;
     }
   Network::DownloadPack pak;
+  LOG("Getting " << assets.size() << " assets.");
   for(auto &a : assets)
     {
       Network::DownloadMeta meta;
@@ -106,16 +115,19 @@ installAssets(Flow *flow, FlowCallback cb)
         // All processed
         if(ps.failed == 0)
           {
+            LOG("Successfully got all assets.");
             cb(AL_OK);
           }
         else
           {
+            LOG("Not all assets have been processed!");
             cb(AL_ERR);
           }
       }
   });
   Sys::runOnWorkerThread([=]() mutable -> void {
     pak.commit();
+    LOG("Start getting assets.");
     Network::ALL_DOWNLOADS.push_back(pak);
   });
 }

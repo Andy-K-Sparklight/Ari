@@ -11,6 +11,7 @@
 #include <filesystem>
 #include <map>
 #include <iostream>
+#include "log.hh"
 
 namespace Alicorn
 {
@@ -210,10 +211,10 @@ applyVars(const std::string &src,
   return s;
 }
 
-// TODO: adjust to accept local
 static std::list<std::string>
 genArgs(const Profile::VersionProfile &prof, const LaunchValues &ev)
 {
+  LOG("Generating args for " << prof.id);
   std::list<std::string> finalArgs;
   std::map<std::string, std::string> varMap;
 
@@ -235,6 +236,7 @@ genArgs(const Profile::VersionProfile &prof, const LaunchValues &ev)
   varMap["launcher_name"] = "Alicorn The Corrupted Heart";
   varMap["launcher_version"] = "Lost";
   auto classPaths = genClassPath(prof, ev);
+  LOG("Classpaths with " << classPaths.size() << " members generated.");
   varMap["classpath"] = classPaths;
   varMap["natives_directory"]
       = getStoragePath("versions/" + prof.id + "/.natives");
@@ -289,7 +291,7 @@ genArgs(const Profile::VersionProfile &prof, const LaunchValues &ev)
             }
         }
     }
-
+  LOG("Generated final args with " << finalArgs.size() << " members.");
   return finalArgs;
 }
 
@@ -316,6 +318,7 @@ launchGame(Flow *flow, FlowCallback cb)
 
   auto args = genArgs(profile, optn);
   Sys::runOnUVThread([=]() -> void {
+    LOG("Creating game instance for " << profile.id);
     Runtime::GameInstance *game = new Runtime::GameInstance();
     cb(AL_SPAWNPROC);
     game->args = args; // Will be processed by launch module
@@ -324,24 +327,30 @@ launchGame(Flow *flow, FlowCallback cb)
       {
         game->bin = "java"; // Use system
       }
+    LOG("Using bin as " << game->bin);
     game->cwd = getRuntimePath(optn.runtimeName);
     try
       {
-
         std::filesystem::create_directories(game->cwd);
       }
     catch(std::exception &e)
       {
         game->cwd = "";
       }
+    if(game->cwd.size() > 0)
+      {
+        LOG("Set CWD to " << game->cwd);
+      }
 
     if(game->run())
       {
+        LOG("Successfully spawned game process with pid " << game->proc.pid);
         Runtime::GAME_INSTANCES[game->proc.pid] = game;
         cb(AL_OK);
       }
     else
       {
+        LOG("Could not spawn game process for " << profile.id);
         delete game;
         cb(AL_ERR);
       }

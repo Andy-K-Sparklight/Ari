@@ -8,6 +8,7 @@
 #include <iostream>
 
 #include <cJSON.h>
+#include <log.hh>
 
 namespace Alicorn
 {
@@ -88,6 +89,7 @@ installLibraries(Flow *flow, FlowCallback cb)
           librariesPack.addTask(meta);
         }
     }
+  LOG("Getting libraries for " << profile.id);
   librariesPack.assignUpdateCallback(
       [=](const Network::DownloadPack *p) -> void {
         auto ps = p->getStat();
@@ -96,16 +98,19 @@ installLibraries(Flow *flow, FlowCallback cb)
             // All processed
             if(ps.failed == 0)
               {
+                LOG("Successfully got all libraries.");
                 cb(AL_OK);
               }
             else
               {
+                LOG("Not all libraries have been processed!");
                 cb(AL_ERR);
               }
           }
       });
   Sys::runOnWorkerThread([=]() mutable -> void {
     librariesPack.commit();
+    LOG("Start getting libraries.");
     Network::ALL_DOWNLOADS.push_back(librariesPack);
   });
 }
