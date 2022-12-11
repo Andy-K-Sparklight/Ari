@@ -30,8 +30,9 @@
 #include "lurl.hpp"
 
 #include <algorithm>
+#include <cerrno>
+#include <cstdlib>
 #include <cstring>
-#include <stdlib.h>
 
 namespace
 {
@@ -57,9 +58,15 @@ LUrlParser::ParseURL::getPort(int *outPort) const
       return false;
     }
 
-  const int port = atoi(port_.c_str());
+  errno = 0; // Reset errno
+  const long long port = strtoll(port_.c_str(), nullptr, 10);
 
-  if(port <= 0 || port > 65535)
+  if(errno == EINVAL || errno == ERANGE) // Failed to parse the port
+    {
+      return false;
+    }
+
+  if(port < 0 || port > 65535)
     {
       return false;
     }
