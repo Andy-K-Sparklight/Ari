@@ -40,7 +40,7 @@
   
   - `scope`: Any scope you like. Also be aware of special scopes like `ci`, `*`, `sys`, etc.
   
-  - Do not use the upper case of the capital letter in description, scope and oper. Use the lower case will be better.
+  - Do not use the upper case of the capital letter in short description, scope and oper. Use the lower case will be better. However, use it in the long description.
   
   - `Fixed #1`: Or `Resolved #1` if you **NEED TO CLOSE THE ISSUE**, otherwise use `Might be helpful with #1` or `Working on #1` will be better.
     
