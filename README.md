@@ -22,6 +22,12 @@ For macOS:
 brew install libuv gcc autoconf openssl@1.1
 ```
 
+If the architecture is ARM64, you will have to make aliases of openssl:
+
+```Shell
+brew link openssl@1.1 --force
+``` 
+
 Then it can be built by AutoTools.
 
 For MSYS2 on Windows and GNU:
@@ -34,7 +40,9 @@ make
 ```
 
 For macOS:
-**You have to specify the compiler, or it will use Apple Clang as compiler, that may cause the build process to fail. **
+
+**You have to specify the compiler, or it will use Apple Clang as compiler, that may cause the build process to fail.**
+
 ```Shell
 git clone --depth=1 https://github.com/Andy-K-Sparklight/ACH.git
 autoreconf --install
