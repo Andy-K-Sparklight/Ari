@@ -2,27 +2,44 @@ name: Build CI
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ["main"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-  build:
-
+  build-gnu:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Install Deps
-      uses: awalsh128/cache-apt-pkgs-action@v1.2.1
-      with:
-        packages: libssl-dev libuv1-dev gcc-10 g++-12 make zlib1g-dev libgtk-3-dev libwebkit2gtk-4.0-dev
-        version: 1.0
-    - uses: actions/checkout@v3
-    - name: Pre Configure
-      run: autoreconf --install
-    - name: Configure
-      run: ./configure
-    - name: Make
-      run: make CC=gcc-10 CXX=g++-12 LD=g++-12 CPP=g++-12
-    - name: Run Tests
-      run: make check
+      - name: Install Deps
+        uses: awalsh128/cache-apt-pkgs-action@v1.2.1
+        with:
+          packages: libssl-dev libuv1-dev gcc-10 g++-12 make zlib1g-dev libgtk-3-dev libwebkit2gtk-4.0-dev
+          version: 1.0
+      - uses: actions/checkout@v3
+      - name: Pre Configure
+        run: autoreconf --install
+      - name: Configure
+        run: ./configure
+      - name: Make
+        run: make -j4 CC=gcc-10 CXX=g++-12 LD=g++-12 CPP=g++-12
+      - name: Run Tests
+        run: make check
+
+  build-osx:
+    runs-on: macos-latest
+
+    steps:
+      - name: Install Deps
+        uses: ConorMacBride/install-package@v1
+        with:
+          brew: gcc libuv make automake openssl@1.1 autoconf
+      - uses: actions/checkout@v3
+      - name: Pre Configure
+        run: autoreconf --install
+      - name: Configure
+        run: ./configure
+      - name: Make
+        run: make -j6 CC=gcc-10 CXX=g++-12 LD=g++-12 CPP=g++-12 LDFLAGS="-L/usr/local/opt/openssl@1.1/lib" CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
+      - name: Run Tests
+        run: make check
