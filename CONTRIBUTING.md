@@ -2,19 +2,17 @@
 
 ## Merging
 
-- Please make sure to merge commits using **rebase** if working on the same branch (like `main`).
+- Please make sure to pull remote commits using **rebase** if working on the same branch (like `main`).
   
   - `git pull --rebase` will always do the trick.
   
-  - Only use **squash** if necessary.
+- For Pull Requests, the following rules apply:
   
-  - Avoid using **merge commit** (this usually happens when pulling from remote or pushing, or merging pull requests wrongly).
+  - **Use squash** if the PR only contains 1-2 commits.
   
-  - The same branch in different repos are considered the **SAME** and should be merged using **rebase**.
+  - **Use merge commit** if the PR contains more than 2 commits.
 
-- If one has been working on a different branch, use any method you think suitable.
-  
-  - Usually **merge commit**, but can also be **squash** if that's easier to resolve conflicts.
+  - **Avoid using rebase** as it won't keep signature.
 
 ## Commits
 
