@@ -19,8 +19,6 @@ initSys()
 {
   LOG("Initializing system.");
 
-  // Output build info
-
   // Services
   Sys::loadConfig();
   Sys::setupUVThread();

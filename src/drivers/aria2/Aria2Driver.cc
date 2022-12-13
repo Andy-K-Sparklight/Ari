@@ -171,7 +171,7 @@ Aria2Daemon::invoke(const std::string &method, const std::list<cJSON *> &args)
 }
 std::string
 Aria2Daemon::invokeMulti(
-    const std::list<std::pair<std::string, std::list<cJSON *> > > &commands)
+    const std::list<std::pair<std::string, std::list<cJSON *>>> &commands)
 {
   if(commands.size() == 0)
     {

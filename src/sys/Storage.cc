@@ -101,10 +101,10 @@ saveConfig()
   file.close();
 }
 
-std::vector<std::map<std::string, std::string> >
+std::vector<std::map<std::string, std::string>>
 loadKVG(const std::string &rel)
 {
-  std::vector<std::map<std::string, std::string> > out;
+  std::vector<std::map<std::string, std::string>> out;
   auto f = getCfgPath(rel);
   std::ifstream file(f);
   std::stringstream ss;
@@ -139,7 +139,7 @@ loadKVG(const std::string &rel)
 
 void
 saveKVG(const std::string &rel,
-        const std::vector<std::map<std::string, std::string> > &data)
+        const std::vector<std::map<std::string, std::string>> &data)
 {
   mkConfigDir();
   auto f = getCfgPath(rel);

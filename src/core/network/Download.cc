@@ -76,7 +76,7 @@ DownloadPack::commit()
 {
   using namespace AlicornDrivers;
   Aria2::Aria2Daemon daemon = Aria2::ARIA2_DAEMON;
-  std::list<std::pair<std::string, std::list<cJSON *> > > batchOps;
+  std::list<std::pair<std::string, std::list<cJSON *>>> batchOps;
   // Collect commands
   for(auto &p : procs)
     {
@@ -154,7 +154,7 @@ DownloadPack::sync()
 {
   using namespace AlicornDrivers;
   Aria2::Aria2Daemon daemon = AlicornDrivers::Aria2::ARIA2_DAEMON;
-  std::list<std::pair<std::string, std::list<cJSON *> > > batchOps;
+  std::list<std::pair<std::string, std::list<cJSON *>>> batchOps;
   for(auto &p : procs)
     {
       std::list<cJSON *> args;

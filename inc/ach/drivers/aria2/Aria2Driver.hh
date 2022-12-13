@@ -40,7 +40,7 @@ public:
 
   // Multicall version of invoke
   std::string invokeMulti(
-      const std::list<std::pair<std::string, std::list<cJSON *> > > &commands);
+      const std::list<std::pair<std::string, std::list<cJSON *>>> &commands);
 };
 
 extern Aria2Daemon ARIA2_DAEMON; // The global unique one

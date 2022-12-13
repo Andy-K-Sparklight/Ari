@@ -26,7 +26,7 @@ uvMain(void *ignored)
 typedef struct
 {
   uv_rwlock_t lock;
-  std::list<std::function<void()> > todos;
+  std::list<std::function<void()>> todos;
 } UVAsyncCallerCarry;
 
 // Runs on UV thread
