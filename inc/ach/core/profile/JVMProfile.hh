@@ -12,6 +12,8 @@ namespace Alicorn
 namespace Profile
 {
 
+#define ACH_JVM_PROFILE "JVMProf.kvg"
+
 class JVMProfile
 {
 public:
@@ -31,10 +33,6 @@ public:
 // Gets information automatically
 // Uses sync method
 void appendJVM(const std::string &bin, std::function<void(bool)> cb);
-
-void loadJVMProfiles();
-
-void saveJVMProfiles();
 
 extern std::vector<JVMProfile> JVM_PROFILES;
 

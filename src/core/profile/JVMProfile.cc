@@ -18,8 +18,6 @@ namespace Alicorn
 namespace Profile
 {
 
-#define ACH_JVM_PROFILE "JVMProf.kvg"
-
 JVMProfile::JVMProfile(const std::map<std::string, std::string> &slice)
 {
   std::map<std::string, std::string> dat = slice;
@@ -56,28 +54,6 @@ JVMProfile::toMap()
     }
   dat["versionStrings"] = vs;
   return dat;
-}
-
-void
-loadJVMProfiles()
-{
-  auto profiles = Sys::loadKVG(ACH_JVM_PROFILE);
-  for(auto &p : profiles)
-    {
-      JVMProfile pr(p);
-      JVM_PROFILES.push_back(pr);
-    }
-}
-
-void
-saveJVMProfiles()
-{
-  std::vector<std::map<std::string, std::string> > vec;
-  for(auto &p : JVM_PROFILES)
-    {
-      vec.push_back(p.toMap());
-    }
-  Sys::saveKVG(ACH_JVM_PROFILE, vec);
 }
 
 void

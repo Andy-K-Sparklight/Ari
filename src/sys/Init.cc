@@ -6,6 +6,7 @@
 #include "ach/sys/Storage.hh"
 #include "ach/core/network/Download.hh"
 #include "ach/core/profile/JVMProfile.hh"
+#include "ach/core/profile/LaunchProfile.hh"
 #include <log.hh>
 
 namespace Alicorn
@@ -17,10 +18,15 @@ void
 initSys()
 {
   LOG("Initializing system.");
+
+  // Output build info
+
+  // Services
   Sys::loadConfig();
   Sys::setupUVThread();
   Op::initBasePath();
-  Profile::loadJVMProfiles();
+  Sys::loadGlobalData(Profile::JVM_PROFILES, ACH_JVM_PROFILE);
+  Sys::loadGlobalData(Profile::LAUNCH_PROFILES, ACH_LAUNCH_PROFILE);
   Network::setupDownloadsSync();
   Sys::runOnUVThread(
       []() -> void { AlicornDrivers::Aria2::ARIA2_DAEMON.run(); });
@@ -32,9 +38,10 @@ downSys()
 {
   LOG("Stopping system.");
   Network::stopDownloadsSync();
+  Sys::saveGlobalData(Profile::LAUNCH_PROFILES, ACH_LAUNCH_PROFILE);
+  Sys::saveGlobalData(Profile::JVM_PROFILES, ACH_JVM_PROFILE);
   Sys::runOnUVThread(
       []() -> void { AlicornDrivers::Aria2::ARIA2_DAEMON.stop(); });
-  Profile::saveJVMProfiles();
   Sys::stopUVThread();
   Sys::saveConfig();
   LOG("System stopped.");
