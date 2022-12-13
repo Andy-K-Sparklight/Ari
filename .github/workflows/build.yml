@@ -28,7 +28,6 @@ jobs:
 
   build-osx:
     runs-on: macos-latest
-
     steps:
       - name: Install Deps
         uses: ConorMacBride/install-package@v1
@@ -40,6 +39,35 @@ jobs:
       - name: Configure
         run: ./configure
       - name: Make
-        run: make -j6 CC=gcc-10 CXX=g++-12 LD=g++-12 CPP=g++-12 LDFLAGS="-L/usr/local/opt/openssl@1.1/lib" CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
+        run: gmake -j6 CC=gcc-12 CXX=g++-12 LD=g++-12 CPP=g++-12 LDFLAGS="-L/usr/local/opt/openssl@1.1/lib" CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
+      - name: Run Tests
+        run: gmake check
+
+  build-dos:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: msys2 {0}
+    steps:
+      - name: Install Deps
+        uses: msys2/setup-msys2@v2
+        with:
+          update: true
+          msystem: MINGW64
+          install: >-
+            base-devel
+            git
+            autotools
+            make
+            mingw-w64-x86_64-gcc
+            mingw-w64-x86_64-openssl
+            mingw-w64-x86_64-zlib
+      - uses: actions/checkout@v3
+      - name: Pre Configure
+        run: autoreconf --install
+      - name: Configure
+        run: ./configure
+      - name: Make
+        run: make -j4 CC=cc CXX=c++ LD=c++ CPP=c++
       - name: Run Tests
         run: make check
