@@ -21,6 +21,7 @@
 #define AL_SPAWNPROC 0x11
 #define AL_FLIPDIR 0x12
 #define AL_COLNAT 0x13
+#define AL_SELECTJVM 0x14
 
 #define AL_FLOWVAR_PROFILEID "profileID"
 #define AL_FLOWVAR_PROFILESRC "profileSrc"
