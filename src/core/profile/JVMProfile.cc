@@ -45,8 +45,8 @@ JVMProfile::toMap()
   dat["id"] = id;
   dat["bin"] = bin;
   dat["specVersion"] = std::to_string(specVersion);
-  dat["is64"] = is64 ? "1" : "0";
-  dat["isServer"] = isServer ? "1" : "0";
+  dat["is64"] = is64 ? std::string("1") : std::string("0");
+  dat["isServer"] = isServer ? std::string("1") : std::string("0");
   std::string vs;
   for(auto &v : versionStrings)
     {

@@ -67,7 +67,7 @@ LaunchProfile::toMap()
       s.pop_back();
     }
   dat["vmArgs"] = s;
-  dat["isDemo"] = isDemo ? "1" : "0";
+  dat["isDemo"] = isDemo ? std::string("1") : std::string("0");
   dat["width"] = std::to_string(width);
   dat["height"] = std::to_string(height);
   return dat;
