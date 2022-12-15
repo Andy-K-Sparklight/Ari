@@ -7,6 +7,8 @@
 #include "ach/drivers/aria2/Aria2Driver.hh"
 #include "ach/sys/Schedule.hh"
 #include "ach/util/Commons.hh"
+#include "ach/core/network/Mirror.hh"
+#include "ach/sys/Storage.hh"
 #include <log.hh>
 
 namespace Alicorn
@@ -65,7 +67,18 @@ DownloadPack::addTask(const DownloadMeta &meta)
   DownloadProcess p;
   p.hash = meta.hash;
   p.path = meta.path;
-  p.urls.push_back(meta.baseURL); // TODO: Mirror applying
+  if(Sys::getValue(ACH_CFG_DLM, ACH_CFG_DLM_ACC) == ACH_CFG_DLM_ACC)
+    {
+      auto mirrors = getMirrors(meta.baseURL);
+      for(auto &m : mirrors)
+        {
+          p.urls.push_back(m);
+        }
+    }
+  else
+    {
+      p.urls.push_back(meta.baseURL);
+    }
   p.totalLength = meta.size;
   procs.push_back(p);
   return procs.size() - 1;

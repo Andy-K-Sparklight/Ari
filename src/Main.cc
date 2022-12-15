@@ -8,6 +8,7 @@
 #include "ach/core/op/ProfileInstall.hh"
 #include "ach/core/op/LibrariesInstall.hh"
 #include "ach/core/op/GameLaunch.hh"
+#include "ach/sys/Storage.hh"
 #include "ach/core/op/NativesCheck.hh"
 
 #include <unistd.h>
@@ -33,7 +34,7 @@ main()
   cJSON_AddBoolToObject(json, "hasCustomRes", true);
   std::string s = cJSON_Print(json);
   cJSON_Delete(json);
-
+  Alicorn::Sys::setValue(ACH_CFG_DLM, ACH_CFG_DLM_ACC);
   flow.data[AL_FLOWVAR_LAUNCHVALS] = s;
   flow.data[AL_FLOWVAR_JAVAMAIN] = "java";
   flow.addTask(Alicorn::Op::installProfile);

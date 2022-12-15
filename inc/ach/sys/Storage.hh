@@ -5,6 +5,9 @@
 #include <vector>
 #include <string>
 
+#define ACH_CFG_DLM "dlMirror"
+#define ACH_CFG_DLM_ACC "Accept"
+
 namespace Alicorn
 {
 namespace Sys
