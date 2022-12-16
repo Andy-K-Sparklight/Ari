@@ -10,48 +10,97 @@ All Rights Reserved.
 
 ## Build Instructions
 
-ACH currently supports GNU/Linux and macOS. Windows build support with MSYS2 might work but not guaranteed.
+**NOTE:** If you don't want to read the full document, please just use the binary release. The build of ACH is quite different.
 
-You have to install dependencies such as [libuv](https://github.com/libuv/libuv), gcc, autoconf, openssl. 
+### Windows Prerequisites
 
-**You need a compiler which supports GNU++23.**
+To build on Windows, you must have MSYS2 installed. It provides a variety of necessary tools.
 
-For macOS:
+You'll need to install the following packages, a simple command:
 
-```Shell
+```bash
+pacman -S git autotools make mingw-w64-x86_64-gcc mingw-w64-x86_64-openssl mingw-w64-x86_64-zlib
+```
+
+Make sure to start terminal **MINGW64**, which means:
+
+```bash
+echo $MSYSTEM
+```
+
+Must be `MINGW64`.
+
+Keep yourself in this terminal and we're ready.
+
+### Mac Prerequisites
+
+To build on macOS, you need the following packages:
+
+```bash
 brew install libuv gcc autoconf openssl@1.1
 ```
 
-If the architecture is ARM64, you will have to make aliases of openssl:
+If you are building for ARM64, please also link openssl:
 
-```Shell
+```bash
 brew link openssl@1.1 --force
-``` 
-
-Then it can be built by AutoTools.
-
-For MSYS2 on Windows and GNU:
-
-```Shell
-git clone --depth=1 https://github.com/Andy-K-Sparklight/ACH.git
-autoreconf --install
-./configure
-make
 ```
 
-For macOS:
+Then we're ready.
 
-**You have to specify the compiler, or it will use Apple Clang as compiler, that may cause the build process to fail.**
+### GNU/Linux Prerequisites
 
-```Shell
-git clone --depth=1 https://github.com/Andy-K-Sparklight/ACH.git
-autoreconf --install
-./configure
-make CC=gcc-<version> CPP=g++-<version> CXX=g++-<version> LD=g++-<version>
+Most tools have already been set up on GNU/Linux. However, there are still quite a few.
+
+First, you need a compiler which supports **GNU++23**.
+
+And then, you probably need to install:
+
+```bash
+apt install libwebkit2gtk-4.0-dev libgtk-3-dev libuv1-dev
 ```
 
-Up to now, the command is:
+These packages might also be available on other PMs.
 
-```Shell
-make CC=gcc-12 CPP=g++-12 CXX=g++-12 LD=g++-12
-```
+### Build
+
+1. First, clone the repository:
+   
+   ```bash
+   git clone https://github.com/Andy-K-Sparklight/ACH.git --depth 1
+   cd ACH
+   ```
+
+2. Run the configure script:
+   
+   ```bash
+   autoreconf --install
+   mkdir build
+   cd build
+   ../configure
+   ```
+
+3. Run the build.
+   
+   For macOS:
+   
+   ```bash
+   make CC=gcc-12 CPP=g++-12 CXX=g++-12 LD=g++-12
+   ```
+   
+   If you've got a later gcc available, just change the suffix to a proper one.
+   
+   For other systems, just:
+   
+   ```bash
+   make
+   ```
+   
+   If you want the build to be faster, append flag `-jX` where X is the same as your CPU cores number.
+
+4. If building for Windows, run:
+   
+   ```bash
+   ../winfix
+   ```
+5. The binary output `AlicornCH.exe` is now available under your CWD, just run it and try!
