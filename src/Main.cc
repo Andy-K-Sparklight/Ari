@@ -22,7 +22,7 @@ main()
 {
   Alicorn::Sys::initSys();
   Alicorn::Op::Flow flow;
-  flow.data[AL_FLOWVAR_PROFILEID] = "1.12.2";
+  flow.data[AL_FLOWVAR_PROFILEID] = "rd-132211";
   cJSON *json = cJSON_CreateObject();
   cJSON_AddStringToObject(json, "xuid", "aaa");
   cJSON_AddStringToObject(json, "uuid", "aaa");
@@ -40,6 +40,8 @@ main()
   flow.data[AL_FLOWVAR_LAUNCHVALS] = s;
   flow.data[AL_FLOWVAR_JAVAMAIN] = "java";
   flow.addTask(Alicorn::Op::installProfile);
+  flow.addTask(Alicorn::Op::flipInstall);
+  flow.addTask(Alicorn::Op::loadProfile);
   flow.addTask(Alicorn::Op::installClient);
   flow.addTask(Alicorn::Op::installLibraries);
   flow.addTask(Alicorn::Op::flipInstall);
