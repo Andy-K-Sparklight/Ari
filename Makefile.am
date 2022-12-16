@@ -6,10 +6,12 @@ AM_CFLAGS=-std=gnu17
 AM_CXXFLAGS+=$(CommonFlags)
 AM_CFLAGS+=$(CommonFlags)
 AlicornCH_LDFLAGS=-L$(top_srcdir)/libs
+
 AlicornCH_LDADD=-luv -lssl -lcrypto -lz
 
 if WINDOWS
 AlicornCH_LDADD+=-lws2_32 -lWebView2Loader.dll -lole32 -lshell32 -lshlwapi -luser32 -lcrypt32
+AlicornCH_LDFLAGS+=-static-libgcc -static-libstdc++ -Wl,-Bstatic -lpthread
 endif
 
 if LINUX

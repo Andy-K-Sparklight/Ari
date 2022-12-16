@@ -1,0 +1,10 @@
+#!/bin/sh
+# Copy necessary DLLs to root directory
+cp /mingw64/bin/libssl-1_1-x64.dll ./
+cp /mingw64/bin/libcrypto-1_1-x64.dll ./
+test -d ../libs && cp ../libs/*.dll ./
+test -d ./libs && cp ./libs/*.dll ./
+strip ./AlicornCH.exe
+strip ./*.dll
+test upx && upx --ultra-brute ./AlicornCH.exe
+test upx && upx --ultra-brute ./*.dll
