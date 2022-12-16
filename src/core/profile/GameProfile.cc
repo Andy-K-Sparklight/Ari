@@ -254,7 +254,7 @@ VersionProfile::setup(const cJSON *src)
       cJSON *clientMappingsItem
           = cJSON_GetObjectItem(downloadsItem, "client_mappings");
 
-      Artifact client(clientItem);
+      clientArtifact = Artifact(clientItem);
       clientMappingsArtifact = Artifact(clientMappingsItem);
 
       // There are no path specified, so we better assign it
