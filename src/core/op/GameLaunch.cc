@@ -193,7 +193,9 @@ genClassPath(const Profile::VersionProfile &prof, const LaunchValues &ext)
                      << split;
         }
     }
-  commonLibs << getStoragePath("versions/" + prof.id + "/" + prof.id + ".jar");
+  commonLibs << getStoragePath("versions/" + prof.clientArtifact.path)
+             << split;
+
   std::string classPathCommon = commonLibs.str();
   return classPathCommon;
 }
@@ -205,8 +207,11 @@ applyVars(const std::string &src,
   std::string s = src;
   for(auto &kv : vars)
     {
-      s = std::regex_replace(s, std::regex("\\$\\{" + kv.first + "\\}"),
-                             kv.second);
+      std::regex k("\\$\\{" + kv.first + "\\}");
+      while(std::regex_search(s, k))
+        {
+          s = std::regex_replace(s, k, kv.second); // Replace all
+        }
     }
   return s;
 }
@@ -229,19 +234,25 @@ genArgs(const Profile::VersionProfile &prof, const LaunchValues &ev)
   varMap["auth_access_token"] = ev.token;
   varMap["clientid"] = ev.clientID;
   varMap["auth_xuid"] = ev.xuid;
-  varMap["user_type"] = "mojang";                         // Constant
+  varMap["user_type"] = "mojang";
   varMap["version_type"] = "Alicorn The Corrupted Heart"; // This is I!
   varMap["resolution_width"] = ev.w;
   varMap["resolution_height"] = ev.h;
   varMap["launcher_name"] = "Alicorn The Corrupted Heart";
   varMap["launcher_version"] = "Lost";
   auto classPaths = genClassPath(prof, ev);
-  LOG("Classpaths with " << classPaths.size() << " members generated.");
+  LOG("Classpaths with length " << classPaths.size() << " generated.");
   varMap["classpath"] = classPaths;
   varMap["natives_directory"]
       = getStoragePath("versions/" + prof.id + "/.natives");
-  varMap["user_properties"] = "[]"; // Nothing, for 1.7
-  varMap["game_assets"] = getStoragePath("assets/legacy");
+  varMap["user_properties"] = "[]";                        // Nothing, for 1.7
+  varMap["game_assets"] = getStoragePath("assets/legacy"); // Pre 1.6
+
+  // Below are Forge related vars
+  varMap["library_directory"] = getStoragePath("libraries"); // Root path
+  varMap["classpath_separator"]
+      = Platform::OS_TYPE == Platform::OS_MSDOS ? ";" : ":";
+  varMap["version_name"] = prof.id;
 
   // Args processing
   // VM Args
@@ -250,6 +261,7 @@ genArgs(const Profile::VersionProfile &prof, const LaunchValues &ev)
   finalArgs.push_back("-XX:+IgnoreUnrecognizedVMOptions");
   finalArgs.push_back("-XX:+UnlockExperimentalVMOptions");
   finalArgs.push_back("-Dfile.encoding=UTF-8");
+  finalArgs.push_back("-Duser.language=en");
   finalArgs.push_back("-showversion");
 
   // Profile JVM args
@@ -308,13 +320,7 @@ launchGame(Flow *flow, FlowCallback cb)
   LaunchValues optn;
   parseLaunchValues(optnSrc, optn);
 
-  auto profileSrc = flow->data[AL_FLOWVAR_PROFILESRC];
-  if(profileSrc.size() == 0)
-    {
-      cb(AL_ERR);
-      return;
-    }
-  Profile::VersionProfile profile(profileSrc);
+  Profile::VersionProfile profile = flow->profile;
 
   auto args = genArgs(profile, optn);
   Sys::runOnUVThread([=]() -> void {

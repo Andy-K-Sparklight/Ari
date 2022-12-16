@@ -17,17 +17,20 @@
 #define AL_GETLIBS 0x07
 #define AL_GETASSETINDEX 0x08
 #define AL_GETASSETS 0x09
-#define AL_GENARGS 0x10
-#define AL_SPAWNPROC 0x11
-#define AL_FLIPDIR 0x12
-#define AL_COLNAT 0x13
-#define AL_SELECTJVM 0x14
+#define AL_GENARGS 0x0a
+#define AL_SPAWNPROC 0x0b
+#define AL_FLIPDIR 0x0c
+#define AL_COLNAT 0x0d
+#define AL_SELECTJVM 0x0e
+#define AL_RDPROFILE 0x0f
+#define AL_EXTPROFILE 0x10
+#define AL_LINKCLIENT 0x11
 
 #define AL_FLOWVAR_PROFILEID "profileID"
-#define AL_FLOWVAR_PROFILESRC "profileSrc"
 #define AL_FLOWVAR_ASSETINDEX "assetIndex"
 #define AL_FLOWVAR_LAUNCHVALS "launchValues"
 #define AL_FLOWVAR_JAVAMAIN "javaMain"
+#define AL_FLOWVAR_INHCLIENTSRC "inhClientSrc"
 
 #include <map>
 #include <string>
@@ -60,13 +63,12 @@ public:
   unsigned int id; // Self ID
   std::map<std::string, std::string> data;
   unsigned int completedStage = 0, totalStage = 0; // Counter
-  std::list<int> output; // Outputs containing stage ID
+  std::list<int> output;           // Outputs containing stage ID
+  Profile::VersionProfile profile; // Extended var
 
   void run();
 
   void addTask(FlowTask t);
-
-  // Status will be directly read by the creator of Flow and send
 };
 
 }

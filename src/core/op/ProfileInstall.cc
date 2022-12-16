@@ -157,9 +157,6 @@ installProfile(Flow *flow, FlowCallback sender)
         return;
       }
 
-    // Pass data to env
-    flow->data[AL_FLOWVAR_PROFILESRC] = profileSrc;
-
     // Write the profile to temp install path
     std::string fileName = targetID + ".json";
     std::string tempPath = getInstallPath(std::filesystem::path("versions")
@@ -193,24 +190,20 @@ installClient(Flow *flow, FlowCallback sender)
   // Start work
   Sys::runOnWorkerThread([=]() -> void {
     sender(AL_GETCLIENT);
-    std::string profileSrc = flow->data[AL_FLOWVAR_PROFILESRC];
-    if(profileSrc.size() == 0)
-      {
-        sender(AL_ERR);
-        return;
-      }
-    Profile::VersionProfile profile(profileSrc);
+    Profile::VersionProfile profile = flow->profile;
 
     // Create tasks
     using namespace Network;
     DownloadMeta clientMeta, clientMappingsMeta;
     DownloadPack clientPack;
     auto installPrefix = getInstallPath("versions");
+
     clientMeta
         = DownloadMeta::mkFromArtifact(profile.clientArtifact, installPrefix);
+    clientPack.addTask(clientMeta);
+
     clientMappingsMeta = DownloadMeta::mkFromArtifact(
         profile.clientMappingsArtifact, installPrefix);
-    clientPack.addTask(clientMeta);
     clientPack.addTask(clientMappingsMeta);
     LOG("Starting download client for " << profile.id);
 

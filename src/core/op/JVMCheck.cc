@@ -17,13 +17,8 @@ selectJVM(Flow *flow, FlowCallback cb)
       cb(AL_OK);
       return;
     }
-  std::string src = flow->data[AL_FLOWVAR_PROFILESRC];
-  if(src.size() == 0)
-    {
-      cb(AL_ERR);
-      return;
-    }
-  Profile::VersionProfile profile(src);
+
+  Profile::VersionProfile profile = flow->profile;
   LOG("Selecting JVM for " << profile.id);
   for(auto &p : Profile::JVM_PROFILES)
     {

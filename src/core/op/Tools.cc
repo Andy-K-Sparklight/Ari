@@ -304,14 +304,22 @@ unzipFile(const std::string &zipFile, const std::string &pt)
 std::list<std::string>
 scanDirectory(const std::filesystem::path pt)
 {
+
   std::list<std::string> out;
-  for(std::filesystem::recursive_directory_iterator i(pt), end; i != end; ++i)
+  try
     {
-      if(i->is_regular_file())
+      for(std::filesystem::recursive_directory_iterator i(pt), end; i != end;
+          ++i)
         {
-          out.push_back(i->path().string());
-        }
-    };
+          if(i->is_regular_file())
+            {
+              out.push_back(i->path().string());
+            }
+        };
+    }
+  catch(std::exception &ignored)
+    {
+    }
   return out;
 }
 

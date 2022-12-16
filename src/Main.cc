@@ -7,6 +7,7 @@
 #include "ach/core/op/Flipper.hh"
 #include "ach/core/op/ProfileInstall.hh"
 #include "ach/core/op/LibrariesInstall.hh"
+#include "ach/core/op/ProfileExt.hh"
 #include "ach/core/op/GameLaunch.hh"
 #include "ach/sys/Storage.hh"
 #include "ach/core/op/NativesCheck.hh"
@@ -25,6 +26,7 @@ main()
   cJSON *json = cJSON_CreateObject();
   cJSON_AddStringToObject(json, "xuid", "aaa");
   cJSON_AddStringToObject(json, "uuid", "aaa");
+  cJSON_AddStringToObject(json, "clientID", "aaa");
   cJSON_AddStringToObject(json, "token", "aaa");
   cJSON_AddStringToObject(json, "playerName", "Dev");
   cJSON_AddStringToObject(json, "w", "1920");

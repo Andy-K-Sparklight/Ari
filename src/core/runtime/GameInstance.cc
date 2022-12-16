@@ -44,7 +44,8 @@ static void
 onExit(uv_process_t *proc, int64_t code, int sig)
 {
   GameInstance *self = (GameInstance *)proc->data;
-  LOG("Game process exited with code/sig " << (code ? code : sig));
+  LOG("Game process exited with CODE " << code << " and SIG " << sig);
+
   // Cleanup
   uv_close((uv_handle_t *)proc, NULL);
   if(self->stat != GS_KILLED)
@@ -119,7 +120,7 @@ GameInstance::run()
       i++;
     }
   argsChar[i] = NULL;
-  LOG(args.size() << " args registered for game.");
+  LOG(args.size() << " args applied.");
 
   options.args = argsChar;
   // Spawning

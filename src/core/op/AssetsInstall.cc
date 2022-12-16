@@ -22,13 +22,7 @@ void
 installAssetIndex(Flow *flow, FlowCallback cb)
 {
   cb(AL_GETASSETINDEX);
-  std::string src = flow->data[AL_FLOWVAR_PROFILESRC];
-  if(src.size() == 0)
-    {
-      cb(AL_ERR);
-      return;
-    }
-  Profile::VersionProfile profile(src);
+  Profile::VersionProfile profile = flow->profile;
   LOG("Getting asset index " << profile.assetIndexArtifact.path);
   auto u = LUrlParser::ParseURL::parseURL(profile.assetIndexArtifact.url);
   httplib::Client cli(u.connectionName_);

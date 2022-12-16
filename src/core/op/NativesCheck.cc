@@ -21,17 +21,11 @@ void
 collectNatives(Flow *flow, FlowCallback cb)
 {
   cb(AL_UNPACKNAT);
-  auto profileSrc = flow->data[AL_FLOWVAR_PROFILESRC];
-  if(profileSrc.size() == 0)
-    {
-      cb(AL_ERR);
-      return;
-    }
   Sys::runOnWorkerThread([=]() -> void {
-    Profile::VersionProfile profile(profileSrc);
+    Profile::VersionProfile profile = flow->profile;
     LOG("Collecting native libraries for " << profile.id);
     auto base = getStoragePath("libraries");
-    auto target = getStoragePath("versions/" + profile.id + "/.natives");
+    auto target = getInstallPath("versions/" + profile.id + "/.natives");
     auto unpackwd = getTempPath("unpack/" + profile.id);
     std::filesystem::create_directories(unpackwd);
     std::filesystem::create_directories(target);
@@ -57,9 +51,13 @@ collectNatives(Flow *flow, FlowCallback cb)
             // Use the sync method to avoid any conflict
             try
               {
-                std::filesystem::copy_file(
-                    f, std::filesystem::path(target)
-                           / std::filesystem::path(f).filename());
+                auto dest = std::filesystem::path(target)
+                            / std::filesystem::path(f).filename();
+                mkParentDirs(dest);
+                if(!std::filesystem::exists(dest))
+                  {
+                    std::filesystem::copy_file(f, dest);
+                  }
                 natives++;
               }
             catch(std::exception &ignored)

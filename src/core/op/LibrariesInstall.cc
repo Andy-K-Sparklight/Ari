@@ -70,14 +70,8 @@ void
 installLibraries(Flow *flow, FlowCallback cb)
 {
   cb(AL_GETLIBS);
-  std::string profileSrc = flow->data[AL_FLOWVAR_PROFILESRC];
-  if(profileSrc.size() == 0)
-    {
-      cb(AL_ERR);
-      return;
-    }
 
-  Profile::VersionProfile profile(profileSrc);
+  Profile::VersionProfile profile = flow->profile;
 
   Network::DownloadPack librariesPack;
   for(auto &lib : profile.libraries)

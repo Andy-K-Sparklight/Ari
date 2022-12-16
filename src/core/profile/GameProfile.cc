@@ -1,6 +1,7 @@
 #include "ach/core/profile/GameProfile.hh"
 
 #include <iostream>
+#include <regex>
 #include "ach/util/Commons.hh"
 #include "ach/core/profile/Transform.hh"
 
@@ -140,6 +141,23 @@ Library::Library(const cJSON *src)
       name = cJSON_GetStringValue(nameItem);
       auto parts = Commons::splitStr(name, ":");
       isNative = parts.size() == 4; // If it has 4 parts
+      cJSON *urlItem = cJSON_GetObjectItem(src, "url");
+      if(cJSON_IsString(urlItem))
+        {
+          // Extend the library path
+          std::string url = cJSON_GetStringValue(urlItem);
+          std::string group = parts[0];
+          std::string proj = parts[1];
+          std::string version = parts[2];
+          std::regex dot("\\.");
+          group = std::regex_replace(group, dot, "/");
+          artifact.path = group + "/" + proj + "/" + version + "/" + proj + "-"
+                          + version + ".jar";
+          artifact.size = 0;
+          artifact.sha1 = "";
+          artifact.url = url + group + "/" + proj + "/" + version + "/" + proj
+                         + "-" + version + ".jar";
+        }
     }
 
   cJSON *downloadsItem = cJSON_GetObjectItem(src, "downloads");
@@ -200,11 +218,21 @@ Argument::Argument(const cJSON *src)
 void
 VersionProfile::setup(const cJSON *src)
 {
+  if(!cJSON_IsObject(src))
+    {
+      return;
+    }
   cJSON *trans = transformProfile(src);
   cJSON *idItem = cJSON_GetObjectItem(trans, "id");
   if(cJSON_IsString(idItem))
     {
       id = cJSON_GetStringValue(idItem);
+    }
+
+  cJSON *inheritsFromItem = cJSON_GetObjectItem(trans, "inheritsFrom");
+  if(cJSON_IsString(inheritsFromItem))
+    {
+      inheritsFrom = cJSON_GetStringValue(inheritsFromItem);
     }
 
   cJSON *argsItem = cJSON_GetObjectItem(trans, "arguments");
@@ -221,15 +249,22 @@ VersionProfile::setup(const cJSON *src)
   cJSON *downloadsItem = cJSON_GetObjectItem(trans, "downloads");
   if(cJSON_IsObject(downloadsItem))
     {
+      // Apply clients
       cJSON *clientItem = cJSON_GetObjectItem(downloadsItem, "client");
       cJSON *clientMappingsItem
           = cJSON_GetObjectItem(downloadsItem, "client_mappings");
-      clientArtifact = Artifact(clientItem);
+
+      Artifact client(clientItem);
       clientMappingsArtifact = Artifact(clientMappingsItem);
 
       // There are no path specified, so we better assign it
       clientArtifact.path = id + "/" + id + ".jar";
       clientMappingsArtifact.path = id + "/" + id + ".mappings";
+    }
+  else
+    {
+      // Even omitted, the implicitly specified one should also be applied
+      clientArtifact.path = id + "/" + id + ".jar";
     }
 
   cJSON *javaVersionStructItem = cJSON_GetObjectItem(trans, "javaVersion");
@@ -307,6 +342,8 @@ VersionProfile::setup(const cJSON *src)
 }
 
 VersionProfile::VersionProfile(const cJSON *src) { setup(src); }
+
+VersionProfile::VersionProfile() { setup(nullptr); }
 
 VersionProfile::VersionProfile(const std::string &s)
 {

@@ -83,6 +83,7 @@ public:
   std::string id;
   std::list<Argument> gameArgs;
   std::list<Argument> jvmArgs;
+  std::string inheritsFrom;
   Artifact assetIndexArtifact;
   Artifact clientArtifact;
   Artifact clientMappingsArtifact; // Forge
@@ -100,6 +101,7 @@ protected:
 
 public:
   VersionProfile(const cJSON *src);
+  VersionProfile();
   VersionProfile(const std::string &s);
 };
 

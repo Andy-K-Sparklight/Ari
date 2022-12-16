@@ -21,6 +21,11 @@ flipInstall(Flow *flow, FlowCallback cb)
     auto base = getInstallPath();
     LOG("Flipping dir " << base);
     std::list<std::string> files = scanDirectory(base);
+    if(files.size() == 0)
+      {
+        cb(AL_OK);
+        return;
+      }
     int *total = new int(files.size());
     int *count = new int(0);
 
