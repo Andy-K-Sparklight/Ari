@@ -78,14 +78,15 @@ These packages might also be available on other PMs.
    For macOS please first run:
    
    ```bash
+   chmod +x ./macpb
    ./macpb
    ```
    
+   Then for all platforms, run:
+
    ```bash
    autoreconf --install
-   mkdir build
-   cd build
-   ../configure
+   ./configure
    ```
    
    If you are using macOS, `configure` might complain about the built-in `make`. If this is the case, do as the output say.
@@ -111,7 +112,7 @@ These packages might also be available on other PMs.
 4. If building for Windows, run:
    
    ```bash
-   ../winfix
+   ./winfix
    ```
 
 5. The binary output `AlicornCH.exe` is now available under your CWD, just run it and try!
