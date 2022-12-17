@@ -71,6 +71,12 @@ AC_TYPE_UINT32_T
 AC_TYPE_UINT64_T
 AC_TYPE_UINT8_T
 
+if [test "$build_linux" = "yes"]
+then
+PKG_CHECK_MODULES([GTK], [gtk+-3.0])
+PKG_CHECK_MODULES([WEBKIT], [webkit2gtk-4.0])
+fi
+
 # Checks for library functions.
 
 AC_OUTPUT

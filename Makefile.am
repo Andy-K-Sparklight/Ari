@@ -15,9 +15,10 @@ AlicornCH_LDFLAGS+=-static-libgcc -static-libstdc++ -Wl,-Bstatic -lpthread
 endif
 
 if LINUX
-AM_CXXFLAGS+=$(pkg-config --cflags gtk+-3.0 webkit2gtk-4.0)
-AM_CFLAGS+=$(pkg-config --cflags gtk+-3.0 webkit2gtk-4.0)
-AlicornCH_LDFLAGS+=$(pkg-config --libs gtk+-3.0 webkit2gtk-4.0)
+AM_CXXFLAGS+=$(GTK_CFLAGS) $(WEBKIT_CFLAGS)
+AM_CFLAGS+=$(GTK_CFLAGS) $(WEBKIT_CFLAGS)
+AlicornCH_LDFLAGS+=$(GTK_LDFLAGS) $(WEBKIT_LDFLAGS)
+AlicornCH_LDADD+=$(GTK_LIBS) $(WEBKIT_LIBS)
 endif
 
 if OSX
