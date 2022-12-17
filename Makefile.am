@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS=foreign
 bin_PROGRAMS=AlicornCH
-CommonFlags=-I$(top_srcdir)/inc -O2 -Wall -Wno-unknown-pragmas -Wno-enum-compare -fmacro-prefix-map=$(top_srcdir)/src/=
+CommonFlags=-I$(top_srcdir)/inc -O2 -Wall -Wno-unknown-pragmas -Wno-enum-compare -Wno-deprecated-declarations -fmacro-prefix-map=$(top_srcdir)/src/=
 AM_CXXFLAGS=-std=gnu++23
 AM_CFLAGS=-std=gnu17
 AM_CXXFLAGS+=$(CommonFlags)
