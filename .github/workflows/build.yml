@@ -37,7 +37,7 @@ jobs:
       - name: Pre Configure
         run: autoreconf --install
       - name: Pre Build
-        run: ./macpb
+        run: chmod +x ./macpb && ./macpb
       - name: Configure
         run: ./configure
       - name: Make
