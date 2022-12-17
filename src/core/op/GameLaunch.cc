@@ -18,103 +18,10 @@ namespace Alicorn
 namespace Op
 {
 
-typedef struct
-{
-  std::string xuid;
-  std::string token;
-  std::string uuid;
-  std::string playerName;
-  bool isDemo = false;
-  bool hasCustomRes = false;
-  std::string w, h;
-  std::list<std::string> extraVMArgs;
-  std::string clientID;
-  std::string runtimeName;
-} LaunchValues;
-
-// The options are passed using JSON
-static void
-parseLaunchValues(const std::string &src, LaunchValues &ev)
-{
-  cJSON *obj = cJSON_Parse(src.c_str());
-
-  cJSON *child;
-
-  child = cJSON_GetObjectItem(obj, "xuid");
-  if(cJSON_IsString(child))
-    {
-      ev.xuid = cJSON_GetStringValue(child);
-    }
-
-  child = cJSON_GetObjectItem(obj, "token");
-  if(cJSON_IsString(child))
-    {
-      ev.token = cJSON_GetStringValue(child);
-    }
-
-  child = cJSON_GetObjectItem(obj, "uuid");
-  if(cJSON_IsString(child))
-    {
-      ev.uuid = cJSON_GetStringValue(child);
-    }
-
-  child = cJSON_GetObjectItem(obj, "playerName");
-  if(cJSON_IsString(child))
-    {
-      ev.playerName = cJSON_GetStringValue(child);
-    }
-  child = cJSON_GetObjectItem(obj, "w");
-  if(cJSON_IsString(child))
-    {
-      ev.w = cJSON_GetStringValue(child);
-    }
-  child = cJSON_GetObjectItem(obj, "h");
-  if(cJSON_IsString(child))
-    {
-      ev.h = cJSON_GetStringValue(child);
-    }
-  child = cJSON_GetObjectItem(obj, "clientID");
-  if(cJSON_IsString(child))
-    {
-      ev.clientID = cJSON_GetStringValue(child);
-    }
-  child = cJSON_GetObjectItem(obj, "runtimeName");
-  if(cJSON_IsString(child))
-    {
-      ev.runtimeName = cJSON_GetStringValue(child);
-    }
-
-  child = cJSON_GetObjectItem(obj, "isDemo");
-  if(cJSON_IsBool(child))
-    {
-      ev.isDemo = cJSON_IsTrue(child);
-    }
-
-  child = cJSON_GetObjectItem(obj, "hasCustomRes");
-  if(cJSON_IsBool(child))
-    {
-      ev.hasCustomRes = cJSON_IsTrue(child);
-    }
-
-  child = cJSON_GetObjectItem(obj, "extraVMArgs");
-  if(cJSON_IsArray(child))
-    {
-      int l = cJSON_GetArraySize(child);
-      for(int i = 0; i < l; i++)
-        {
-          cJSON *cur = cJSON_GetArrayItem(child, i);
-          if(cJSON_IsString(cur))
-            {
-              ev.extraVMArgs.push_back(cJSON_GetStringValue(cur));
-            }
-        }
-    }
-
-  cJSON_Delete(obj);
-}
-
+// Parse rules
 static bool
-parseRule(const std::list<Profile::Rule> &rules, const LaunchValues &ext)
+parseRule(const std::list<Profile::Rule> &rules,
+          std::map<std::string, std::string> flowData)
 {
   using namespace Profile;
   if(rules.size() == 0)
@@ -130,13 +37,14 @@ parseRule(const std::list<Profile::Rule> &rules, const LaunchValues &ext)
           fi = true;
           break;
         case CR_FE_DEMO:
-          if(ext.isDemo)
+          if(flowData[AL_FLOWVAR_DEMO] != "0")
             {
               fi = r.action;
             }
           break;
         case CR_FE_CRES:
-          if(ext.hasCustomRes)
+          if(flowData[AL_FLOWVAR_WIDTH].size() > 0
+             && flowData[AL_FLOWVAR_HEIGHT].size() > 0)
             {
               fi = r.action;
             }
@@ -173,7 +81,8 @@ parseRule(const std::list<Profile::Rule> &rules, const LaunchValues &ext)
 
 // Generate both natives and common libs
 static std::string
-genClassPath(const Profile::VersionProfile &prof, const LaunchValues &ext)
+genClassPath(const Profile::VersionProfile &prof,
+             std::map<std::string, std::string> flowData)
 {
   using namespace std::filesystem;
   // Path split
@@ -187,7 +96,7 @@ genClassPath(const Profile::VersionProfile &prof, const LaunchValues &ext)
   std::stringstream commonLibs, nativeLibs;
   for(auto &l : prof.libraries)
     {
-      if(parseRule(l.rules, ext))
+      if(parseRule(l.rules, flowData))
         {
           commonLibs << getStoragePath("libraries/" + l.artifact.path)
                      << split;
@@ -217,30 +126,48 @@ applyVars(const std::string &src,
 }
 
 static std::list<std::string>
-genArgs(const Profile::VersionProfile &prof, const LaunchValues &ev)
+genArgs(const Profile::VersionProfile &prof,
+        std::map<std::string, std::string> &flowData)
 {
   LOG("Generating args for " << prof.id);
   std::list<std::string> finalArgs;
   std::map<std::string, std::string> varMap;
 
   // Vars assemble
-  varMap["auth_player_name"] = ev.playerName;
+  varMap["auth_player_name"] = flowData[AL_FLOWVAR_AUTHNAME];
   varMap["version_name"] = prof.id;
-  varMap["game_directory"] = getRuntimePath(ev.runtimeName);
+  varMap["game_directory"] = getRuntimePath(flowData[AL_FLOWVAR_RUNTIME]);
   varMap["assets_root"] = getStoragePath("assets");
   varMap["assets_index_name"]
       = prof.assetIndexArtifact.path; // This is actually id
-  varMap["auth_uuid"] = ev.uuid;
-  varMap["auth_access_token"] = ev.token;
-  varMap["clientid"] = ev.clientID;
-  varMap["auth_xuid"] = ev.xuid;
+  varMap["auth_uuid"] = flowData[AL_FLOWVAR_AUTHUUID];
+  varMap["auth_access_token"] = flowData[AL_FLOWVAR_AUTHTOKEN];
+  varMap["clientid"] = "0"; // Not sure, reserved
+  varMap["auth_xuid"] = flowData[AL_FLOWVAR_AUTHXUID];
   varMap["user_type"] = "mojang";
-  varMap["version_type"] = "Alicorn The Corrupted Heart"; // This is I!
-  varMap["resolution_width"] = ev.w;
-  varMap["resolution_height"] = ev.h;
+  std::string vType;
+  if(prof.type == Profile::RT_RELEASE)
+    {
+      vType = "release";
+    }
+  else if(prof.type == Profile::RT_SNAPSHOT)
+    {
+      vType = "snapshot";
+    }
+  else if(prof.type == Profile::RT_ALPHA)
+    {
+      vType = "old_alpha";
+    }
+  else if(prof.type == Profile::RT_BETA)
+    {
+      vType = "old_beta";
+    }
+  varMap["version_type"] = vType; // Be honest
+  varMap["resolution_width"] = flowData[AL_FLOWVAR_WIDTH];
+  varMap["resolution_height"] = flowData[AL_FLOWVAR_HEIGHT];
   varMap["launcher_name"] = "Alicorn The Corrupted Heart";
   varMap["launcher_version"] = "Lost";
-  auto classPaths = genClassPath(prof, ev);
+  auto classPaths = genClassPath(prof, flowData);
   LOG("Classpaths with length " << classPaths.size() << " generated.");
   varMap["classpath"] = classPaths;
   varMap["natives_directory"]
@@ -267,7 +194,7 @@ genArgs(const Profile::VersionProfile &prof, const LaunchValues &ev)
   // Profile JVM args
   for(auto &va : prof.jvmArgs)
     {
-      if(parseRule(va.rules, ev))
+      if(parseRule(va.rules, flowData))
         {
           for(auto &v : va.values)
             {
@@ -276,8 +203,16 @@ genArgs(const Profile::VersionProfile &prof, const LaunchValues &ev)
         }
     }
 
+  // Process Extra Args
+  auto vmx = flowData[AL_FLOWVAR_EXVMARGS];
+  std::regex reg(" +");
+  while(std::regex_search(vmx, reg))
+    {
+      vmx = std::regex_replace(vmx, reg, "\t\n");
+    }
+
   // Externals
-  for(auto &e : ev.extraVMArgs)
+  for(auto &e : Commons::splitStr(vmx, "\t\n"))
     {
       finalArgs.push_back(applyVars(e, varMap)); // Just in case
     }
@@ -295,7 +230,7 @@ genArgs(const Profile::VersionProfile &prof, const LaunchValues &ev)
   // Game Args
   for(auto &ga : prof.gameArgs)
     {
-      if(parseRule(ga.rules, ev))
+      if(parseRule(ga.rules, flowData))
         {
           for(auto &v : ga.values)
             {
@@ -311,18 +246,9 @@ void
 launchGame(Flow *flow, FlowCallback cb)
 {
   cb(AL_GENARGS);
-  auto optnSrc = flow->data[AL_FLOWVAR_LAUNCHVALS];
-  if(optnSrc.size() == 0)
-    {
-      cb(AL_ERR);
-      return;
-    }
-  LaunchValues optn;
-  parseLaunchValues(optnSrc, optn);
-
   Profile::VersionProfile profile = flow->profile;
 
-  auto args = genArgs(profile, optn);
+  auto args = genArgs(profile, flow->data);
   Sys::runOnUVThread([=]() -> void {
     LOG("Creating game instance for " << profile.id);
     Runtime::GameInstance *game = new Runtime::GameInstance();
@@ -334,7 +260,7 @@ launchGame(Flow *flow, FlowCallback cb)
         game->bin = "java"; // Use system
       }
     LOG("Using bin as " << game->bin);
-    game->cwd = getRuntimePath(optn.runtimeName);
+    game->cwd = getRuntimePath(flow->data[AL_FLOWVAR_RUNTIME]);
     try
       {
         std::filesystem::create_directories(game->cwd);

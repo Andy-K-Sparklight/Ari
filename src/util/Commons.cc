@@ -3,6 +3,7 @@
 #include <string>
 #include <random>
 #include <uuid.h>
+#include <openssl/md5.h>
 
 namespace Alicorn
 {
@@ -58,6 +59,15 @@ genUUID()
   std::mt19937 generator(seq);
   uuids::uuid_random_generator gen{ generator };
   auto id = gen();
+  return uuids::to_string(id);
+}
+
+std::string
+genUUID(const std::string &name)
+{
+  unsigned char result[MD5_DIGEST_LENGTH];
+  MD5((unsigned char *)name.c_str(), name.size(), result);
+  uuids::uuid id{ result };
   return uuids::to_string(id);
 }
 

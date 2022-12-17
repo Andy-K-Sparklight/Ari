@@ -25,12 +25,22 @@
 #define AL_RDPROFILE 0x0f
 #define AL_EXTPROFILE 0x10
 #define AL_LINKCLIENT 0x11
+#define AL_AUTHENTICATE 0x12
 
 #define AL_FLOWVAR_PROFILEID "profileID"
 #define AL_FLOWVAR_ASSETINDEX "assetIndex"
-#define AL_FLOWVAR_LAUNCHVALS "launchValues"
 #define AL_FLOWVAR_JAVAMAIN "javaMain"
 #define AL_FLOWVAR_INHCLIENTSRC "inhClientSrc"
+#define AL_FLOWVAR_ACCOUNTINDEX "accountIndex"
+#define AL_FLOWVAR_AUTHTOKEN "authToken"
+#define AL_FLOWVAR_AUTHUUID "authUUID"
+#define AL_FLOWVAR_AUTHNAME "authName"
+#define AL_FLOWVAR_AUTHXUID "authXUID"
+#define AL_FLOWVAR_RUNTIME "runtime"
+#define AL_FLOWVAR_WIDTH "width"
+#define AL_FLOWVAR_HEIGHT "height"
+#define AL_FLOWVAR_DEMO "demo"
+#define AL_FLOWVAR_EXVMARGS "exVMArgs"
 
 #include <map>
 #include <string>

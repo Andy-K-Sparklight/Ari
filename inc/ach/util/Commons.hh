@@ -16,7 +16,11 @@ std::string normalizePath(const std::filesystem::path &pt);
 
 std::string getNameHash(const std::string &name);
 
+// Generate random UUID
 std::string genUUID();
+
+// Generate UUID base on name
+std::string genUUID(const std::string &name);
 
 }
 }
