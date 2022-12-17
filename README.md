@@ -46,6 +46,8 @@ If you are building for ARM64, please also link openssl:
 brew link openssl@1.1 --force
 ```
 
+Make sure you've also got `clang` installed to compile some codebase with Apple's extensions.
+
 Then we're ready.
 
 ### GNU/Linux Prerequisites
@@ -73,12 +75,20 @@ These packages might also be available on other PMs.
 
 2. Run the configure script:
    
+   For macOS please first run:
+   
+   ```bash
+   ./macpb
+   ```
+   
    ```bash
    autoreconf --install
    mkdir build
    cd build
    ../configure
    ```
+   
+   If you are using macOS, `configure` might complain about the built-in `make`. If this is the case, do as the output say.
 
 3. Run the build.
    
@@ -88,7 +98,7 @@ These packages might also be available on other PMs.
    make CC=gcc-12 CPP=g++-12 CXX=g++-12 LD=g++-12
    ```
    
-   If you've got a later gcc available, just change the suffix to a proper one.
+   If you've got a later gcc available, just change the suffix to a proper one. Also, if any complains exists, use `gmake` and try again.
    
    For other systems, just:
    
@@ -103,4 +113,5 @@ These packages might also be available on other PMs.
    ```bash
    ../winfix
    ```
+
 5. The binary output `AlicornCH.exe` is now available under your CWD, just run it and try!

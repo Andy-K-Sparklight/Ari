@@ -30,6 +30,8 @@ onAlloc(uv_handle_t *handle, size_t suggested_size, uv_buf_t *buf)
 static void
 onExit(uv_process_t *p, int64_t code, int sig)
 {
+  auto pc = (ProcData *)p->data;
+  pc->cb(pc->data);
   uv_close((uv_handle_t *)p, [](uv_handle_t *h) -> void {
     auto p = (ProcData *)h->data;
     delete p;
@@ -40,13 +42,10 @@ onExit(uv_process_t *p, int64_t code, int sig)
 void
 onRead(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
 {
-
   auto p = (ProcData *)stream->data;
-
   if(nread < 0 || nread == UV_EOF)
     {
       uv_read_stop(stream);
-      p->cb(p->data);
     }
   else
     {

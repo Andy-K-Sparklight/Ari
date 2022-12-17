@@ -9,6 +9,9 @@ namespace Alicorn
 {
 namespace Commons
 {
+
+extern std::string argv0;
+
 std::vector<std::string> splitStr(const std::string &str,
                                   const std::string &del);
 
