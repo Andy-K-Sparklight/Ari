@@ -51,7 +51,7 @@ mergeProfile(Profile::VersionProfile &mod, const Profile::VersionProfile &base)
 }
 
 static Profile::VersionProfile
-readProfile(const std::string &id)
+readProfile(const std::string &id, Flow *flow)
 {
   // Performance is quite acceptable
   std::ifstream f(
@@ -64,9 +64,11 @@ readProfile(const std::string &id)
   ss << f.rdbuf();
   std::string s = ss.str();
   Profile::VersionProfile p(s);
+  // So that it will be overwritten by the last call
+  flow->data[AL_FLOWVAR_INHCLIENTSRC] = "versions/" + p.clientArtifact.path;
   if(p.inheritsFrom.size() > 0)
     {
-      auto inhProf = readProfile(p.inheritsFrom);
+      auto inhProf = readProfile(p.inheritsFrom, flow);
       if(inhProf.id.size() > 0)
         {
           mergeProfile(p, inhProf); // Assign
@@ -88,10 +90,9 @@ loadProfile(Flow *flow, FlowCallback cb)
     }
   LOG("Loading profile " << id);
   Sys::runOnWorkerThread([=]() -> void {
-    auto p = readProfile(id);
+    auto p = readProfile(id, flow);
     LOG("Loaded profile " << id);
     flow->profile = p;
-    flow->data[AL_FLOWVAR_INHCLIENTSRC] = p.clientArtifact.path;
     cb(AL_OK);
   });
 }
@@ -109,11 +110,12 @@ linkClient(Flow *flow, FlowCallback cb)
     }
   LOG("Linking client for " << id);
   Sys::runOnWorkerThread([=]() -> void {
-    std::string target = getStoragePath("versions/" + id + "/" + id + ".jar");
+    std::string target = getInstallPath("versions/" + id + "/" + id + ".jar");
     if(!std::filesystem::exists(target))
       {
         try
           {
+            mkParentDirs(target);
             std::filesystem::copy_file(source, target);
           }
         catch(std::exception &e)

@@ -9,9 +9,15 @@
 #include "ach/core/auth/YggAuth.hh"
 #include "ach/core/op/Flow.hh"
 #include "ach/core/op/GameLaunch.hh"
-#include "ach/core/auth/MSAuth.hh"
+#include "ach/core/auth/LocalAuth.hh"
 #include "ach/core/op/ProfileExt.hh"
 #include "ach/core/op/Authenticate.hh"
+#include "ach/core/auto/AutoLoader.hh"
+#include "ach/core/op/AutoProfile.hh"
+#include "ach/core/op/LibrariesInstall.hh"
+#include "ach/core/op/Flipper.hh"
+#include "ach/core/op/ProfileExt.hh"
+#include "ach/core/op/NativesCheck.hh"
 #include <unistd.h>
 
 int
@@ -91,8 +97,7 @@ main(int argc, char **argv)
       // Run init
       using namespace Alicorn;
       Sys::initSys();
-      auto acc = Auth::mkMsAccount();
-      acc.id = "3a1824a1-15fe-4c79-854b-5fdab0e8471a";
+      auto acc = Auth::mkLocalAccount("Player");
       Op::Flow flow;
       flow.data[AL_FLOWVAR_ACCOUNTINDEX] = "0";
       Profile::ACCOUNT_PROFILES.push_back(acc);
@@ -101,10 +106,12 @@ main(int argc, char **argv)
       flow.data[AL_FLOWVAR_PROFILEID] = "1.19.2";
       flow.data[AL_FLOWVAR_DEMO] = "0";
       flow.data[AL_FLOWVAR_RUNTIME] = "test";
+      flow.data[AL_FLOWVAR_LOADERTYPE] = "Fabric";
+      flow.data[AL_FLOWVAR_LOADERVER] = "0.14.11";
       flow.data[AL_FLOWVAR_JAVAMAIN] = "java";
-      flow.addTask(Op::loadProfile);
-      flow.addTask(Op::authAccount);
-      flow.addTask(Op::launchGame);
+      flow.data[AL_FLOWVAR_ACCOUNTINDEX] = "0";
+      flow.addTask(Op::autoProfile);
+      flow.addTask(Op::flipInstall);
       flow.run();
       sleep(3000);
     }

@@ -44,6 +44,8 @@
 #define AL_FLOWVAR_YGGPWD "yggPWD"
 #define AL_FLOWVAR_AUTHSV "authSV"
 #define AL_FLOWVAR_INJPREF "injPref"
+#define AL_FLOWVAR_LOADERTYPE "loaderType"
+#define AL_FLOWVAR_LOADERVER "loaderVer"
 
 #include <map>
 #include <string>
