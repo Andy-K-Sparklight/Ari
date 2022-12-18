@@ -3,7 +3,6 @@
 BASEDIR=$(dirname "$0")
 cp /mingw64/bin/libssl-1_1-x64.dll ./
 cp /mingw64/bin/libcrypto-1_1-x64.dll ./
-cp $BASEDIR/assets/aria2c.prog ./
 cp $BASEDIR/libs/*.dll ./
 strip ./AlicornCH.exe
 strip ./*.dll
