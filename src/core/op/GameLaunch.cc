@@ -191,6 +191,22 @@ genArgs(const Profile::VersionProfile &prof,
   finalArgs.push_back("-Duser.language=en");
   finalArgs.push_back("-showversion");
 
+  // Authlib Injector
+  auto &authServer = flowData[AL_FLOWVAR_AUTHSV];
+  if(authServer.size() > 0)
+    {
+      finalArgs.push_back("-javaagent:"
+                          + Commons::normalizePath("authlib-injector.jar")
+                          + "=" + authServer);
+    }
+
+  auto &prefetch = flowData[AL_FLOWVAR_INJPREF];
+  if(prefetch.size() > 0)
+    {
+      finalArgs.push_back("-Dauthlibinjector.yggdrasil.prefetched="
+                          + prefetch);
+    }
+
   // Profile JVM args
   for(auto &va : prof.jvmArgs)
     {

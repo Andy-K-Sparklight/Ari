@@ -11,6 +11,9 @@ namespace Op
 // Flow task to authenticate account
 void authAccount(Flow *flow, FlowCallback cb);
 
+// Flow task to prefetch custom authlib server
+void authlibPrefetch(Flow *flow, FlowCallback cb);
+
 }
 }
 

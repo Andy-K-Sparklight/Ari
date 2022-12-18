@@ -41,6 +41,9 @@
 #define AL_FLOWVAR_HEIGHT "height"
 #define AL_FLOWVAR_DEMO "demo"
 #define AL_FLOWVAR_EXVMARGS "exVMArgs"
+#define AL_FLOWVAR_YGGPWD "yggPWD"
+#define AL_FLOWVAR_AUTHSV "authSV"
+#define AL_FLOWVAR_INJPREF "injPref"
 
 #include <map>
 #include <string>
