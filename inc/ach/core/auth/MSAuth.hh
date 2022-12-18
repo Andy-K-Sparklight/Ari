@@ -11,7 +11,9 @@ namespace Alicorn
 namespace Auth
 {
 
-void msAuth(Profile::AccountProfile &acc);
+Profile::AccountProfile mkMsAccount();
+
+void msAuth(Profile::AccountProfile &acc, std::function<void(bool)> cb);
 
 void getMSCode(const std::string &part, std::function<void(std::string)> cb);
 
