@@ -7,6 +7,7 @@
 #include "ach/util/Commons.hh"
 #include "ach/sys/Init.hh"
 #include "ach/core/auth/MSAuth.hh"
+#include "ach/core/auth/YggAuth.hh"
 #include <unistd.h>
 
 int
@@ -85,14 +86,22 @@ main(int argc, char **argv)
     {
       // Run init
       Alicorn::Sys::initSys();
-      auto acc = Alicorn::Auth::mkMsAccount();
-      acc.id = "a863aa45-3b14-4c4a-94aa-eb50e3260578";
-      Alicorn::Auth::msAuth(acc, [&](bool b) -> void {
-        std::cout << "Hi " << acc.userName
-                  << "! You've successfully authenticated with:\n"
-                  << "XUID: " << acc.xuid << "\n"
-                  << "UUID: " << acc.uuid << std::endl;
-      });
+      sleep(1);
+      std::cout << "Server: ";
+      std::string server;
+      std::cin >> server;
+      std::cout << "Email: ";
+      std::string email;
+      std::cin >> email;
+      std::cout << "Pwd: ";
+      std::string pwd;
+      std::cin >> pwd;
+      auto acc = Alicorn::Auth::mkYggAccount(email, server);
+      Alicorn::Auth::yggAuth(acc, pwd);
+      std::cout << "Guten tag, " << acc.userName << "!\n"
+                << "Sie haben sich erfolgreich authentifiziert:\n"
+                << "UUID: " << acc.uuid << "\n"
+                << "Token: " << acc.mcToken << std::endl;
       sleep(3000);
     }
 

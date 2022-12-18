@@ -10,6 +10,7 @@ AccountProfile::AccountProfile(const std::map<std::string, std::string> &slice)
   std::map<std::string, std::string> dat = slice;
   id = dat["id"];
   email = dat["email"];
+  server = dat["server"];
   userName = dat["type"];
   uuid = dat["uuid"];
   mcToken = dat["mcToken"];
@@ -26,6 +27,7 @@ AccountProfile::toMap()
   std::map<std::string, std::string> dat;
   dat["id"] = id;
   dat["email"] = email;
+  dat["server"] = server;
   dat["type"] = userName;
   dat["uuid"] = uuid;
   dat["mcToken"] = mcToken;

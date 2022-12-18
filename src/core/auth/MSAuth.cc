@@ -195,7 +195,7 @@ completeAuth(Profile::AccountProfile &acc, const std::string &msToken)
   acc.uuid = cJSON_GetStringValue(uuidObj);
   acc.userName = cJSON_GetStringValue(nameObj);
   cJSON_Delete(mcResContent);
-  LOG("MS login completed.");
+  LOG("Authentication completed. Hello, " << acc.userName << "!");
   return true;
 }
 

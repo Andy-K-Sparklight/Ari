@@ -24,7 +24,7 @@ class AccountProfile
 public:
   std::string id;
   AccountType type;
-  std::string email;
+  std::string email, server;
   std::string userName;
   std::string uuid, mcToken;
   std::string refreshToken, xuid; // For ms only
