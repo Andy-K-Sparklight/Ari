@@ -33,10 +33,11 @@ main(int argc, char **argv)
           "com%2Foauth20_desktop.srf");
       webview_init(
           loginWindow,
-          "window.onload=function(){window.tellSize(screen.availWidth, "
-          "screen.availHeight, window.outerWidth, window.outerHeight);let "
-          "code=window.location.href.match(/(?<=code=)[^&]+/"
-          ");if(code!=null){window.tellCode(code[0]);}};");
+          "window.onload=function(){window.tellSize(screen.availWidth,screen."
+          "availHeight,window.outerWidth,window.outerHeight);var "
+          "u=window.location.href;if(u.includes(\"code=\")){u=u.split(\"code="
+          "\")[1];if(u.includes(\"&lc=\"))u=u.split(\"&lc=\")[0];window."
+          "tellCode(u);}}");
 
       webview_bind(
           loginWindow, "tellSize",
