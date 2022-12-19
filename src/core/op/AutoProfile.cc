@@ -19,7 +19,7 @@ autoProfile(Flow *flow, FlowCallback cb)
       cb(AL_ERR);
       return;
     }
-  for(int i = 0; i < variants.size(); i++)
+  for(size_t i = 0; i < variants.size(); i++)
     {
       auto &variant = variants[i];
       auto &ldv = ldvs[i];

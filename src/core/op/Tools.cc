@@ -6,7 +6,7 @@
 #include <fstream>
 #include <cstring>
 #include "ach/sys/Schedule.hh"
-#include <miniz.h>
+#include <zip.h>
 #include "ach/util/Commons.hh"
 
 namespace Alicorn
@@ -239,70 +239,30 @@ readDirAsync(const std::string &pt,
 bool
 unzipFile(const std::string &zipFile, const std::string &pt)
 {
-  using namespace std;
-  using namespace filesystem;
-  std::vector<std::string> files = {};
-  mz_zip_archive zip_archive;
-  memset(&zip_archive, 0, sizeof(zip_archive));
-  try
-    {
-      create_directories(pt);
-    }
-  catch(std::exception &ignored)
-    {
-    }
-  auto status = mz_zip_reader_init_file(&zip_archive, zipFile.c_str(), 0);
-  if(!status)
-    {
-      return false;
-    }
-  int fileCount = (int)mz_zip_reader_get_num_files(&zip_archive);
-  if(fileCount == 0)
-    {
-      mz_zip_reader_end(&zip_archive);
-      return false;
-    }
-  mz_zip_archive_file_stat file_stat;
-  if(!mz_zip_reader_file_stat(&zip_archive, 0, &file_stat))
-    {
-      mz_zip_reader_end(&zip_archive);
-      return false;
-    }
+  return zip_extract(zipFile.c_str(), pt.c_str(), NULL, NULL) >= 0;
+}
 
-  string lastDir = "";
-  for(int i = 0; i < fileCount; i++)
+bool
+zipDir(const std::string &prefix, const std::string &fileName)
+{
+  auto files = scanDirectory(prefix);
+  auto zip = zip_open(fileName.c_str(), ZIP_DEFAULT_COMPRESSION_LEVEL, 'w');
+  for(auto &f : files)
     {
-      if(!mz_zip_reader_file_stat(&zip_archive, i, &file_stat))
-        continue;
-      if(mz_zip_reader_is_file_a_directory(&zip_archive, i))
-        continue;
-      string fileName = file_stat.m_filename;
-      string destFile = (path(pt) / fileName).string();
-      auto newDir = path(fileName).parent_path().string();
-      if(newDir != lastDir)
+      auto relPt = std::filesystem::relative(f, prefix);
+      zip_entry_open(zip, relPt.string().c_str());
+      if(zip_entry_fwrite(zip, f.c_str()) < 0)
         {
-          try
-            {
-              create_directories((path(pt) / newDir).string());
-            }
-          catch(std::exception &e)
-            {
-              continue;
-            }
+          return false; // Broken
         }
-
-      if(mz_zip_reader_extract_to_file(&zip_archive, i, destFile.c_str(), 0))
-        {
-          files.emplace_back(destFile);
-        }
+      zip_entry_close(zip);
     }
-
-  mz_zip_reader_end(&zip_archive);
+  zip_close(zip);
   return true;
 }
 
 std::list<std::string>
-scanDirectory(const std::filesystem::path pt)
+scanDirectory(const std::filesystem::path pt, bool includeDir)
 {
 
   std::list<std::string> out;
@@ -314,6 +274,10 @@ scanDirectory(const std::filesystem::path pt)
           if(i->is_regular_file())
             {
               out.push_back(i->path().string());
+            }
+          else if(includeDir && i->is_directory())
+            {
+              out.push_back(i->path().string() + "/");
             }
         };
     }

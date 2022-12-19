@@ -32,8 +32,12 @@ void readDirAsync(const std::string &pt,
 // Unzip file
 bool unzipFile(const std::string &f, const std::string &extractPrefix);
 
+// Zip dir
+bool zipDir(const std::string &prefix, const std::string &fileName);
+
 // Scan directory
-std::list<std::string> scanDirectory(const std::filesystem::path pt);
+std::list<std::string> scanDirectory(const std::filesystem::path pt,
+                                     bool includeDir = false);
 
 }
 }
