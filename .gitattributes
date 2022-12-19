@@ -1,0 +1,5 @@
+src/libimpl/**/* linguist-vendored
+inc/**/* linguist-vendored
+inc/ach/**/* -linguist-vendored
+inc/wv.hh -linguist-vendored
+inv/log.hh -linguist-vendored
