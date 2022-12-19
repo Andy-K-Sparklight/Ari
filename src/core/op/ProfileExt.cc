@@ -32,13 +32,17 @@ mergeProfile(Profile::VersionProfile &mod, const Profile::VersionProfile &base)
     }
 
   // Assign args
-  for(auto &a : base.gameArgs)
+  // Legacy profile cannot accept arguments merge
+  if(!mod.isLegacy)
     {
-      mod.gameArgs.push_back(a);
-    }
-  for(auto &a : base.jvmArgs)
-    {
-      mod.jvmArgs.push_back(a);
+      for(auto &a : base.gameArgs)
+        {
+          mod.gameArgs.push_back(a);
+        }
+      for(auto &a : base.jvmArgs)
+        {
+          mod.jvmArgs.push_back(a);
+        }
     }
 
   mod.inheritsFrom = base.inheritsFrom; // Pass it on

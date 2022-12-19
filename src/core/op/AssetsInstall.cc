@@ -126,5 +126,35 @@ installAssets(Flow *flow, FlowCallback cb)
   });
 }
 
+void
+copyAssets(Flow *flow, FlowCallback cb)
+{
+  cb(AL_COPYASSETS);
+  std::string assetIndexSrc = flow->data[AL_FLOWVAR_ASSETINDEX];
+  if(assetIndexSrc.size() == 0)
+    {
+      cb(AL_ERR);
+      return;
+    }
+  std::list<Profile::Asset> assets = Profile::loadAssetIndex(assetIndexSrc);
+  LOG("Mapping " << assets.size() << " legacy assets.");
+  for(auto &a : assets)
+    {
+      auto src = getStoragePath("assets/objects/" + a.hash.substr(0, 2) + "/"
+                                + a.hash);
+      auto target = getInstallPath("assets/legacy/" + a.name);
+      mkParentDirs(target);
+      try
+        {
+          std::filesystem::copy_file(src, target);
+        }
+      catch(std::exception &ignored)
+        {
+        }
+    }
+  LOG("Mapped assets.");
+  cb(AL_OK);
+}
+
 }
 }

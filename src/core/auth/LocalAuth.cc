@@ -27,8 +27,7 @@ localAuth(Profile::AccountProfile &acc)
 {
   LOG("Authenticating local account " << acc.id);
   // Only token needs to be changed, others remain untouched
-  acc.refreshToken
-      = Commons::getNameHash(Commons::genUUID()); // Refresh a new one
+  acc.mcToken = Commons::getNameHash(Commons::genUUID()); // Refresh a new one
 }
 
 }

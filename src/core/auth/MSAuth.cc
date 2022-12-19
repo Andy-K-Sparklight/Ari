@@ -291,7 +291,7 @@ getMSCode(const std::string &part, std::function<void(std::string)> cb)
       std::list<std::string> args;
       args.push_back("mslogin");
       Commons::runCommand(
-          loginExec, args, [=](std::string c) -> void { cb(c); }, 1);
+          loginExec, args, [=](std::string c, int) -> void { cb(c); }, 1);
     }
   catch(std::exception &ignored)
     {

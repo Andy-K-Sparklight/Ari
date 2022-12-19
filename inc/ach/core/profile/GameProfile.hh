@@ -64,8 +64,11 @@ public:
   Artifact artifact;
   std::list<Rule> rules;
   bool isNative;
+  bool noDownload = false;
 
-  Library(const cJSON *src);
+  // If checkReq is set, library should check clientreq and serverreq
+  // If both of them does not exist, it should not be downloaded
+  Library(const cJSON *src, bool checkReq = false);
 };
 
 class Argument
@@ -95,6 +98,7 @@ public:
   std::string releaseTime;
   std::string installTime;
   ReleaseType type = RT_RELEASE;
+  bool isLegacy = false; // Pre 1.12.2
 
 protected:
   void setup(const cJSON *src);
@@ -109,6 +113,7 @@ typedef struct
 {
   std::string hash;
   size_t size;
+  std::string name;
 } Asset;
 
 std::list<Asset> loadAssetIndex(const std::string &src);

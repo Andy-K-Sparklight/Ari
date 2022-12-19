@@ -45,11 +45,12 @@ normalizePath(const std::filesystem::path &pt)
   return npath;
 }
 
-static std::hash<std::string> stringHasher;
 std::string
 getNameHash(const std::string &name)
 {
-  return "" + stringHasher(name);
+  std::hash<std::string> stringHasher;
+  auto sz = stringHasher(name);
+  return std::to_string(sz);
 }
 
 std::string

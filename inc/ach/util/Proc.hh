@@ -11,7 +11,7 @@ namespace Commons
 {
 
 void runCommand(const std::string &bin, const std::list<std::string> &args,
-                std::function<void(std::string)> cb, int pipe = 2);
+                std::function<void(std::string, int)> cb, int pipe = 2);
 
 }
 }

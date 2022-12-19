@@ -128,7 +128,7 @@ Artifact::Artifact(const cJSON *src)
 
 Artifact::Artifact() {}
 
-Library::Library(const cJSON *src)
+Library::Library(const cJSON *src, bool checkReq)
 {
   if(!cJSON_IsObject(src))
     {
@@ -142,21 +142,38 @@ Library::Library(const cJSON *src)
       auto parts = Commons::splitStr(name, ":");
       isNative = parts.size() == 4; // If it has 4 parts
       cJSON *urlItem = cJSON_GetObjectItem(src, "url");
+      std::string url;
       if(cJSON_IsString(urlItem))
         {
           // Extend the library path
-          std::string url = cJSON_GetStringValue(urlItem);
-          std::string group = parts[0];
-          std::string proj = parts[1];
-          std::string version = parts[2];
-          std::regex dot("\\.");
-          group = std::regex_replace(group, dot, "/");
-          artifact.path = group + "/" + proj + "/" + version + "/" + proj + "-"
-                          + version + ".jar";
-          artifact.size = 0;
-          artifact.sha1 = "";
-          artifact.url = url + group + "/" + proj + "/" + version + "/" + proj
-                         + "-" + version + ".jar";
+          url = cJSON_GetStringValue(urlItem);
+        }
+      else
+        {
+          url = "https://libraries.minecraft.net/"; // Set default
+        }
+      std::string group = parts[0];
+      std::string proj = parts[1];
+      std::string version = parts[2];
+      std::regex dot("\\.");
+      group = std::regex_replace(group, dot, "/");
+      artifact.path = group + "/" + proj + "/" + version + "/" + proj + "-"
+                      + version + ".jar";
+      artifact.size = 0;
+      artifact.sha1 = "";
+      artifact.url = url + group + "/" + proj + "/" + version + "/" + proj
+                     + "-" + version + ".jar";
+    }
+  if(checkReq)
+    {
+      if(cJSON_HasObjectItem(src, "clientreq")
+         || cJSON_HasObjectItem(src, "serverreq"))
+        {
+          noDownload = false;
+        }
+      else
+        {
+          noDownload = true;
         }
     }
 
@@ -229,6 +246,12 @@ VersionProfile::setup(const cJSON *src)
       id = cJSON_GetStringValue(idItem);
     }
 
+  cJSON *legacyBit = cJSON_GetObjectItem(trans, "isLegacy");
+  if(cJSON_IsBool(legacyBit))
+    {
+      isLegacy = cJSON_IsTrue(legacyBit);
+    }
+
   cJSON *inheritsFromItem = cJSON_GetObjectItem(trans, "inheritsFrom");
   if(cJSON_IsString(inheritsFromItem))
     {
@@ -280,7 +303,28 @@ VersionProfile::setup(const cJSON *src)
     }
 
   cJSON *librariesItem = cJSON_GetObjectItem(trans, "libraries");
-  parseList(libraries, librariesItem);
+
+  if(cJSON_IsArray(librariesItem))
+    {
+      // We want to finish this part manually for Forge
+      int length = cJSON_GetArraySize(librariesItem);
+      bool checkReq = false;
+      for(int i = 0; i < length; i++)
+        {
+          cJSON *currentItem = cJSON_GetArrayItem(librariesItem, i);
+          if(cJSON_HasObjectItem(currentItem, "clientreq")
+             || cJSON_HasObjectItem(currentItem, "serverreq"))
+            {
+              checkReq = true;
+            }
+        }
+      for(int i = 0; i < length; i++)
+        {
+          cJSON *currentItem = cJSON_GetArrayItem(librariesItem, i);
+          Library item(currentItem, checkReq);
+          libraries.push_back(item);
+        }
+    }
 
   cJSON *logItem = cJSON_GetObjectItem(trans, "logging");
   if(cJSON_IsObject(logItem))
@@ -371,6 +415,7 @@ loadAssetIndex(const std::string &src)
   cJSON *currentChild = objects->child;
   while(cJSON_IsObject(currentChild))
     {
+
       cJSON *hash = cJSON_GetObjectItem(currentChild, "hash");
       cJSON *size = cJSON_GetObjectItem(currentChild, "size");
       if(cJSON_IsString(hash) && cJSON_IsNumber(size))
@@ -378,6 +423,7 @@ loadAssetIndex(const std::string &src)
           Asset a;
           a.hash = cJSON_GetStringValue(hash);
           a.size = (size_t)cJSON_GetNumberValue(size);
+          a.name = currentChild->string; // Nametag
           out.push_back(a);
         }
       currentChild = currentChild->next;

@@ -15,6 +15,8 @@ void installAssetIndex(Flow *flow, FlowCallback cb);
 
 void installAssets(Flow *flow, FlowCallback cb);
 
+void copyAssets(Flow *flow, FlowCallback cb);
+
 }
 }
 

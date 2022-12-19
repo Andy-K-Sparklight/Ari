@@ -66,7 +66,7 @@ appendJVM(const std::string &bin, std::function<void(bool)> cb)
     args.push_back("-version");
     Commons::runCommand(
         bin, args,
-        [=](std::string result) -> void {
+        [=](std::string result, int) -> void {
           JVMProfile prof;
           if(result.size() == 0)
             {

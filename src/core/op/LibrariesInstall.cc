@@ -76,11 +76,16 @@ installLibraries(Flow *flow, FlowCallback cb)
   Network::DownloadPack librariesPack;
   for(auto &lib : profile.libraries)
     {
+      if(lib.noDownload)
+        {
+          continue; // Forge
+        }
       if(parseLibRule(lib.rules))
         {
           auto meta = Network::DownloadMeta::mkFromLibrary(
               lib, getInstallPath("libraries"));
           librariesPack.addTask(meta);
+          LOG("Added: " << meta.baseURL);
         }
     }
   LOG("Getting libraries for " << profile.id);

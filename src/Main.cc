@@ -13,11 +13,16 @@
 #include "ach/core/op/ProfileExt.hh"
 #include "ach/core/op/Authenticate.hh"
 #include "ach/core/auto/AutoLoader.hh"
+#include "ach/core/auto/AutoForge.hh"
 #include "ach/core/op/AutoProfile.hh"
 #include "ach/core/op/LibrariesInstall.hh"
 #include "ach/core/op/Flipper.hh"
 #include "ach/core/op/ProfileExt.hh"
+#include "ach/core/op/ProfileInstall.hh"
 #include "ach/core/op/NativesCheck.hh"
+#include "ach/core/auto/AutoForge.hh"
+#include "ach/core/op/Tools.hh"
+#include "ach/core/op/AssetsInstall.hh"
 #include <unistd.h>
 
 int
@@ -103,15 +108,25 @@ main(int argc, char **argv)
       Profile::ACCOUNT_PROFILES.push_back(acc);
       flow.data[AL_FLOWVAR_WIDTH] = "960";
       flow.data[AL_FLOWVAR_HEIGHT] = "540";
-      flow.data[AL_FLOWVAR_PROFILEID] = "1.19.2";
+      flow.data[AL_FLOWVAR_PROFILEID] = "1.4.7";
       flow.data[AL_FLOWVAR_DEMO] = "0";
       flow.data[AL_FLOWVAR_RUNTIME] = "test";
-      flow.data[AL_FLOWVAR_LOADERTYPE] = "Fabric";
-      flow.data[AL_FLOWVAR_LOADERVER] = "0.14.11";
-      flow.data[AL_FLOWVAR_JAVAMAIN] = "java";
+      flow.data[AL_FLOWVAR_JAVAMAIN]
+          = "C:\\Program Files\\Eclipse "
+            "Adoptium\\jdk-8.0.352.8-hotspot\\bin\\java.exe";
       flow.data[AL_FLOWVAR_ACCOUNTINDEX] = "0";
-      flow.addTask(Op::autoProfile);
+      flow.addTask(Op::installProfile);
       flow.addTask(Op::flipInstall);
+      flow.addTask(Op::loadProfile);
+      flow.addTask(Op::installClient);
+      flow.addTask(Op::installLibraries);
+      flow.addTask(Op::flipInstall);
+      flow.addTask(Op::collectNatives);
+      flow.addTask(Op::installAssetIndex);
+      flow.addTask(Op::copyAssets);
+      flow.addTask(Op::flipInstall);
+      flow.addTask(Op::authAccount);
+      flow.addTask(Op::launchGame);
       flow.run();
       sleep(3000);
     }

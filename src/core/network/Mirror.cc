@@ -15,6 +15,7 @@ namespace Network
   "resources.download.minecraft.net:download.mcbbs.net/assets;"               \
   "libraries.minecraft.net:download.mcbbs.net/maven;"                         \
   "files.minecraftforge.net/maven:download.mcbbs.net/maven;"                  \
+  "maven.minecraftforge.net:download.mcbbs.net/maven;"                        \
   "meta.fabricmc.net:download.mcbbs.net/fabric-meta;"                         \
   "maven.fabricmc.net:download.mcbbs.net/maven;"                              \
   ".:."

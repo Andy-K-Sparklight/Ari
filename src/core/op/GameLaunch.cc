@@ -142,6 +142,7 @@ genArgs(const Profile::VersionProfile &prof,
       = prof.assetIndexArtifact.path; // This is actually id
   varMap["auth_uuid"] = flowData[AL_FLOWVAR_AUTHUUID];
   varMap["auth_access_token"] = flowData[AL_FLOWVAR_AUTHTOKEN];
+  varMap["auth_session"] = flowData[AL_FLOWVAR_AUTHTOKEN];
   varMap["clientid"] = "0"; // Not sure, reserved
   varMap["auth_xuid"] = flowData[AL_FLOWVAR_AUTHXUID];
   varMap["user_type"] = "mojang";
@@ -196,7 +197,7 @@ genArgs(const Profile::VersionProfile &prof,
   if(authServer.size() > 0)
     {
       finalArgs.push_back("-javaagent:"
-                          + Commons::normalizePath("authlib-injector.jar")
+                          + Commons::normalizePath("./authlib-injector.jar")
                           + "=" + authServer);
     }
 

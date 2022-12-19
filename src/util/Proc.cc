@@ -2,6 +2,7 @@
 
 #include <uv.h>
 #include <cstring>
+#include <iostream>
 
 namespace Alicorn
 {
@@ -14,7 +15,7 @@ typedef struct
   uv_process_options_t optn;
   uv_pipe_t pipe;
   uv_stdio_container_t cont[3];
-  std::function<void(std::string)> cb;
+  std::function<void(std::string, int code)> cb;
   std::string data;
 } ProcData;
 
@@ -31,7 +32,7 @@ static void
 onExit(uv_process_t *p, int64_t code, int sig)
 {
   auto pc = (ProcData *)p->data;
-  pc->cb(pc->data);
+  pc->cb(pc->data, (int)code);
   uv_close((uv_handle_t *)p, [](uv_handle_t *h) -> void {
     auto p = (ProcData *)h->data;
     delete p;
@@ -60,7 +61,7 @@ onRead(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
 
 void
 runCommand(const std::string &bin, const std::list<std::string> &args,
-           std::function<void(std::string)> cb, int pipe)
+           std::function<void(std::string, int)> cb, int pipe)
 {
   ProcData *p = new ProcData;
   p->cb = cb;
@@ -95,7 +96,7 @@ runCommand(const std::string &bin, const std::list<std::string> &args,
   int r = uv_spawn(uv_default_loop(), &p->proc, &p->optn);
   if(r < 0)
     {
-      cb("");
+      cb("", 1);
       uv_close((uv_handle_t *)&p->pipe, [](uv_handle_t *pipe) -> void {
         ProcData *pd = (ProcData *)pipe->data;
         delete pd;

@@ -3,6 +3,7 @@
 #include "ach/util/Commons.hh"
 #include "ach/core/platform/OSType.hh"
 #include <list>
+#include <regex>
 #include <iostream>
 
 namespace Alicorn
@@ -24,6 +25,7 @@ transformProfile(const cJSON *src)
     {
       // Convert to GEN 2
       // Basically resolve game arguments
+      cJSON_AddBoolToObject(srcObj, "isLegacy", 1); // For ourselves
       cJSON *arguments = cJSON_CreateArray();
       cJSON *args = cJSON_GetObjectItem(srcObj, "minecraftArguments");
       if(cJSON_IsString(args))
@@ -93,7 +95,17 @@ transformProfile(const cJSON *src)
                   cJSON *nativesKey = cJSON_GetObjectItem(natives, k.c_str());
                   if(cJSON_IsString(nativesKey))
                     {
-                      char *nk = cJSON_GetStringValue(nativesKey);
+                      std::string nk = cJSON_GetStringValue(nativesKey);
+                      // This requires ${arch} to be replaced
+                      std::regex arch("\\$\\{arch\\}");
+                      std::string bits;
+#if defined(__x86_64) || defined(__amd64) || defined(_WIN64)                  \
+    || defined(__MINGW64__) || defined(__arm64) || defined(__aarch64__)
+                      bits = "64";
+#else
+                      bits = "32"
+#endif
+                      nk = std::regex_replace(nk, arch, bits);
                       cJSON *classifiers
                           = cJSON_GetObjectItem(downloads, "classifiers");
                       if(cJSON_IsObject(classifiers))
@@ -102,7 +114,7 @@ transformProfile(const cJSON *src)
                               = cJSON_Duplicate(classifiers, true);
                           cJSON_DeleteItemFromObject(downloads, "classifiers");
                           cJSON *nativesLib = cJSON_GetObjectItem(
-                              classifiersCopy, nk); // An artifact
+                              classifiersCopy, nk.c_str()); // An artifact
                           cJSON *newLib = cJSON_CreateObject();
                           cJSON *newLibDownloads = cJSON_CreateObject();
                           cJSON_AddItemReferenceToObject(

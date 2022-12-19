@@ -26,6 +26,7 @@
 #define AL_EXTPROFILE 0x10
 #define AL_LINKCLIENT 0x11
 #define AL_AUTHENTICATE 0x12
+#define AL_COPYASSETS 0x14
 
 #define AL_FLOWVAR_PROFILEID "profileID"
 #define AL_FLOWVAR_ASSETINDEX "assetIndex"

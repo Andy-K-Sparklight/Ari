@@ -9,7 +9,6 @@ namespace Op
 {
 
 // Flow task to install specified modloader.
-// Forge should not use this, use autoForge instead.
 void autoProfile(Flow *flow, FlowCallback cb);
 
 }
