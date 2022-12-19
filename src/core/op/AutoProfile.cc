@@ -1,6 +1,7 @@
 #include "ach/core/op/AutoProfile.hh"
 
 #include "ach/core/auto/AutoLoader.hh"
+#include "ach/util/Commons.hh"
 
 namespace Alicorn
 {
@@ -9,25 +10,37 @@ namespace Op
 void
 autoProfile(Flow *flow, FlowCallback cb)
 {
-  std::string variant = flow->data[AL_FLOWVAR_LOADERTYPE];
+  // In the format of 'Type1,Type2,Type3'
+  auto variants = Commons::splitStr(flow->data[AL_FLOWVAR_LOADERTYPE], ",");
   auto mcv = flow->data[AL_FLOWVAR_PROFILEID];
-  auto ldv = flow->data[AL_FLOWVAR_LOADERVER];
-  if(variant == "Fabric")
+  auto ldvs = Commons::splitStr(flow->data[AL_FLOWVAR_LOADERVER], ",");
+  if(ldvs.size() != variants.size())
     {
-      if(!Auto::installLoader(mcv, ldv, Auto::FABRIC_SUITE))
+      cb(AL_ERR);
+      return;
+    }
+  for(int i = 0; i < variants.size(); i++)
+    {
+      auto &variant = variants[i];
+      auto &ldv = ldvs[i];
+      if(variant == "Fabric")
         {
-          cb(AL_ERR);
-          return;
+          if(!Auto::installLoader(mcv, ldv, Auto::FABRIC_SUITE))
+            {
+              cb(AL_ERR);
+              return;
+            }
+        }
+      else if(variant == "Quilt")
+        {
+          if(!Auto::installLoader(mcv, ldv, Auto::QUILT_SUITE))
+            {
+              cb(AL_ERR);
+              return;
+            }
         }
     }
-  else if(variant == "Quilt")
-    {
-      if(!Auto::installLoader(mcv, ldv, Auto::QUILT_SUITE))
-        {
-          cb(AL_ERR);
-          return;
-        }
-    }
+
   cb(AL_OK);
 }
 }
