@@ -10,6 +10,7 @@
 #include "ach/core/profile/JVMProfile.hh"
 #include <set>
 #include <filesystem>
+#include <unistd.h>
 
 #include <log.hh>
 
@@ -200,8 +201,18 @@ installJVM(std::function<void(bool)> cb)
               {
                 std::filesystem::remove(meta.path);
                 LOG("Verifying JVM installation.")
-                if(std::filesystem::exists(Platform::getJVMPath("18")))
+                auto pt18 = Platform::getJVMPath("18");
+                auto pt8 = Platform::getJVMPath("8");
+                if(std::filesystem::exists(pt18))
                   {
+                    if(Platform::OS_TYPE != Platform::OS_MSDOS)
+                      {
+                        chmod(pt18.c_str(), 0755);
+                        if(std::filesystem::exists(pt8))
+                          {
+                            chmod(pt8.c_str(), 0755);
+                          }
+                      }
                     LOG("Verified JVM installation. Done.");
                     cb(true);
                   }
