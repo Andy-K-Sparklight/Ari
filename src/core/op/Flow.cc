@@ -19,9 +19,9 @@ Flow::run()
 {
   if(tasks.size() == 0)
     {
+      LOG("All task finished, no errors reported.");
       return;
     }
-  LOG("Flow is running next task in queue.")
   FlowTask t = *(tasks.begin());
   tasks.pop_front();
   t(this, [&](int sig) -> void {
