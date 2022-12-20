@@ -19,6 +19,7 @@ class JVMProfile
 public:
   std::string id;
   std::string bin;                       // Main Executable File
+  bool isARM = false;                    // Currently only macOS
   unsigned int specVersion = 0;          // The major version
   bool is64 = false, isServer = false;   // x64 + Server VM is recommended
   std::list<std::string> versionStrings; // Usually 3 lines
