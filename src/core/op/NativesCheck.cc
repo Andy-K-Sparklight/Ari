@@ -3,9 +3,9 @@
 #include <string>
 #include <filesystem>
 #include <list>
-#include "ach/core/op/Tools.hh"
+#include "ach/core/platform/Tools.hh"
 #include "ach/sys/Schedule.hh"
-#include "ach/core/op/Finder.hh"
+#include "ach/core/platform/Finder.hh"
 #include "ach/core/profile/GameProfile.hh"
 #include "ach/util/Commons.hh"
 #include <iostream>
@@ -20,6 +20,7 @@ namespace Op
 void
 collectNatives(Flow *flow, FlowCallback cb)
 {
+  using namespace Platform;
   cb(AL_UNPACKNAT);
   Sys::runOnWorkerThread([=]() -> void {
     Profile::VersionProfile profile = flow->profile;
@@ -53,7 +54,7 @@ collectNatives(Flow *flow, FlowCallback cb)
               {
                 auto dest = std::filesystem::path(target)
                             / std::filesystem::path(f).filename();
-                mkParentDirs(dest);
+                Platform::mkParentDirs(dest);
                 if(!std::filesystem::exists(dest))
                   {
                     std::filesystem::copy_file(f, dest);

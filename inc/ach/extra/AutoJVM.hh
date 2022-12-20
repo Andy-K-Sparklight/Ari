@@ -13,6 +13,9 @@ namespace Extra
 // Scan for existing JVM installation.
 void scanJVM(std::function<void(std::list<std::string>)> cb);
 
+// Install corresponding JVMs.
+void installJVM(std::function<void(bool)> cb);
+
 }
 }
 

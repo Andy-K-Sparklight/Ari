@@ -3,7 +3,7 @@
 #include "ach/core/profile/GameProfile.hh"
 #include "ach/core/platform/OSType.hh"
 #include "ach/core/network/Download.hh"
-#include "ach/core/op/Finder.hh"
+#include "ach/core/platform/Finder.hh"
 #include "ach/sys/Schedule.hh"
 #include <iostream>
 
@@ -83,7 +83,7 @@ installLibraries(Flow *flow, FlowCallback cb)
       if(parseLibRule(lib.rules))
         {
           auto meta = Network::DownloadMeta::mkFromLibrary(
-              lib, getInstallPath("libraries"));
+              lib, Platform::getInstallPath("libraries"));
           librariesPack.addTask(meta);
         }
     }

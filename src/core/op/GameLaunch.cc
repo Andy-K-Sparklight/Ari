@@ -2,7 +2,7 @@
 
 #include "ach/core/platform/OSType.hh"
 #include "ach/util/Commons.hh"
-#include "ach/core/op/Finder.hh"
+#include "ach/core/platform/Finder.hh"
 #include "ach/core/profile/GameProfile.hh"
 #include "ach/core/runtime/GameInstance.hh"
 #include "ach/sys/Schedule.hh"
@@ -98,11 +98,13 @@ genClassPath(const Profile::VersionProfile &prof,
     {
       if(parseRule(l.rules, flowData))
         {
-          commonLibs << getStoragePath("libraries/" + l.artifact.path)
+          commonLibs << Platform::getStoragePath("libraries/"
+                                                 + l.artifact.path)
                      << split;
         }
     }
-  commonLibs << getStoragePath("versions/" + prof.clientArtifact.path)
+  commonLibs << Platform::getStoragePath("versions/"
+                                         + prof.clientArtifact.path)
              << split;
 
   std::string classPathCommon = commonLibs.str();
@@ -129,6 +131,7 @@ static std::list<std::string>
 genArgs(const Profile::VersionProfile &prof,
         std::map<std::string, std::string> &flowData)
 {
+  using namespace Platform;
   LOG("Generating args for " << prof.id);
   std::list<std::string> finalArgs;
   std::map<std::string, std::string> varMap;
@@ -277,7 +280,7 @@ launchGame(Flow *flow, FlowCallback cb)
         game->bin = "java"; // Use system
       }
     LOG("Using bin as " << game->bin);
-    game->cwd = getRuntimePath(flow->data[AL_FLOWVAR_RUNTIME]);
+    game->cwd = Platform::getRuntimePath(flow->data[AL_FLOWVAR_RUNTIME]);
     try
       {
         std::filesystem::create_directories(game->cwd);

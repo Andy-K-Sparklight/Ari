@@ -2,7 +2,7 @@
 #define INCLUDE_ALICORN_CH_ACH_CORE_OP_ASSETSINSTALL
 
 #include "ach/core/op/Flow.hh"
-#include "ach/core/op/Finder.hh"
+#include "ach/core/platform/Finder.hh"
 
 #define ACH_MOJANG_RESOURCES_HOST "https://resources.download.minecraft.net"
 

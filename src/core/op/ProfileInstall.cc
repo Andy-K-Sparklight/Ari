@@ -2,8 +2,8 @@
 
 #include "ach/core/network/Download.hh"
 #include "ach/core/op/Flow.hh"
-#include "ach/core/op/Finder.hh"
-#include "ach/core/op/Tools.hh"
+#include "ach/core/platform/Finder.hh"
+#include "ach/core/platform/Tools.hh"
 #include "ach/core/profile/GameProfile.hh"
 #include "ach/sys/Schedule.hh"
 
@@ -159,15 +159,15 @@ installProfile(Flow *flow, FlowCallback sender)
 
     // Write the profile to temp install path
     std::string fileName = targetID + ".json";
-    std::string tempPath = getInstallPath(std::filesystem::path("versions")
-                                          / targetID / (targetID + ".json"));
-    mkParentDirs(tempPath);
+    std::string tempPath = Platform::getInstallPath(
+        std::filesystem::path("versions") / targetID / (targetID + ".json"));
+    Platform::mkParentDirs(tempPath);
 
     size_t len = profileSrc.size();
     char *rbuf = new char[len];
     memcpy(rbuf, profileSrc.c_str(), len);
     Sys::runOnUVThread([=]() -> void {
-      writeFileAsync(tempPath, rbuf, len, [=](int err) -> void {
+      Platform::writeFileAsync(tempPath, rbuf, len, [=](int err) -> void {
         delete[] rbuf;
         if(err < 0)
           {
@@ -196,7 +196,7 @@ installClient(Flow *flow, FlowCallback sender)
     using namespace Network;
     DownloadMeta clientMeta, clientMappingsMeta;
     DownloadPack clientPack;
-    auto installPrefix = getInstallPath("versions");
+    auto installPrefix = Platform::getInstallPath("versions");
 
     clientMeta
         = DownloadMeta::mkFromArtifact(profile.clientArtifact, installPrefix);

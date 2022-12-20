@@ -1,4 +1,4 @@
-#include "ach/core/op/Finder.hh"
+#include "ach/core/platform/Finder.hh"
 
 #include <functional>
 #include <algorithm>
@@ -8,13 +8,14 @@
 
 namespace Alicorn
 {
-namespace Op
+namespace Platform
 {
 
 #define ACH_ROOT_NAME ".alicorn-ch"
 #define ACH_STORAGE_PATH "storage"
 #define ACH_INSTALL_PATH "installing"
 #define ACH_GAME_PATH "gamemd"
+#define ACH_JVM_PATH "jvm"
 
 static std::filesystem::path ACH_BASE_PATH;
 
@@ -100,6 +101,12 @@ std::string
 getRuntimePath(const std::string &name)
 {
   return Commons::normalizePath(ACH_BASE_PATH / ACH_GAME_PATH / name);
+}
+
+std::string
+getJVMPath(const std::string &name)
+{
+  return Commons::normalizePath(ACH_BASE_PATH / ACH_JVM_PATH / name);
 }
 
 }

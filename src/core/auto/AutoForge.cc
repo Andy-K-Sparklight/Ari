@@ -1,10 +1,10 @@
 #include "ach/core/auto/AutoForge.hh"
 
 #include "ach/core/network/Download.hh"
-#include "ach/core/op/Finder.hh"
+#include "ach/core/platform/Finder.hh"
 #include "ach/util/Commons.hh"
 #include "ach/util/Proc.hh"
-#include "ach/core/op/Tools.hh"
+#include "ach/core/platform/Tools.hh"
 #include "ach/core/platform/OSType.hh"
 #include "ach/core/profile/GameProfile.hh"
 #include "ach/core/profile/JVMProfile.hh"
@@ -71,7 +71,7 @@ runForgeInstaller(const std::string &java, const std::string &bin,
 {
   LOG("Creating temporary launcher profiles.");
   // First, fake a launcher profile
-  auto lppt = Op::getInstallPath("launcher_profiles.json");
+  auto lppt = Platform::getInstallPath("launcher_profiles.json");
 
   std::ofstream lpf(lppt);
   if(!lpf.fail())
@@ -81,7 +81,8 @@ runForgeInstaller(const std::string &java, const std::string &bin,
   lpf.close();
 
   // And we collect the versions
-  auto originVersionsL = Op::scanDirectory(Op::getInstallPath("versions"));
+  auto originVersionsL
+      = Platform::scanDirectory(Platform::getInstallPath("versions"));
   std::set<std::string> originVersions;
   for(auto &v : originVersionsL)
     {
@@ -94,7 +95,7 @@ runForgeInstaller(const std::string &java, const std::string &bin,
   args.push_back("-cp");
   args.push_back(harmony + split + bin);
   args.push_back("rarityeg.alicorn.ForgeInstallerWrapper");
-  args.push_back(Op::getInstallPath());
+  args.push_back(Platform::getInstallPath());
   LOG("Running Forge installer with helper " << harmony);
   Commons::runCommand(
       java, args,
@@ -116,7 +117,8 @@ runForgeInstaller(const std::string &java, const std::string &bin,
             return;
           }
         // Now we collect the versions again
-        auto nowVersions = Op::scanDirectory(Op::getInstallPath("versions"));
+        auto nowVersions
+            = Platform::scanDirectory(Platform::getInstallPath("versions"));
         for(auto &v : nowVersions)
           {
             if(v.ends_with(".json"))
@@ -198,8 +200,8 @@ renameForge(const std::string &originName)
         }
     }
 
-  auto profilePt = Op::getInstallPath("versions/" + originName + "/"
-                                      + originName + ".json");
+  auto profilePt = Platform::getInstallPath("versions/" + originName + "/"
+                                            + originName + ".json");
   std::ifstream f(profilePt);
   std::stringstream ss;
   ss << f.rdbuf();
@@ -210,27 +212,29 @@ renameForge(const std::string &originName)
       cJSON *id = cJSON_GetObjectItem(dat, "id");
       cJSON_SetValuestring(id, nn.c_str());
     }
-  auto nProfilePt = Op::getInstallPath("versions/" + nn + "/" + nn + ".json");
-  Op::mkParentDirs(nProfilePt);
+  auto nProfilePt
+      = Platform::getInstallPath("versions/" + nn + "/" + nn + ".json");
+  Platform::mkParentDirs(nProfilePt);
   std::ofstream nf(nProfilePt);
   nf << cJSON_Print(dat);
   cJSON_Delete(dat);
-  std::filesystem::remove_all(Op::getInstallPath("versions/" + originName));
+  std::filesystem::remove_all(
+      Platform::getInstallPath("versions/" + originName));
 }
 
 static void
 cpMappings(const std::string &mcp, const std::string &game)
 {
   LOG("Dumping game mappings for " << game);
-  auto originalPt
-      = Op::getStoragePath("versions/" + game + "/" + game + ".mappings");
-  auto targetPt
-      = Op::getInstallPath("libraries/net/minecraft/client/" + game + "-" + mcp
-                           + "/client-" + game + "-" + mcp + "-mappings.txt");
+  auto originalPt = Platform::getStoragePath("versions/" + game + "/" + game
+                                             + ".mappings");
+  auto targetPt = Platform::getInstallPath(
+      "libraries/net/minecraft/client/" + game + "-" + mcp + "/client-" + game
+      + "-" + mcp + "-mappings.txt");
 
   if(!std::filesystem::exists(targetPt))
     {
-      Op::mkParentDirs(targetPt);
+      Platform::mkParentDirs(targetPt);
       std::filesystem::copy_file(originalPt, targetPt);
     }
 }
@@ -323,7 +327,7 @@ autoForge(const std::string &url, std::function<void(bool)> cb)
   Network::DownloadMeta forgeInstallerMeta;
   forgeInstallerMeta.baseURL = url;
   std::string installerName = "fgi-" + Commons::getNameHash(url) + ".jar";
-  std::string installerPath = Op::getTempPath(installerName);
+  std::string installerPath = Platform::getTempPath(installerName);
   forgeInstallerMeta.path = installerPath;
   Network::DownloadPack pk;
   pk.addTask(forgeInstallerMeta);
@@ -336,8 +340,8 @@ autoForge(const std::string &url, std::function<void(bool)> cb)
             // OK, let's continue
             // Unpack the installer to somewhere
             LOG("Unpacking Forge installer.");
-            std::string fgWorkFolder = Op::getTempPath("ForgeWork");
-            Op::unzipFile(installerPath, fgWorkFolder);
+            std::string fgWorkFolder = Platform::getTempPath("ForgeWork");
+            Platform::unzipFile(installerPath, fgWorkFolder);
 
             // Let's grab the profile
             auto installJSON
@@ -401,7 +405,7 @@ autoForge(const std::string &url, std::function<void(bool)> cb)
                     if(l.artifact.url.size() > 0)
                       {
                         auto mt = Network::DownloadMeta::mkFromLibrary(
-                            l, Op::getInstallPath("libraries"));
+                            l, Platform::getInstallPath("libraries"));
                         lpack.addTask(mt);
                       }
                   }
@@ -410,7 +414,7 @@ autoForge(const std::string &url, std::function<void(bool)> cb)
                     if(l.artifact.url.size() > 0)
                       {
                         auto mt = Network::DownloadMeta::mkFromLibrary(
-                            l, Op::getInstallPath("libraries"));
+                            l, Platform::getInstallPath("libraries"));
                         lpack.addTask(mt);
                       }
                   }
@@ -452,7 +456,7 @@ autoForge(const std::string &url, std::function<void(bool)> cb)
 
                 // Now compress
                 auto insName = installerName + ".patched.jar";
-                if(!Op::zipDir(fgWorkFolder, insName))
+                if(!Platform::zipDir(fgWorkFolder, insName))
                   {
                     LOG("Failed to patch the installer!");
                     cb(false);
@@ -492,7 +496,8 @@ autoForge(const std::string &url, std::function<void(bool)> cb)
                             if(clib.artifact.url.size() > 0)
                               {
                                 auto mt = Network::DownloadMeta::mkFromLibrary(
-                                    clib, Op::getInstallPath("libraries"));
+                                    clib,
+                                    Platform::getInstallPath("libraries"));
                                 lpack.addTask(mt);
                               };
                           }

@@ -1,7 +1,7 @@
 #include "ach/core/op/Flipper.hh"
 
-#include "ach/core/op/Tools.hh"
-#include "ach/core/op/Finder.hh"
+#include "ach/core/platform/Tools.hh"
+#include "ach/core/platform/Finder.hh"
 #include "ach/sys/Schedule.hh"
 
 #include <iostream>
@@ -16,6 +16,7 @@ namespace Op
 void
 flipInstall(Flow *flow, FlowCallback cb)
 {
+  using namespace Platform;
   cb(AL_FLIPDIR);
   Sys::runOnWorkerThread([=]() -> void {
     auto base = getInstallPath();

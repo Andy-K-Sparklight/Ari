@@ -49,5 +49,9 @@ scanJVM(std::function<void(std::list<std::string>)> cb)
       1);
 }
 
+void
+installJVM(std::function<void(bool)> cb)
+{
+}
 }
 }

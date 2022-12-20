@@ -8,7 +8,7 @@
 
 namespace Alicorn
 {
-namespace Op
+namespace Platform
 {
 // All functions listed here should run on the correct thread!
 

@@ -3,7 +3,7 @@
 #include <httplib.h>
 #include <cJSON.h>
 #include "ach/core/profile/GameProfile.hh"
-#include "ach/core/op/Tools.hh"
+#include "ach/core/platform/Tools.hh"
 #include "ach/sys/Schedule.hh"
 #include "ach/core/network/Download.hh"
 #include <lurl.hpp>
@@ -21,6 +21,7 @@ namespace Op
 void
 installAssetIndex(Flow *flow, FlowCallback cb)
 {
+  using namespace Platform;
   cb(AL_GETASSETINDEX);
   Profile::VersionProfile profile = flow->profile;
   LOG("Getting asset index " << profile.assetIndexArtifact.path);
@@ -75,7 +76,7 @@ loadAssetIndex(Flow *flow, FlowCallback cb)
 {
   cb(AL_LOADASSETIND);
   auto ind = flow->profile.assetIndexArtifact.path;
-  auto pt = getStoragePath("assets/indexes/" + ind + ".json");
+  auto pt = Platform::getStoragePath("assets/indexes/" + ind + ".json");
   std::ifstream f(pt);
   if(!f.fail())
     {
@@ -115,8 +116,8 @@ installAssets(Flow *flow, FlowCallback cb)
           = std::string(ACH_MOJANG_RESOURCES_HOST) + "/" + ind + "/" + a.hash;
       meta.hash = "sha-1=" + a.hash;
       using namespace std::filesystem;
-      meta.path = (path(getInstallPath(path("assets") / "objects")) / path(ind)
-                   / a.hash)
+      meta.path = (path(Platform::getInstallPath(path("assets") / "objects"))
+                   / path(ind) / a.hash)
                       .string();
       meta.size = a.size;
       pak.addTask(meta);
@@ -148,6 +149,7 @@ installAssets(Flow *flow, FlowCallback cb)
 void
 copyAssets(Flow *flow, FlowCallback cb)
 {
+  using namespace Platform;
   cb(AL_COPYASSETS);
   std::string assetIndexSrc = flow->data[AL_FLOWVAR_ASSETINDEX];
   if(assetIndexSrc.size() == 0)

@@ -9,7 +9,7 @@
 
 namespace Alicorn
 {
-namespace Op
+namespace Platform
 {
 
 void initBasePath();
@@ -27,6 +27,7 @@ std::string getInstallPath(const std::filesystem::path &rel);
 std::string getInstallPath(const char *rel);
 
 std::string getRuntimePath(const std::string &name);
+std::string getJVMPath(const std::string &name);
 
 }
 }

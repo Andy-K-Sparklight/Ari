@@ -1,7 +1,7 @@
 #include "ach/core/auto/AutoLoader.hh"
 
-#include "ach/core/op/Finder.hh"
-#include "ach/core/op/Tools.hh"
+#include "ach/core/platform/Finder.hh"
+#include "ach/core/platform/Tools.hh"
 #include <httplib.h>
 #include <cJSON.h>
 #include <lurl.hpp>
@@ -66,9 +66,9 @@ installLoader(const std::string &mcVersion, const std::string &ldVersion,
   if(res != nullptr && res->status == 200)
     {
       std::string name = mcVersion + "+" + detail.name + "-" + ldVersion;
-      auto target
-          = Op::getInstallPath("versions/" + name + "/" + name + ".json");
-      Op::mkParentDirs(target);
+      auto target = Platform::getInstallPath("versions/" + name + "/" + name
+                                             + ".json");
+      Platform::mkParentDirs(target);
       std::ofstream f(target);
       if(!f.fail())
         {

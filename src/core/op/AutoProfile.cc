@@ -3,8 +3,8 @@
 #include "ach/core/auto/AutoLoader.hh"
 #include "ach/core/auto/AutoForge.hh"
 #include "ach/util/Commons.hh"
-#include "ach/core/op/Tools.hh"
-#include "ach/core/op/Finder.hh"
+#include "ach/core/platform/Tools.hh"
+#include "ach/core/platform/Finder.hh"
 
 #include <log.hh>
 
@@ -16,15 +16,16 @@ namespace Op
 static void
 mirrorDir(const std::string &name)
 {
-  auto base = Op::getStoragePath(name);
-  auto files = Op::scanDirectory(base);
+  auto base = Platform::getStoragePath(name);
+  auto files = Platform::scanDirectory(base);
   for(auto &f : files)
     {
       auto relPt = std::filesystem::relative(std::filesystem::path(f), base);
-      auto target = std::filesystem::path(Op::getInstallPath(name)) / relPt;
+      auto target
+          = std::filesystem::path(Platform::getInstallPath(name)) / relPt;
       if(!std::filesystem::exists(target))
         {
-          Op::mkParentDirs(target);
+          Platform::mkParentDirs(target);
           std::filesystem::copy(f, target);
         }
     }

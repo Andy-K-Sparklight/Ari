@@ -2,7 +2,7 @@
 
 #include "ach/drivers/aria2/Aria2Driver.hh"
 #include "ach/sys/Schedule.hh"
-#include "ach/core/op/Finder.hh"
+#include "ach/core/platform/Finder.hh"
 #include "ach/sys/Storage.hh"
 #include "ach/core/network/Download.hh"
 #include "ach/core/profile/JVMProfile.hh"
@@ -23,7 +23,7 @@ initSys()
   // Services
   Sys::loadConfig();
   Sys::setupUVThread();
-  Op::initBasePath();
+  Platform::initBasePath();
   Sys::loadGlobalData(Profile::JVM_PROFILES, ACH_JVM_PROFILE);
   Sys::loadGlobalData(Profile::LAUNCH_PROFILES, ACH_LAUNCH_PROFILE);
   Sys::loadGlobalData(Profile::ACCOUNT_PROFILES, ACH_ACCOUNT_PROFILE);

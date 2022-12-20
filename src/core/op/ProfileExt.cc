@@ -1,8 +1,8 @@
 #include "ach/core/op/ProfileExt.hh"
 
 #include "ach/core/profile/GameProfile.hh"
-#include "ach/core/op/Tools.hh"
-#include "ach/core/op/Finder.hh"
+#include "ach/core/platform/Tools.hh"
+#include "ach/core/platform/Finder.hh"
 #include "ach/sys/Schedule.hh"
 
 #include <fstream>
@@ -58,8 +58,8 @@ static Profile::VersionProfile
 readProfile(const std::string &id, Flow *flow)
 {
   // Performance is quite acceptable
-  std::ifstream f(
-      getStoragePath(std::string("versions/") + id + "/" + id + ".json"));
+  std::ifstream f(Platform::getStoragePath(std::string("versions/") + id + "/"
+                                           + id + ".json"));
   if(f.fail())
     {
       return Profile::VersionProfile();
@@ -105,7 +105,7 @@ void
 linkClient(Flow *flow, FlowCallback cb)
 {
   cb(AL_LINKCLIENT);
-  auto source = getStoragePath(flow->data[AL_FLOWVAR_INHCLIENTSRC]);
+  auto source = Platform::getStoragePath(flow->data[AL_FLOWVAR_INHCLIENTSRC]);
   auto id = flow->data[AL_FLOWVAR_PROFILEID];
   if(source.size() == 0 || id.size() == 0)
     {
@@ -114,12 +114,13 @@ linkClient(Flow *flow, FlowCallback cb)
     }
   LOG("Linking client for " << id);
   Sys::runOnWorkerThread([=]() -> void {
-    std::string target = getInstallPath("versions/" + id + "/" + id + ".jar");
+    std::string target
+        = Platform::getInstallPath("versions/" + id + "/" + id + ".jar");
     if(!std::filesystem::exists(target))
       {
         try
           {
-            mkParentDirs(target);
+            Platform::mkParentDirs(target);
             std::filesystem::copy_file(source, target);
           }
         catch(std::exception &e)

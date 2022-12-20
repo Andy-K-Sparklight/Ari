@@ -1,4 +1,4 @@
-#include "ach/core/op/Tools.hh"
+#include "ach/core/platform/Tools.hh"
 
 #include <uv.h>
 #include <fcntl.h>
@@ -11,7 +11,7 @@
 
 namespace Alicorn
 {
-namespace Op
+namespace Platform
 {
 
 static void
