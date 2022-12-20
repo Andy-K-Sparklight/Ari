@@ -18,6 +18,7 @@ namespace Network
   "maven.minecraftforge.net:download.mcbbs.net/maven;"                        \
   "meta.fabricmc.net:download.mcbbs.net/fabric-meta;"                         \
   "maven.fabricmc.net:download.mcbbs.net/maven;"                              \
+  "github.com:ghproxy.com/https://github.com;"                                \
   ".:."
 
 static std::vector<std::pair<std::string, std::string>> mirrorRules;

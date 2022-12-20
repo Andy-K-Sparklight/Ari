@@ -23,6 +23,7 @@
 #include "ach/core/auto/AutoForge.hh"
 #include "ach/core/op/Tools.hh"
 #include "ach/core/op/AssetsInstall.hh"
+#include "ach/extra/AutoJVM.hh"
 #include <unistd.h>
 
 int
