@@ -103,41 +103,10 @@ main(int argc, char **argv)
       // Run init
       using namespace Alicorn;
       Sys::initSys();
-      Extra::installJVM([](bool b) -> void {
-        Extra::scanJVM([](std::list<std::string> j) -> void {
-          for(auto &l : j)
-            {
-              std::cout << "JVM: " << l << std::endl;
-            }
-        });
-      });
-      sleep(3000);
-      return 0;
       auto acc = Auth::mkLocalAccount("Player");
       Op::Flow flow;
-      flow.data[AL_FLOWVAR_ACCOUNTINDEX] = "0";
-      Profile::ACCOUNT_PROFILES.push_back(acc);
-      flow.data[AL_FLOWVAR_WIDTH] = "960";
-      flow.data[AL_FLOWVAR_HEIGHT] = "540";
-      flow.data[AL_FLOWVAR_PROFILEID] = "1.4.7";
-      flow.data[AL_FLOWVAR_DEMO] = "0";
-      flow.data[AL_FLOWVAR_RUNTIME] = "test";
-      flow.data[AL_FLOWVAR_JAVAMAIN]
-          = "C:\\Program Files\\Eclipse "
-            "Adoptium\\jdk-8.0.352.8-hotspot\\bin\\java.exe";
-      flow.data[AL_FLOWVAR_ACCOUNTINDEX] = "0";
-      flow.addTask(Op::installProfile);
-      flow.addTask(Op::flipInstall);
-      flow.addTask(Op::loadProfile);
-      flow.addTask(Op::installClient);
-      flow.addTask(Op::installLibraries);
-      flow.addTask(Op::flipInstall);
-      flow.addTask(Op::collectNatives);
-      flow.addTask(Op::installAssetIndex);
-      flow.addTask(Op::copyAssets);
-      flow.addTask(Op::flipInstall);
-      flow.addTask(Op::authAccount);
-      flow.addTask(Op::launchGame);
+      flow.data[AL_FLOWVAR_DLJVM] = "0";
+      flow.addTask(Extra::configureJVM);
       flow.run();
       sleep(3000);
     }

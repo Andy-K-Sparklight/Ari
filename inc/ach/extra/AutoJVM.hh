@@ -1,6 +1,7 @@
 #ifndef INCLUDE_ALICORN_CH_ACH_EXTRA_AUTOJVM
 #define INCLUDE_ALICORN_CH_ACH_EXTRA_AUTOJVM
 
+#include "ach/core/op/Flow.hh"
 #include <list>
 #include <string>
 #include <functional>
@@ -15,6 +16,9 @@ void scanJVM(std::function<void(std::list<std::string>)> cb);
 
 // Install corresponding JVMs.
 void installJVM(std::function<void(bool)> cb);
+
+// Flow task to configure JVM
+void configureJVM(Op::Flow *flow, Op::FlowCallback cb);
 
 }
 }
