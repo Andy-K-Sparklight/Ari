@@ -85,7 +85,6 @@ installLibraries(Flow *flow, FlowCallback cb)
           auto meta = Network::DownloadMeta::mkFromLibrary(
               lib, getInstallPath("libraries"));
           librariesPack.addTask(meta);
-          LOG("Added: " << meta.baseURL);
         }
     }
   LOG("Getting libraries for " << profile.id);

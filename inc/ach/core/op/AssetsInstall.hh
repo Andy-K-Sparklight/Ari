@@ -13,6 +13,8 @@ namespace Op
 
 void installAssetIndex(Flow *flow, FlowCallback cb);
 
+void loadAssetIndex(Flow *flow, FlowCallback cb);
+
 void installAssets(Flow *flow, FlowCallback cb);
 
 void copyAssets(Flow *flow, FlowCallback cb);

@@ -71,6 +71,25 @@ installAssetIndex(Flow *flow, FlowCallback cb)
 }
 
 void
+loadAssetIndex(Flow *flow, FlowCallback cb)
+{
+  cb(AL_LOADASSETIND);
+  auto ind = flow->profile.assetIndexArtifact.path;
+  auto pt = getStoragePath("assets/indexes/" + ind + ".json");
+  std::ifstream f(pt);
+  if(!f.fail())
+    {
+      std::stringstream ss;
+      ss << f.rdbuf();
+      flow->data[AL_FLOWVAR_ASSETINDEX] = ss.str();
+      LOG("Loaded asset index for " << ind);
+      cb(AL_OK);
+      return;
+    }
+  cb(AL_ERR);
+}
+
+void
 installAssets(Flow *flow, FlowCallback cb)
 {
   cb(AL_GETASSETS);
@@ -142,11 +161,16 @@ copyAssets(Flow *flow, FlowCallback cb)
     {
       auto src = getStoragePath("assets/objects/" + a.hash.substr(0, 2) + "/"
                                 + a.hash);
-      auto target = getInstallPath("assets/legacy/" + a.name);
-      mkParentDirs(target);
+
+      auto target1 = getInstallPath("assets/legacy/" + a.name);
+      auto target2 = getRuntimePath(flow->data[AL_FLOWVAR_RUNTIME]
+                                    + "/resources/" + a.name);
+      mkParentDirs(target1);
+      mkParentDirs(target2);
       try
         {
-          std::filesystem::copy_file(src, target);
+          std::filesystem::copy_file(src, target1);
+          std::filesystem::copy_file(src, target2);
         }
       catch(std::exception &ignored)
         {
