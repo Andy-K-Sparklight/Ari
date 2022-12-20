@@ -4,6 +4,7 @@
 #include <algorithm>
 #include <iostream>
 #include "ach/util/Commons.hh"
+#include "ach/core/platform/OSType.hh"
 #include <log.hh>
 
 namespace Alicorn
@@ -106,7 +107,27 @@ getRuntimePath(const std::string &name)
 std::string
 getJVMPath(const std::string &name)
 {
-  return Commons::normalizePath(ACH_BASE_PATH / ACH_JVM_PATH / name);
+  auto root = ACH_BASE_PATH / ACH_JVM_PATH / ("jre" + name);
+  if(Platform::OS_TYPE == Platform::OS_DARWIN)
+    {
+      root = root / "Contents/Home/bin/java";
+    }
+  else if(Platform::OS_TYPE == Platform::OS_MSDOS)
+    {
+      root = root / "bin/java.exe";
+    }
+  else if(Platform::OS_TYPE == Platform::OS_UNIX)
+    {
+      root = root / "bin/java";
+    }
+
+  return Commons::normalizePath(root);
+}
+
+std::string
+getJVMHomePath()
+{
+  return Commons::normalizePath(ACH_BASE_PATH / ACH_JVM_PATH);
 }
 
 }

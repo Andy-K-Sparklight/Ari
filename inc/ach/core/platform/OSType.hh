@@ -19,6 +19,7 @@ extern OSType OS_TYPE;
 enum OSArch
 {
   AR_X86,
+  AR_ARM,
   AR_OTHER,
 };
 

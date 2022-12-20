@@ -103,6 +103,16 @@ main(int argc, char **argv)
       // Run init
       using namespace Alicorn;
       Sys::initSys();
+      Extra::installJVM([](bool b) -> void {
+        Extra::scanJVM([](std::list<std::string> j) -> void {
+          for(auto &l : j)
+            {
+              std::cout << "JVM: " << l << std::endl;
+            }
+        });
+      });
+      sleep(3000);
+      return 0;
       auto acc = Auth::mkLocalAccount("Player");
       Op::Flow flow;
       flow.data[AL_FLOWVAR_ACCOUNTINDEX] = "0";

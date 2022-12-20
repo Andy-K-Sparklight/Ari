@@ -9,17 +9,16 @@ namespace Network
 
 // Predifined, usually won't need to change
 #define ACH_MIRROR_RULES                                                      \
-  "piston-meta.mojang.com:download.mcbbs.net;"                                \
-  "launcher.mojang.com:download.mcbbs.net;"                                   \
-  "launchermeta.mojang.com:download.mcbbs.net;"                               \
-  "resources.download.minecraft.net:download.mcbbs.net/assets;"               \
-  "libraries.minecraft.net:download.mcbbs.net/maven;"                         \
-  "files.minecraftforge.net/maven:download.mcbbs.net/maven;"                  \
-  "maven.minecraftforge.net:download.mcbbs.net/maven;"                        \
-  "meta.fabricmc.net:download.mcbbs.net/fabric-meta;"                         \
-  "maven.fabricmc.net:download.mcbbs.net/maven;"                              \
-  "github.com:ghproxy.com/https://github.com;"                                \
-  ".:."
+  "piston-meta.mojang.com|download.mcbbs.net;"                                \
+  "launcher.mojang.com|download.mcbbs.net;"                                   \
+  "launchermeta.mojang.com|download.mcbbs.net;"                               \
+  "resources.download.minecraft.net|download.mcbbs.net/assets;"               \
+  "libraries.minecraft.net|download.mcbbs.net/maven;"                         \
+  "files.minecraftforge.net/maven|download.mcbbs.net/maven;"                  \
+  "maven.minecraftforge.net|download.mcbbs.net/maven;"                        \
+  "meta.fabricmc.net|download.mcbbs.net/fabric-meta;"                         \
+  "maven.fabricmc.net|download.mcbbs.net/maven;"                              \
+  "github.com|ghproxy.com/https://github.com;"
 
 static std::vector<std::pair<std::string, std::string>> mirrorRules;
 
@@ -31,7 +30,7 @@ getMirrors(const std::string &source)
       auto rs = Commons::splitStr(ACH_MIRROR_RULES, ";");
       for(auto &r : rs)
         {
-          auto kv = Commons::splitStr(r, ":");
+          auto kv = Commons::splitStr(r, "|");
           if(kv.size() == 2)
             {
               mirrorRules.push_back({ kv[0], kv[1] });
@@ -39,6 +38,7 @@ getMirrors(const std::string &source)
         }
     }
   std::vector<std::string> resultURLS;
+
   for(auto &r : mirrorRules)
     {
       if(source.contains(r.first))
