@@ -171,13 +171,12 @@ renameForge(const std::string &originName)
   // Origin name is <mcv>-forge-<fgv>
   LOG("Pretty renaming Forge profile.");
   auto verSplit = Commons::splitStr(originName, "-");
-  if(verSplit.size() != 3)
-    {
-      return; // Cannot handle
-    }
 
   std::string nn;
-  if(verSplit[2] == verSplit[0])
+
+  // Legacy Forge name
+  if((verSplit.size() == 3 && verSplit[2] == verSplit[0])
+     || verSplit.size() == 2)
     {
       auto &mid = verSplit[1];
       if(mid.starts_with("Forge"))
@@ -188,7 +187,15 @@ renameForge(const std::string &originName)
     }
   if(nn.size() == 0)
     {
-      nn = verSplit[0] + "+Forge-" + verSplit[2];
+      if(verSplit.size() == 3)
+        {
+          // New Forge name
+          nn = verSplit[0] + "+Forge-" + verSplit[2];
+        }
+      else
+        {
+          return; // Cannot touch
+        }
     }
 
   auto profilePt = Op::getInstallPath("versions/" + originName + "/"
