@@ -13,22 +13,21 @@ namespace Alicorn
 namespace Op
 {
 
+// This will clean the target path.
+// Make sure to do a flip before using this!
 static void
 mirrorDir(const std::string &name)
 {
   auto base = Platform::getStoragePath(name);
-  auto files = Platform::scanDirectory(base);
-  for(auto &f : files)
+  auto target = Platform::getInstallPath(name);
+  if(std::filesystem::exists(target))
     {
-      auto relPt = std::filesystem::relative(std::filesystem::path(f), base);
-      auto target
-          = std::filesystem::path(Platform::getInstallPath(name)) / relPt;
-      if(!std::filesystem::exists(target))
-        {
-          Platform::mkParentDirs(target);
-          std::filesystem::copy(f, target);
-        }
+      std::filesystem::remove_all(target);
     }
+  Platform::mkParentDirs(target);
+  std::filesystem::copy(base, target,
+                        std::filesystem::copy_options::overwrite_existing
+                            | std::filesystem::copy_options::recursive);
 }
 void
 autoProfile(Flow *flow, FlowCallback cb)

@@ -106,11 +106,15 @@ main(int argc, char **argv)
       Sys::initSys();
       auto acc = Auth::mkLocalAccount("Player");
       Op::Flow flow;
-      flow.data[AL_FLOWVAR_PROFILEID] = "1.19.2";
-      flow.data[AL_FLOWVAR_DLJVM] = "0";
+      flow.data[AL_FLOWVAR_PROFILEID] = "1.17.1";
+      flow.data[AL_FLOWVAR_LOADERTYPE] = "Forge";
+      flow.data[AL_FLOWVAR_JAVAMAIN] = "java";
+      flow.data[AL_FLOWVAR_LOADERVER]
+          = "https://maven.minecraftforge.net/net/minecraftforge/forge/"
+            "1.17.1-37.1.1/forge-1.17.1-37.1.1-installer.jar";
       flow.addTask(Op::loadProfile);
-      flow.addTask(Extra::Env::configureJVM);
-      flow.addTask(Op::selectJVM);
+      flow.addTask(Op::autoProfile);
+      flow.addTask(Op::flipInstall);
       flow.run();
       sleep(3000);
     }

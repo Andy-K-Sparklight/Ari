@@ -139,7 +139,7 @@ runForgeInstaller(const std::string &java, const std::string &bin,
         LOG("Could not find newly appended profile, cancelling.")
         cb(""); // Not found
       },
-      1);
+      2);
 }
 
 static std::string
@@ -254,7 +254,7 @@ finalizeForgeRun(Network::DownloadPack lpack, std::string installerPath,
             runForgeInstaller(getJavaForForge(), installerPath,
                               [=](std::string name) -> void {
                                 LOG("Forge installer run completed.");
-                                std::filesystem::remove(installerPath);
+                                std::filesystem::remove_all(installerPath);
                                 if(name.size() > 0)
                                   {
                                     renameForge(name);
@@ -293,7 +293,6 @@ takeOverMappings(cJSON *install)
               = cJSON_GetObjectItem(cJSON_GetArrayItem(processors, i), "args");
           if(cJSON_IsArray(args))
             {
-              bool target;
               int asz = cJSON_GetArraySize(args);
               for(int j = 0; j < asz; j++)
                 {
@@ -303,16 +302,12 @@ takeOverMappings(cJSON *install)
                       std::string a = cJSON_GetStringValue(c);
                       if(a == "DOWNLOAD_MOJMAPS")
                         {
-                          target = true;
+                          cJSON_DeleteItemFromArray(processors, i);
+                          LOG("Removed useless op at " << i);
+                          i--;
                           break;
                         }
                     }
-                }
-              if(target)
-                {
-                  LOG("Target processor found.");
-                  cJSON_DeleteItemFromArray(processors, i);
-                  break;
                 }
             }
         }
@@ -328,6 +323,7 @@ autoForge(const std::string &url, std::function<void(bool)> cb)
   forgeInstallerMeta.baseURL = url;
   std::string installerName = "fgi-" + Commons::getNameHash(url) + ".jar";
   std::string installerPath = Platform::getTempPath(installerName);
+  LOG(installerPath);
   forgeInstallerMeta.path = installerPath;
   Network::DownloadPack pk;
   pk.addTask(forgeInstallerMeta);
@@ -450,20 +446,9 @@ autoForge(const std::string &url, std::function<void(bool)> cb)
                 outFile.close();
 
                 // Dispose sig
-                auto sigPt = std::filesystem::path(fgWorkFolder) / "META-INF";
-                std::filesystem::remove_all(sigPt);
-                std::filesystem::remove(installerName); // Cleanup
+                std::filesystem::remove(installerPath); // Cleanup
 
-                // Now compress
-                auto insName = installerName + ".patched.jar";
-                if(!Platform::zipDir(fgWorkFolder, insName))
-                  {
-                    LOG("Failed to patch the installer!");
-                    cb(false);
-                    return;
-                  }
-                std::filesystem::remove_all(fgWorkFolder);
-                finalizeForgeRun(lpack, insName, cb);
+                finalizeForgeRun(lpack, fgWorkFolder, cb);
                 return;
               }
             else if(cJSON_HasObjectItem(install, "install"))
