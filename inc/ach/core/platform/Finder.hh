@@ -1,5 +1,5 @@
-#ifndef INCLUDE_ALICORN_CH_ACH_CORE_OP_FINDER
-#define INCLUDE_ALICORN_CH_ACH_CORE_OP_FINDER
+#ifndef INCLUDE_ALICORN_CH_ACH_CORE_PLATFORM_FINDER
+#define INCLUDE_ALICORN_CH_ACH_CORE_PLATFORM_FINDER
 
 #include <filesystem>
 #include "ach/core/profile/GameProfile.hh"
@@ -33,4 +33,4 @@ std::string getJVMHomePath();
 }
 }
 
-#endif /* INCLUDE_ALICORN_CH_ACH_CORE_OP_FINDER */
+#endif /* INCLUDE_ALICORN_CH_ACH_CORE_PLATFORM_FINDER */

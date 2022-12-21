@@ -1,5 +1,5 @@
-#ifndef INCLUDE_ALICORN_CH_ACH_CORE_OP_TOOLS
-#define INCLUDE_ALICORN_CH_ACH_CORE_OP_TOOLS
+#ifndef INCLUDE_ALICORN_CH_ACH_CORE_PLATFORM_TOOLS
+#define INCLUDE_ALICORN_CH_ACH_CORE_PLATFORM_TOOLS
 
 #include <functional>
 #include <string>
@@ -42,4 +42,4 @@ std::list<std::string> scanDirectory(const std::filesystem::path pt,
 }
 }
 
-#endif /* INCLUDE_ALICORN_CH_ACH_CORE_OP_TOOLS */
+#endif /* INCLUDE_ALICORN_CH_ACH_CORE_PLATFORM_TOOLS */
