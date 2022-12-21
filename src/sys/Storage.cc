@@ -83,9 +83,9 @@ setValue(const std::string &k, const std::string &v)
   ACH_CONFIG[k] = v;
 }
 
-#define ACH_CFG_LINESPLIT "\n\t\a%%\a\t\n"
-#define ACH_CFG_KVSPLIT "\t\a%$==$%\a\t"
-#define ACH_CFG_SECSPLIT "\t\a\n==%MSIEKCU%==\n\a\t"
+#define ACH_CFG_LINESPLIT "\n\t\a\x06%LN%\x06\a\t\n"
+#define ACH_CFG_KVSPLIT "\t\a\x11==\x11\a\t"
+#define ACH_CFG_SECSPLIT "\t\a\n\x16=%MSIEKCU%=\x16\n\a\t"
 
 void
 saveConfig()
