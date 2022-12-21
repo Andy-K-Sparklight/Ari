@@ -1,4 +1,4 @@
-#include "ach/extra/AutoJVM.hh"
+#include "ach/extra/env/AutoJVM.hh"
 
 #include "ach/util/Proc.hh"
 #include "ach/util/Commons.hh"
@@ -19,6 +19,8 @@ namespace Alicorn
 namespace Extra
 {
 
+namespace Env
+{
 static void
 optionalAdd(std::set<std::string> &jvms, std::string b)
 {
@@ -290,5 +292,6 @@ configureJVM(Op::Flow *flow, Op::FlowCallback cb)
     }
 }
 
+}
 }
 }

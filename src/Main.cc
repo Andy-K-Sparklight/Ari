@@ -24,7 +24,7 @@
 #include "ach/core/platform/Tools.hh"
 #include "ach/core/op/JVMCheck.hh"
 #include "ach/core/op/AssetsInstall.hh"
-#include "ach/extra/AutoJVM.hh"
+#include "ach/extra/env/AutoJVM.hh"
 #include <unistd.h>
 
 int
@@ -109,7 +109,7 @@ main(int argc, char **argv)
       flow.data[AL_FLOWVAR_PROFILEID] = "1.19.2";
       flow.data[AL_FLOWVAR_DLJVM] = "0";
       flow.addTask(Op::loadProfile);
-      flow.addTask(Extra::configureJVM);
+      flow.addTask(Extra::Env::configureJVM);
       flow.addTask(Op::selectJVM);
       flow.run();
       sleep(3000);

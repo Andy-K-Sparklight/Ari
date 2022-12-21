@@ -1,5 +1,5 @@
-#ifndef INCLUDE_ALICORN_CH_ACH_EXTRA_AUTOJVM
-#define INCLUDE_ALICORN_CH_ACH_EXTRA_AUTOJVM
+#ifndef INCLUDE_ALICORN_CH_ACH_EXTRA_ENV_AUTOJVM
+#define INCLUDE_ALICORN_CH_ACH_EXTRA_ENV_AUTOJVM
 
 #include "ach/core/op/Flow.hh"
 #include <list>
@@ -9,6 +9,9 @@
 namespace Alicorn
 {
 namespace Extra
+{
+
+namespace Env
 {
 
 // Scan for existing JVM installation.
@@ -22,5 +25,6 @@ void configureJVM(Op::Flow *flow, Op::FlowCallback cb);
 
 }
 }
+}
 
-#endif /* INCLUDE_ALICORN_CH_ACH_EXTRA_AUTOJVM */
+#endif /* INCLUDE_ALICORN_CH_ACH_EXTRA_ENV_AUTOJVM */
