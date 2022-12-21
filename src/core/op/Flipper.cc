@@ -40,7 +40,7 @@ flipInstall(Flow *flow, FlowCallback cb)
       for(auto &f : files)
         {
           auto target = getStoragePath(std::filesystem::relative(f, base));
-          copyFileAsync(f, target, [=](bool stat) -> void {
+          moveFileAsync(f, target, [=](bool stat) -> void {
             (*count)++;
             if(*count == *total)
               {

@@ -17,7 +17,7 @@ void writeFileAsync(const std::string &pt, const char *data, size_t dataLength,
                     std::function<void(bool)> callback);
 
 // Copy a file on UV thread
-void copyFileAsync(const std::string &src, const std::string &dest,
+void moveFileAsync(const std::string &src, const std::string &dest,
                    std::function<void(bool)> callback);
 
 // Create parent directories on Worker thread

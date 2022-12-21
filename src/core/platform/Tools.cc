@@ -120,27 +120,27 @@ writeFileAsync(const std::string &pt, const char *data, size_t dataLength,
 }
 
 void
-copyFileAsync(const std::string &src, const std::string &dest,
+moveFileAsync(const std::string &src, const std::string &dest,
               std::function<void(bool)> callback)
 {
   uv_fs_t *copyReq = new uv_fs_t;
   auto *funcCpy = new std::function<void(bool)>;
   *funcCpy = callback;
   copyReq->data = funcCpy;
-  uv_fs_copyfile(uv_default_loop(), copyReq, src.c_str(), dest.c_str(),
-                 UV_FS_COPYFILE_FICLONE, [](uv_fs_t *req) -> void {
-                   auto *cb = (std::function<void(bool)> *)req->data;
-                   if(req->result < 0)
-                     {
-                       (*cb)(false);
-                     }
-                   else
-                     {
-                       (*cb)(true);
-                     }
-                   delete cb;
-                   delete req;
-                 });
+  uv_fs_rename(uv_default_loop(), copyReq, src.c_str(), dest.c_str(),
+               [](uv_fs_t *req) -> void {
+                 auto *cb = (std::function<void(bool)> *)req->data;
+                 if(req->result < 0)
+                   {
+                     (*cb)(false);
+                   }
+                 else
+                   {
+                     (*cb)(true);
+                   }
+                 delete cb;
+                 delete req;
+               });
 }
 
 void
