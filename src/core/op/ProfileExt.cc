@@ -46,6 +46,7 @@ mergeProfile(Profile::VersionProfile &mod, const Profile::VersionProfile &base)
     }
 
   mod.inheritsFrom = base.inheritsFrom; // Pass it on
+  mod.baseVersion = base.baseVersion;   // So the last one is the actual base
 
   // Copy others
   mod.clientMappingsArtifact = base.clientMappingsArtifact;

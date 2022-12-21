@@ -388,6 +388,7 @@ VersionProfile::setup(const cJSON *src)
         }
     }
   cJSON_Delete(trans);
+  baseVersion = id; // Temporarily
 }
 
 VersionProfile::VersionProfile(const cJSON *src) { setup(src); }

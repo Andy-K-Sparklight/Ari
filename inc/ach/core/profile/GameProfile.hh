@@ -97,6 +97,7 @@ public:
   std::string mainClass;
   std::string releaseTime;
   std::string installTime;
+  std::string baseVersion; // Version of game content
   ReleaseType type = RT_RELEASE;
   bool isLegacy = false;   // Pre 1.12.2
   bool armSupport = false; // 1.19+
