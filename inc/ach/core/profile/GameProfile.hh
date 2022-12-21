@@ -98,7 +98,8 @@ public:
   std::string releaseTime;
   std::string installTime;
   ReleaseType type = RT_RELEASE;
-  bool isLegacy = false; // Pre 1.12.2
+  bool isLegacy = false;   // Pre 1.12.2
+  bool armSupport = false; // 1.19+
 
 protected:
   void setup(const cJSON *src);

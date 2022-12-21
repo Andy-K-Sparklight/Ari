@@ -322,6 +322,11 @@ VersionProfile::setup(const cJSON *src)
         {
           cJSON *currentItem = cJSON_GetArrayItem(librariesItem, i);
           Library item(currentItem, checkReq);
+          // Patch for macOS arm64
+          if(item.name.contains("natives-macos-arm64"))
+            {
+              armSupport = true;
+            }
           libraries.push_back(item);
         }
     }

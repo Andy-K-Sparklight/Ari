@@ -273,7 +273,7 @@ configureJVM(Op::Flow *flow, Op::FlowCallback cb)
                   LOG("Settled " << *total << " JVMs.");
                   delete completed;
                   delete total;
-                  cb(true);
+                  cb(AL_OK);
                 }
             });
           });

@@ -22,6 +22,7 @@
 #include "ach/core/op/NativesCheck.hh"
 #include "ach/core/auto/AutoForge.hh"
 #include "ach/core/platform/Tools.hh"
+#include "ach/core/op/JVMCheck.hh"
 #include "ach/core/op/AssetsInstall.hh"
 #include "ach/extra/AutoJVM.hh"
 #include <unistd.h>
@@ -105,8 +106,11 @@ main(int argc, char **argv)
       Sys::initSys();
       auto acc = Auth::mkLocalAccount("Player");
       Op::Flow flow;
+      flow.data[AL_FLOWVAR_PROFILEID] = "1.19.2";
       flow.data[AL_FLOWVAR_DLJVM] = "0";
+      flow.addTask(Op::loadProfile);
       flow.addTask(Extra::configureJVM);
+      flow.addTask(Op::selectJVM);
       flow.run();
       sleep(3000);
     }

@@ -52,6 +52,7 @@ mergeProfile(Profile::VersionProfile &mod, const Profile::VersionProfile &base)
   mod.javaVersion = base.javaVersion;
   mod.logArgument = base.logArgument;
   mod.logConfigFileArtifact = base.logConfigFileArtifact;
+  mod.armSupport = mod.armSupport || base.armSupport;
 }
 
 static Profile::VersionProfile
