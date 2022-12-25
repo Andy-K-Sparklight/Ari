@@ -130,5 +130,11 @@ getJVMHomePath()
   return Commons::normalizePath(ACH_BASE_PATH / ACH_JVM_PATH);
 }
 
+std::string
+getBasePath()
+{
+  return Commons::normalizePath(ACH_BASE_PATH);
+}
+
 }
 }

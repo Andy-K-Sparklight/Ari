@@ -11,7 +11,7 @@ namespace Alicorn
 namespace Sys
 {
 
-#define ACH_CONFIG_DIR ".achconf"
+#define ACH_CONFIG_DIR ".alicorn-ch"
 #define ACH_CONFIG_FILE "Main.kv"
 
 std::map<std::string, std::string> ACH_CONFIG;

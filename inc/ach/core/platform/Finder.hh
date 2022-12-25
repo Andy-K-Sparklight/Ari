@@ -30,6 +30,8 @@ std::string getRuntimePath(const std::string &name);
 std::string getJVMPath(const std::string &name);
 std::string getJVMHomePath();
 
+std::string getBasePath();
+
 }
 }
 
