@@ -24,6 +24,7 @@ namespace Mod
 //   - dynamics
 //     - NNNNNN (ID of the launch profile)
 //       - (Copied Files)
+// For unmanaged files, they are registered as version, not meta
 
 class ModMeta
 {
@@ -43,7 +44,7 @@ class ModVersion
 {
 public:
   std::string bid, displayName;
-  std::string pid;
+  std::string pid, provider;
   std::string slug;                            // Inherited From Meta
   std::set<std::string> urls;                  // All files, usually one
   std::set<std::string> gameVersions, loaders; // Supported
@@ -54,6 +55,9 @@ public:
 };
 
 bool collectVersions(const std::set<std::string> vers, std::string lpid);
+
+bool addVersionFromFile(const std::string &filePt);
+
 }
 }
 }

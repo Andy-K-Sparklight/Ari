@@ -3,7 +3,9 @@
 #include "ach/util/Commons.hh"
 #include "ach/core/platform/Finder.hh"
 #include <filesystem>
+#include <fstream>
 #include "ach/core/platform/Tools.hh"
+#include "ach/sys/Storage.hh"
 #include <log.hh>
 
 namespace Alicorn
@@ -87,6 +89,7 @@ ModVersion::ModVersion(std::map<std::string, std::string> &slice)
   displayName = dat["displayName"];
   pid = dat["pid"];
   slug = dat["slug"];
+  provider = dat["provider"];
   strset(urls, dat["urls"], true);
   strset(gameVersions, dat["gameVersions"], true);
   strset(loaders, dat["loaders"], true);
@@ -102,6 +105,7 @@ ModVersion::toMap()
   dat["displayName"] = displayName;
   dat["pid"] = pid;
   dat["slug"] = slug;
+  dat["provider"] = provider;
   strset(urls, dat["urls"], false);
   strset(gameVersions, dat["gameVersions"], false);
   strset(loaders, dat["loaders"], false);
@@ -114,7 +118,7 @@ collectVersions(const std::set<std::string> vers, std::string lpid)
   LOG("Collecting mods for " << lpid);
   for(auto &v : vers)
     {
-      auto src = getBurinBase() / "versions" / v;
+      auto src = getBurinBase() / "files" / v;
       auto files = Platform::scanDirectory(src.string());
       for(auto &f : files)
         {
@@ -133,6 +137,34 @@ collectVersions(const std::set<std::string> vers, std::string lpid)
         }
     }
   LOG("Collected " << vers.size() << " mod files.");
+  return true;
+}
+
+bool
+addVersionFromFile(const std::string &filePt)
+{
+  ModVersion vs;
+  vs.bid = Commons::genUUID();
+  vs.provider = "LOCAL";
+  auto fname = std::filesystem::path(filePt).filename().string();
+  vs.slug = fname;
+  LOG("Creating new version " << vs.bid << " from " << filePt);
+  auto target = getBurinBase() / "files" / vs.bid / fname;
+  auto metaTarget = getBurinBase() / "versions" / vs.bid;
+  Platform::mkParentDirs(target);
+  Platform::mkParentDirs(target);
+  try
+    {
+      auto mmap = vs.toMap();
+      Sys::saveKVG(metaTarget.string(), { mmap });
+      std::filesystem::copy_file(filePt, target);
+    }
+  catch(std::exception &e)
+    {
+      LOG("Something went wrong when creating: " << e.what());
+      return false;
+    }
+  LOG("Created new version " << vs.bid);
   return true;
 }
 
