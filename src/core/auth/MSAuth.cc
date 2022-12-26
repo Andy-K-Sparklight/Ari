@@ -288,10 +288,9 @@ getMSCode(const std::string &part, std::function<void(std::string)> cb)
       Platform::mkParentDirs(loginExec);
       std::filesystem::copy_file(Commons::argv0, loginExec);
 
-      std::list<std::string> args;
-      args.push_back("mslogin");
       Commons::runCommand(
-          loginExec, args, [=](std::string c, int) -> void { cb(c); }, 1);
+          loginExec, { "mslogin" }, [=](std::string c, int) -> void { cb(c); },
+          1);
     }
   catch(std::exception &ignored)
     {
