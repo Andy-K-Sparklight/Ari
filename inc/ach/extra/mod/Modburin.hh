@@ -4,6 +4,7 @@
 #include <string>
 #include <set>
 #include <map>
+#include <filesystem>
 
 namespace Alicorn
 {
@@ -43,7 +44,7 @@ public:
 class ModVersion
 {
 public:
-  std::string bid, displayName;
+  std::string bid, displayName, mid;
   std::string pid, provider;
   std::string slug;                            // Inherited From Meta
   std::set<std::string> urls;                  // All files, usually one
@@ -53,6 +54,8 @@ public:
   ModVersion();
   std::map<std::string, std::string> toMap();
 };
+
+std::filesystem::path getBurinBase();
 
 bool collectVersions(const std::set<std::string> vers, std::string lpid);
 

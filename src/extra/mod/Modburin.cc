@@ -2,7 +2,6 @@
 
 #include "ach/util/Commons.hh"
 #include "ach/core/platform/Finder.hh"
-#include <filesystem>
 #include <fstream>
 #include "ach/core/platform/Tools.hh"
 #include "ach/sys/Storage.hh"
@@ -38,7 +37,8 @@ strset(std::set<std::string> &s, std::string &src, bool write)
         }
       if(src.size() > 0)
         {
-          for(size_t i = 0; i < sizeof(ACH_BURIN_SPLIT) / sizeof(char); i++)
+          for(size_t i = 0; i < (sizeof(ACH_BURIN_SPLIT) / sizeof(char)) - 1;
+              i++) // -1 because sizeof includes NULL at the end
             {
               src.pop_back();
             }
@@ -46,7 +46,7 @@ strset(std::set<std::string> &s, std::string &src, bool write)
     }
 }
 
-static std::filesystem::path
+std::filesystem::path
 getBurinBase()
 {
   return std::filesystem::path(Platform::getBasePath()) / "burin";
@@ -90,6 +90,7 @@ ModVersion::ModVersion(std::map<std::string, std::string> &slice)
   pid = dat["pid"];
   slug = dat["slug"];
   provider = dat["provider"];
+  mid = dat["mid"];
   strset(urls, dat["urls"], true);
   strset(gameVersions, dat["gameVersions"], true);
   strset(loaders, dat["loaders"], true);
@@ -106,6 +107,7 @@ ModVersion::toMap()
   dat["pid"] = pid;
   dat["slug"] = slug;
   dat["provider"] = provider;
+  dat["mid"] = mid;
   strset(urls, dat["urls"], false);
   strset(gameVersions, dat["gameVersions"], false);
   strset(loaders, dat["loaders"], false);

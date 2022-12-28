@@ -74,7 +74,7 @@ runOnUVThread(std::function<void()> func)
 }
 
 void
-runOnWorkerThread(std::function<void()> func)
+runOnWorkerThread(std::function<void()> func, bool join)
 {
   // The tid won't be used by uv again, we can safely use a local one
   uv_thread_t tid;
@@ -88,6 +88,10 @@ runOnWorkerThread(std::function<void()> func)
         delete f; // It was copied
       },
       (void *)funcCpy);
+  if(join)
+    {
+      uv_thread_join(&tid);
+    }
 }
 
 void
@@ -109,5 +113,34 @@ stopUVThread()
   uv_thread_join(&ACH_UV_THREAD); // Block and wait
   LOG("UV thread joined.");
 }
+
+void
+runOnWorkerThreadMulti(std::function<std::function<void()>(int)> gen,
+                       int times)
+{
+  uv_thread_t *threads[times];
+  int i = 0;
+  for(i = 0; i < times; i++)
+    {
+      auto fn = new std::function<void()>;
+      *fn = gen(i);
+      auto th = new uv_thread_t;
+      uv_thread_create(
+          th,
+          [](void *arg) -> void {
+            auto f = (std::function<void()> *)arg;
+            (*f)();
+            delete f;
+          },
+          fn);
+      threads[i] = th;
+    }
+  i--;
+  for(; i >= 0; i--)
+    {
+      uv_thread_join(threads[i]);
+    }
+}
+
 }
 }

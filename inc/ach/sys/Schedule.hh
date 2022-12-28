@@ -25,10 +25,15 @@ void runOnUVThread(std::function<void()> func);
 // If some blocking tasks must be created, put it here.
 // Nothing will collect theses threads when exit.
 // So make sure to exit normally!
-void runOnWorkerThread(std::function<void()> func);
+void runOnWorkerThread(std::function<void()> func, bool join = false);
 
 // Join the UV thread and close the loop
 void stopUVThread();
+
+// Run multiple thread using an action generator.
+// This will join all threads before continuing.
+void runOnWorkerThreadMulti(std::function<std::function<void()>(int)> gen,
+                            int times);
 
 }
 }

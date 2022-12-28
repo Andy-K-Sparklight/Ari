@@ -25,6 +25,8 @@
 #include "ach/core/op/JVMCheck.hh"
 #include "ach/core/op/AssetsInstall.hh"
 #include "ach/extra/env/AutoJVM.hh"
+#include "ach/extra/mod/provider/Modrinth.hh"
+#include "ach/extra/mod/Modburin.hh"
 #include <unistd.h>
 
 int
@@ -104,18 +106,9 @@ main(int argc, char **argv)
       // Run init
       using namespace Alicorn;
       Sys::initSys();
-      auto acc = Auth::mkLocalAccount("Player");
-      Op::Flow flow;
-      flow.data[AL_FLOWVAR_PROFILEID] = "1.17.1";
-      flow.data[AL_FLOWVAR_LOADERTYPE] = "Forge";
-      flow.data[AL_FLOWVAR_JAVAMAIN] = "java";
-      flow.data[AL_FLOWVAR_LOADERVER]
-          = "https://maven.minecraftforge.net/net/minecraftforge/forge/"
-            "1.17.1-37.1.1/forge-1.17.1-37.1.1-installer.jar";
-      flow.addTask(Op::loadProfile);
-      flow.addTask(Op::autoProfile);
-      flow.addTask(Op::flipInstall);
-      flow.run();
+      Extra::Mod::Modrinth::getModMeta("AANobbMI");
+      Extra::Mod::Modrinth::syncModVersions(
+          "6a16617c-4536-208c-b8b7-90fbf175d8d8");
       sleep(3000);
     }
 
