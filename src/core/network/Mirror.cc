@@ -52,6 +52,10 @@ getMirrors(const std::string &source)
             }
         }
     }
+  if(resultURLS.size() == 0)
+    {
+      resultURLS.push_back(source); // Use source
+    }
   return resultURLS;
 }
 
