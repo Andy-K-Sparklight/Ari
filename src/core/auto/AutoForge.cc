@@ -91,10 +91,9 @@ runForgeInstaller(const std::string &java, const std::string &bin,
   // Then let's run the launcher
   auto harmony = Commons::normalizePath("./HarmonyForgeInstallerCLI.jar");
   std::string split = Platform::OS_TYPE == Platform::OS_MSDOS ? ";" : ":";
-  std::list<std::string> args;
-  std::vector<std::string> args = { "-cp", harmony + split + bin,
-                                    "rarityeg.alicorn.ForgeInstallerWrapper",
-                                    Platform::getInstallPath() };
+  std::list<std::string> args = { "-cp", harmony + split + bin,
+                                  "rarityeg.alicorn.ForgeInstallerWrapper",
+                                  Platform::getInstallPath() };
   LOG("Running Forge installer with helper " << harmony);
   Commons::runCommand(
       java, args,
