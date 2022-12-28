@@ -21,6 +21,7 @@ splitStr(const std::string &s, const std::string &delimiter)
   std::vector<std::string> res;
   if(s.size() == 0 || !s.contains(delimiter))
     {
+      res.push_back(s);
       return res;
     }
 
