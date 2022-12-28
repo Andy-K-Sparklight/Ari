@@ -202,6 +202,36 @@ addVersionFromFile(const std::string &filePt)
   return true;
 }
 
+std::string
+pickVersion(const std::string &mid, const std::string &gv,
+            const std::string &ld)
+{
+  LOG("Picking version for " << mid << " with game version " << gv
+                             << " and loader " << ld);
+  auto target = getBurinBase() / "metas" / mid;
+  auto meta = Sys::loadKVG(target.string());
+  if(meta.size() == 0)
+    {
+      return "";
+    }
+  ModMeta mt(meta[0]);
+  for(auto &m : mt.versions)
+    {
+      auto uuid = Commons::genUUID(m);
+      auto vTarget = getBurinBase() / "versions" / uuid;
+      auto vMeta = Sys::loadKVG(vTarget.string());
+      if(vMeta.size() > 0)
+        {
+          ModVersion mv(vMeta[0]);
+          if(mv.loaders.contains(ld) && mv.gameVersions.contains(gv))
+            {
+              return mv.bid;
+            }
+        }
+    }
+  return "";
+}
+
 }
 }
 }
