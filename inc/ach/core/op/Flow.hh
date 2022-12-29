@@ -30,6 +30,7 @@
 #define AL_LOADASSETIND 0x15
 #define AL_DLJVM 0x16
 #define AL_SCANJVM 0x17
+#define AL_CFGLP 0x18
 
 #define AL_FLOWVAR_PROFILEID "profileID"
 #define AL_FLOWVAR_ASSETINDEX "assetIndex"
@@ -51,6 +52,7 @@
 #define AL_FLOWVAR_LOADERTYPE "loaderType"
 #define AL_FLOWVAR_LOADERVER "loaderVer"
 #define AL_FLOWVAR_DLJVM "dlJVM"
+#define AL_FLOWVAR_LCPROFILE "lcProfile"
 
 #include <map>
 #include <string>

@@ -46,6 +46,7 @@ extractCredits(Profile::AccountProfile &acc, const std::string &response)
   acc.mcToken = cJSON_GetStringValue(tokenObj);
   acc.uuid = cJSON_GetStringValue(uuidObj);
   acc.userName = cJSON_GetStringValue(nameObj);
+  acc.xuid = "0";
   LOG("Authentication completed. Hello, " << acc.userName << "!");
   return true;
 }

@@ -25,6 +25,8 @@
 #include "ach/core/op/JVMCheck.hh"
 #include "ach/core/op/AssetsInstall.hh"
 #include "ach/extra/env/AutoJVM.hh"
+#include "ach/core/profile/LaunchProfile.hh"
+#include "ach/core/op/Bootstrap.hh"
 #include "ach/extra/mod/provider/Modrinth.hh"
 #include "ach/extra/mod/Modburin.hh"
 #include <unistd.h>
@@ -106,9 +108,26 @@ main(int argc, char **argv)
       // Run init
       using namespace Alicorn;
       Sys::initSys();
-      Extra::Mod::Modrinth::getModMeta("AANobbMI");
-      Extra::Mod::Modrinth::syncModVersions(
-          "6a16617c-4536-208c-b8b7-90fbf175d8d8");
+      Profile::LaunchProfile lp;
+      Profile::AccountProfile ap = Auth::mkLocalAccount("Player");
+      lp.baseProfile = "1.19.2";
+      lp.runtime = "test";
+      lp.isDemo = false;
+      lp.account = ap.id;
+      lp.id = Commons::genUUID();
+      Profile::LAUNCH_PROFILES.push_back(lp);
+      Profile::ACCOUNT_PROFILES.push_back(ap);
+      Op::Flow flow;
+      flow.data[AL_FLOWVAR_LCPROFILE] = lp.id;
+      flow.data[AL_FLOWVAR_JAVAMAIN]
+          = "C:\\Program Files\\Eclipse "
+            "Adoptium\\jdk-17.0.4.101-hotspot\\bin\\java.exe";
+      flow.addTask(Op::configureLaunch);
+      flow.addTask(Op::loadProfile);
+      flow.addTask(Op::authAccount);
+      flow.addTask(Op::launchGame);
+      flow.run();
+
       sleep(3000);
     }
 

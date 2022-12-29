@@ -26,10 +26,10 @@ public:
   std::string runtime;         // ID of runtime
   std::string account;         // ID of account profile
 
-  std::string baseProfile;       // The core to be launched
-  std::list<std::string> vmArgs; // Extra VM args
-  bool isDemo = false;           // Optn for demo
-  int width = 0, height = 0;     // Window size
+  std::string baseProfile;   // The core to be launched
+  std::string vmArgs;        // Extra VM args, split in spaces
+  bool isDemo = false;       // Optn for demo
+  int width = 0, height = 0; // Window size
 
   LaunchProfile(const std::map<std::string, std::string> &slice);
 

@@ -121,7 +121,14 @@ applyVars(const std::string &src,
       std::regex k("\\$\\{" + kv.first + "\\}");
       while(std::regex_search(s, k))
         {
-          s = std::regex_replace(s, k, kv.second); // Replace all
+          if(kv.second.size() > 0) // Replace only when value present
+            {
+              s = std::regex_replace(s, k, kv.second); // Replace all
+            }
+          else
+            {
+              break;
+            }
         }
     }
   return s;
@@ -225,16 +232,19 @@ genArgs(const Profile::VersionProfile &prof,
 
   // Process Extra Args
   auto vmx = flowData[AL_FLOWVAR_EXVMARGS];
-  std::regex reg(" +");
-  while(std::regex_search(vmx, reg))
+  if(vmx.size() > 0)
     {
-      vmx = std::regex_replace(vmx, reg, "\t\n");
-    }
+      std::regex reg(" +");
+      while(std::regex_search(vmx, reg))
+        {
+          vmx = std::regex_replace(vmx, reg, "\t\n");
+        }
 
-  // Externals
-  for(auto &e : Commons::splitStr(vmx, "\t\n"))
-    {
-      finalArgs.push_back(applyVars(e, varMap)); // Just in case
+      // Externals
+      for(auto &e : Commons::splitStr(vmx, "\t\n"))
+        {
+          finalArgs.push_back(applyVars(e, varMap)); // Just in case
+        }
     }
 
   // In this world, the truly terrifying ones...
@@ -258,6 +268,7 @@ genArgs(const Profile::VersionProfile &prof,
             }
         }
     }
+
   LOG("Generated final args with " << finalArgs.size() << " members.");
   return finalArgs;
 }
