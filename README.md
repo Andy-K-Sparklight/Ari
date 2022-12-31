@@ -4,15 +4,23 @@
 
 ACH is aimed to be a launcher with high performance, high reliability and an easygoing user interface, which is now under development.
 
-## Licensing
-
-All Rights Reserved.
-
 ## Build Instructions
 
 **NOTE:** If you don't want to read the full document, please just use the binary release. The build of ACH is quite different.
 
 **NOTE:** ACH only supports Autotools and GCC currently. Make sure your compiler supports C++23 before continuing.
+
+Basically, the build of ACH contains two parts: the JS part and the C++ part. Please bear that in mind.
+
+### Prerequisites For All Platforms
+
+To build ACH, you need a C/C++ toolchain and a working Node.js installation.
+
+Remember to have `yarn` installed when installing Node.js. If you've forgotten that, run:
+
+```bash
+npm install -g yarn
+```
 
 ### Windows Prerequisites
 
@@ -69,58 +77,74 @@ Make sure also to update your other packages to the latest version, including `g
 ### Build
 
 1. First, clone the repository:
-
+   
    ```bash
    git clone https://github.com/Andy-K-Sparklight/ACH.git --depth 1
    cd ACH
    ```
 
 2. Run the configure script:
-
+   
    For macOS please first run:
-
+   
    ```bash
    chmod +x ./macpb
    ./macpb
    ```
-
+   
    Then for all platforms, run:
-
+   
    ```bash
    autoreconf --install
    ./configure
    ```
-
+   
    If you are using macOS, `configure` might complain about the built-in `make`. If this is the case, run `./configure MAKE=gmake` as the output says.
 
 3. Run the build.
-
+   
    For macOS:
-
+   
    ```bash
    gmake CC=gcc-12 CPP=g++-12 CXX=g++-12 LD=g++-12
    ```
-
+   
    If you've got a later gcc version available, just change the suffix to the proper one.
-
+   
    For other systems, just:
-
+   
    ```bash
    make
    ```
-
+   
    If you want the build to be faster, append flag `-jX` where X is the same as the count of your CPU cores.
 
 4. If building for Windows, run:
-
+   
    ```bash
    ./winfix
    ```
 
-5. Make sure to also copy the assets we needed:
+5. Now build the JS part:
+   
+   ```bash
+   chmod +x ./jsbuild
+   ./jsbuild
+   cp ./dist/* ./
+   ```
 
+6. Make sure to copy the assets we needed:
+   
    ```
    cp ./assets/* ./
    ```
 
-6. The binary output `AlicornCH.exe` or `AlicornCH` is now available under your CWD, just run it and try!
+7. The binary output `AlicornCH.exe` or `AlicornCH` is now available under your CWD, just run it and try!
+
+## Licensing
+
+Copyright (C) 2022 
+
+This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
+
+This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
