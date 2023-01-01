@@ -18,8 +18,6 @@ jobs:
           version: 2.0
       - uses: actions/setup-node@v3
       - uses: actions/checkout@v3
-      - name: Install Yarn
-        run: sudo npm install -g yarn
       - name: Install Packages
         run: yarn install
       - name: Pre Configure
@@ -42,8 +40,6 @@ jobs:
           brew: gcc libuv make automake openssl@1.1 autoconf
       - uses: actions/setup-node@v3
       - uses: actions/checkout@v3
-      - name: Install Yarn
-        run: sudo npm install -g yarn
       - name: Install Packages
         run: yarn install
       - name: Pre Configure
@@ -69,6 +65,7 @@ jobs:
         uses: msys2/setup-msys2@v2
         with:
           update: true
+          path-type: inherit
           msystem: MINGW64
           install: >-
             base-devel
@@ -80,8 +77,6 @@ jobs:
             mingw-w64-x86_64-zlib
       - uses: actions/setup-node@v3
       - uses: actions/checkout@v3
-      - name: Install Yarn
-        run: sudo npm install -g yarn
       - name: Install Packages
         run: yarn install
       - name: Pre Configure
