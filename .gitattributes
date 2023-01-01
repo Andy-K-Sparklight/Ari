@@ -2,4 +2,6 @@ src/libimpl/**/* linguist-vendored
 inc/**/* linguist-vendored
 inc/ach/**/* -linguist-vendored
 inc/wv.hh -linguist-vendored
-inv/log.hh -linguist-vendored
+inc/log.hh -linguist-vendored
+src/uic/components/ImgSrc.ts linguist-vendored
+*.tsx linguist-language=ts
