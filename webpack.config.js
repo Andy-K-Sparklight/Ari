@@ -23,10 +23,18 @@ module.exports = {
         },
         exclude: /node_modules/,
       },
+      {
+        test: /\.css$/i,
+        use: ["style-loader", "css-loader"],
+      },
+      {
+        test: /\.ya?ml$/,
+        use: "yaml-loader",
+      },
     ],
   },
   resolve: {
-    extensions: [".ts", ".js"],
+    extensions: [".ts", ".js", ".tsx", ".css", ".yaml"],
   },
   devtool: "eval-source-map",
   mode: "development",

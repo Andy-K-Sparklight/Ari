@@ -1,0 +1,202 @@
+html {
+  user-select: none;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+body {
+  overflow: visible;
+}
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: var(--a2-base);
+}
+
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: var(--a2-text);
+}
+
+.a2btn {
+  cursor: pointer;
+  color: var(--a2-text);
+  width: 35vw;
+  margin-top: 1vh;
+  border: solid 3px;
+  border-radius: 1vw;
+  box-shadow: 2px 2px var(--a2-shadow);
+  min-height: 10vh;
+  font-size: 1.3rem;
+  font-weight: bold;
+  line-height: 10vh;
+  transition: 200ms;
+  cursor: pointer;
+  transform: translateY(var(--dy));
+}
+
+.a2btn:hover {
+  transform: translateX(-2%);
+  box-shadow: 3px 3px var(--a2-shadow-highligh);
+  background-color: var(--a2-highlight);
+}
+
+.a2btncompact {
+  min-height: 8vh;
+  line-height: 8vh;
+  font-size: 1.2rem;
+  margin-top: 1vh;
+}
+
+.a2btncompact .a2img {
+  transform: translateY(1vh);
+  height: 4vh;
+  margin-left: 1vw;
+}
+
+.a2hintwarn {
+  color: var(--a2-warn);
+  font-size: 1rem;
+}
+
+.a2hintopt {
+  color: var(--a2-opt);
+  font-size: 1rem;
+}
+
+.a2img {
+  transform: translateY(1.5vh);
+  height: 6vh;
+  margin-left: 1vw;
+}
+
+.a2tag {
+  color: var(--a2-subtext);
+  margin-top: 2vh;
+}
+.a2ops {
+  position: fixed;
+  right: 5vw;
+  top: 50vh;
+  transition: 500ms;
+  transform: translateY(-50%);
+  max-height: 90vh;
+  overflow-y: auto;
+  max-width: 60vw;
+}
+
+.a2opsin {
+  padding-left: 2rem;
+  padding-right: 1rem;
+  padding-bottom: 2rem;
+  text-align: right;
+}
+
+.a2optitle {
+  color: var(--a2-base);
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: right;
+}
+
+.a2opsbtns {
+  float: right;
+  text-align: left;
+}
+
+.a2layer {
+  position: fixed;
+  z-index: -1;
+  width: 60vw;
+  height: 100vh;
+  left: 0;
+  top: 0;
+  transform: translateX(-20vw);
+}
+.a2layer::after {
+  content: "";
+  position: absolute;
+  z-index: -2;
+  left: 0;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  transform: skewX(-15deg);
+  box-shadow: 5px 0px 0px var(--a2-highlight);
+  background-color: var(--a2-base);
+}
+
+.a2dispanel {
+  transition: 500ms;
+  position: fixed;
+  left: 5vw;
+  top: 40vh;
+  transform: translateY(-50%);
+}
+
+.a2distitle {
+  width: 60vw;
+  font-size: 2rem;
+  color: var(--a2-title);
+}
+
+.a2text {
+  left: 5vw;
+  width: 40vw;
+  font-size: 1rem;
+  color: var(--a2-typo);
+  margin-top: 0.25rem;
+  transition: 100ms;
+}
+.a2text:hover {
+  color: var(--a2-title);
+}
+
+.a2mask {
+  position: fixed;
+  pointer-events: none;
+  z-index: 999;
+  transition: 200ms;
+  animation-name: A2WarnMask;
+  animation-duration: 500ms;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+@keyframes A2OptJump {
+  0% {
+    --dy: 0;
+  }
+  10% {
+    --dy: -3px;
+  }
+  20% {
+    --dy: 0;
+  }
+  100% {
+    --dy: 0;
+  }
+}
+
+@keyframes A2WarnMask {
+  from {
+    opacity: 20%;
+  }
+  to {
+    opacity: 80%;
+  }
+}
+
+.a2opt {
+  animation-name: A2OptJump;
+  animation-duration: 1s;
+  animation-iteration-count: infinite;
+}

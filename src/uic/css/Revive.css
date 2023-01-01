@@ -1,0 +1,12 @@
+html {
+  --a2-base: #24bfa5;
+  --a2-text: #13ae94;
+  --a2-typo: #c3ffee;
+  --a2-title: white;
+  --a2-shadow: #67676750;
+  --a2-shadow-highligh: gray;
+  --a2-warn: orange;
+  --a2-opt: green;
+  --a2-highlight: #24bfa520;
+  --a2-subtext: gray;
+}
