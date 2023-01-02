@@ -86,8 +86,6 @@ main(int argc, char **argv)
       using namespace Alicorn;
       UIC::initMainWindow(w);
       webview_set_title(w, "A2 | GREAT A2");
-      webview_set_html(w, "<!DOCTYPE html><html><body><div "
-                          "id=\"a2root\"></div></body></html>");
       UIC::bindListener("Ping",
                         [](const std::string &s, UIC::Callback cb) -> void {
                           cb("\"...It's courage.\"");
@@ -99,7 +97,11 @@ main(int argc, char **argv)
       jss << jsf.rdbuf();
       std::string js = jss.str();
       Sys::initSys();
-      webview_eval(w, js.c_str());
+      auto boot = "window.onload=()=>{" + js + "}";
+      webview_init(w, boot.c_str());
+      webview_set_html(w, "<!DOCTYPE html><html><body><div "
+                          "id=\"a2root\"></"
+                          "div></body></html>");
       webview_run(w);
       Sys::downSys();
     }
