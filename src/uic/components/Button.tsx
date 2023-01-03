@@ -1,11 +1,10 @@
-import React, { ReactNode } from "react";
+import React from "react";
 import { IMAGES } from "./ImgSrc";
 
 interface ButtonProps {
-  children?: ReactNode;
   onClick?: () => void;
   text?: string;
-  hint?: "warn" | "opt";
+  hint?: string;
   warn?: string;
   img?: string;
   tag?: string;

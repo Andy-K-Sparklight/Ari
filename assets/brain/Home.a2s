@@ -1,0 +1,17 @@
+pp  Msg Home.Title
+wdg Title
+pp  Msg Home.Greeting1
+wdg Text
+pp  Msg Home.Greeting2
+wdg Text
+
+pp  Label   Home.Exit
+pp  Hint    warn
+ln  0
+ent Choice
+
+uic
+
+::0
+sys Exit
+ret

@@ -39,7 +39,14 @@ initMainWindow(void *w)
                       std::string js = "if(window.a2Reply)window.a2Reply(`"
                                        + ret + "`," + std::to_string(pidInt)
                                        + ")";
-                      webview_eval(mainWindow, js.c_str());
+                      std::string *jsa = new std::string;
+                      *jsa = js;
+                      webview_dispatch(
+                          mainWindow,
+                          [](webview_t w, void *arg) -> void {
+                            webview_eval(w, ((std::string *)arg)->c_str());
+                          },
+                          jsa);
                     };
                     if(parStr != NULL)
                       {
@@ -60,15 +67,42 @@ initMainWindow(void *w)
 void
 sendMessage(const std::string &channel, const std::string &dat)
 {
-  auto js
-      = "if(window.a2Call)window.a2Call(\"" + channel + "\",\"" + dat + "\")";
-  webview_eval(mainWindow, js.c_str());
+  auto js = "if(window.a2Call)window.a2Call(`" + channel + "`,`" + dat + "`)";
+  std::string *str = new std::string;
+  *str = js;
+  webview_dispatch(
+      mainWindow,
+      [](webview_t w, void *jsa) -> void {
+        auto js = (std::string *)jsa;
+        webview_eval(w, js->c_str());
+        delete js;
+      },
+      str);
 }
 
+static Listener NOP = [](const std::string &s, Callback cb) -> void {};
+
 void
-bindListener(const std::string &channel, Listener l)
+bindListener(const std::string &channel, Listener l, bool once)
 {
-  LISTENERS_CTL[channel] = l;
+  if(!once)
+    {
+      LISTENERS_CTL[channel] = l;
+    }
+  else
+    {
+      LISTENERS_CTL[channel]
+          = [l, channel](const std::string &s, Callback cb) -> void {
+        l(s, cb);
+        LISTENERS_CTL[channel] = NOP;
+      };
+    }
+}
+
+void *
+getMainWindow()
+{
+  return mainWindow;
 }
 
 }

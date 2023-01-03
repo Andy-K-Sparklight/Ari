@@ -9,7 +9,7 @@ interface OpPanelProps {
 }
 
 export function OpPanel(props: OpPanelProps): JSX.Element {
-  const [ti, updateTi] = useTr("ops.title.hints");
+  const [ti, updateTi] = useTr("Op.Title");
   return (
     <div
       className={"a2ops"}

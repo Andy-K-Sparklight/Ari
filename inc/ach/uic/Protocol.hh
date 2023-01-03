@@ -15,7 +15,9 @@ void initMainWindow(void *w);
 
 void sendMessage(const std::string &channel, const std::string &dat);
 
-void bindListener(const std::string &channel, Listener l);
+void bindListener(const std::string &channel, Listener l, bool once = false);
+
+void *getMainWindow();
 
 }
 }

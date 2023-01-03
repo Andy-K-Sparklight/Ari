@@ -8,6 +8,8 @@
 #include "ach/core/profile/JVMProfile.hh"
 #include "ach/core/profile/LaunchProfile.hh"
 #include "ach/core/profile/AccountProfile.hh"
+#include "ach/uic/UserData.hh"
+#include "ach/uic/SysCall.hh"
 #include <log.hh>
 
 namespace Alicorn
@@ -22,6 +24,8 @@ initSys()
 
   // Services
   Sys::loadConfig();
+  UIC::loadUserData();
+  UIC::bindAllSysCalls();
   Sys::setupUVThread();
   Platform::initBasePath();
   Sys::loadGlobalData(Profile::JVM_PROFILES, ACH_JVM_PROFILE);
@@ -44,6 +48,7 @@ downSys()
   Sys::runOnUVThread(
       []() -> void { AlicornDrivers::Aria2::ARIA2_DAEMON.stop(); });
   Sys::stopUVThread();
+  UIC::saveUserData();
   Sys::saveConfig();
   LOG("System stopped.");
 }

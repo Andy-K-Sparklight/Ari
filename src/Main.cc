@@ -1,3 +1,5 @@
+#define ACH_USE_TERMINALUI
+
 #include <iostream>
 #include <string>
 #include <vector>
@@ -8,6 +10,10 @@
 #include "ach/uic/Protocol.hh"
 #include <wv.hh>
 #include <cJSON.h>
+#include <log.hh>
+#include "ach/uic/Brain.hh"
+#include "ach/sys/Schedule.hh"
+#include "ach/uic/UserData.hh"
 
 int
 main(int argc, char **argv)
@@ -102,6 +108,15 @@ main(int argc, char **argv)
       webview_set_html(w, "<!DOCTYPE html><html><body><div "
                           "id=\"a2root\"></"
                           "div></body></html>");
+      UIC::bindListener("Ready",
+                        [w](const std::string &dat, UIC::Callback cb) -> void {
+                          Sys::runOnWorkerThread([w]() -> void {
+                            UIC::runProgram(
+                                "Home", []() -> void {}, UIC::getUserData());
+                          });
+                          cb("");
+                        });
+
       webview_run(w);
       Sys::downSys();
     }

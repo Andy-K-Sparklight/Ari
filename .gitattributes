@@ -5,3 +5,4 @@ inc/wv.hh -linguist-vendored
 inc/log.hh -linguist-vendored
 src/uic/components/ImgSrc.ts linguist-vendored
 *.tsx linguist-language=ts
+*.a2s linguist-language=asm
