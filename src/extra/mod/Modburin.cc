@@ -154,21 +154,12 @@ collectVersions(const std::set<std::string> vers, std::string lpid)
   LOG("Linking mod directory: " << remoteModsRoot << " <- " << localModsRoot);
   try
     {
-      std::filesystem::create_hard_link(localModsRoot, remoteModsRoot);
+      std::filesystem::create_symlink(localModsRoot, remoteModsRoot);
     }
   catch(std::exception &e)
     {
-      LOG("Failed to create hard link for mod directory, using symlink "
-          "instead.");
-      try
-        {
-          std::filesystem::create_symlink(localModsRoot, remoteModsRoot);
-        }
-      catch(std::exception &e)
-        {
-          LOG("Could not link mod directory.");
-          return false;
-        }
+      LOG("Could not link mod directory.");
+      return false;
     }
   LOG("Finished linking mod directory.");
   return true;
