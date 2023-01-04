@@ -11,6 +11,7 @@ import { UIText } from "./components/UIText";
 import { Button } from "./components/Button";
 import { tr } from "./components/TP";
 import { Mask } from "./components/Mask";
+import { Progress } from "./components/Progress";
 
 interface DrawInstr {
   widgets: { variant: string; props: Record<string, string> }[];
@@ -34,7 +35,6 @@ function App() {
     });
   }, []);
   const obj = JSON.parse(drawInstr) as DrawInstr;
-  console.log(obj);
   if (Object.keys(obj).length == 0) {
     return <></>;
   }
@@ -47,7 +47,7 @@ function App() {
           if (w.variant == "Title") {
             return <DisTitle key={i}>{tr(w.props["Msg"])}</DisTitle>;
           } else if (w.variant == "Text") {
-            return <UIText key={i}>{tr(w.props["Msg"])}</UIText>;
+            return <UIText key={i} text={tr(w.props["Msg"])} />;
           }
         })}
       </DisPanel>
@@ -55,23 +55,30 @@ function App() {
         {obj.entries.map((e, i) => {
           if (e.variant == "Choice" || e.variant == "") {
             return (
-              <Button
-                key={i}
-                text={tr(e.props["Label"])}
-                hint={e.props["Hint"]}
-                warn={e.props["Warn"]}
-                img={e.props["Img"]}
-                onClick={() => {
-                  if (!submitLock) {
-                    setSubmitLock(true);
-                    sendMessage(
-                      "UIDrawOK",
-                      JSON.stringify({ userChoice: e.jmpLabel })
-                    );
-                  }
-                }}
-              />
+              <>
+                <Button
+                  key={i}
+                  tag={tr(e.props["Tag"])}
+                  text={tr(e.props["Label"])}
+                  hint={e.props["Hint"]}
+                  warn={tr(e.props["Warn"])}
+                  img={e.props["Img"]}
+                  onClick={() => {
+                    if (!submitLock) {
+                      setSubmitLock(true);
+                      setTimeout(() => {
+                        sendMessage(
+                          "UIDrawOK",
+                          JSON.stringify({ userChoice: e.jmpLabel })
+                        );
+                      }, 200);
+                    }
+                  }}
+                />
+              </>
             );
+          } else if (e.variant == "Progress") {
+            return <Progress key={i} />;
           }
         })}
       </OpPanel>

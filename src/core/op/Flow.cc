@@ -15,26 +15,34 @@ Flow::addTask(FlowTask t)
 }
 
 void
-Flow::run()
+Flow::run(std::function<void(bool)> cb)
 {
   if(tasks.size() == 0)
     {
       LOG("All task finished, no errors reported.");
+      if(cb != nullptr)
+        {
+          cb(true);
+        }
       return;
     }
   FlowTask t = *(tasks.begin());
   tasks.pop_front();
-  t(this, [&](int sig) -> void {
+  t(this, [&, cb](int sig) -> void {
     if(sig == AL_ERR)
       {
         LOG("Flow received an err signal, last signal is " << output.back());
         completedStage = totalStage + 1; // Mark as failed and stop executing
+        if(cb != nullptr)
+          {
+            cb(false);
+          }
       }
     else if(sig == AL_OK)
       {
         LOG("Flow received OK signal.");
         completedStage++;
-        this->run(); // Run again for next task
+        this->run(cb); // Run again for next task
       }
     else
       {

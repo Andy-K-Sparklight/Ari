@@ -7,6 +7,7 @@ html {
   --a2-shadow-highligh: gray;
   --a2-warn: orange;
   --a2-opt: green;
-  --a2-highlight: #24bfa520;
+  --a2-highlight: #24bfa530;
+  --a2-bg: #24bfa510;
   --a2-subtext: gray;
 }

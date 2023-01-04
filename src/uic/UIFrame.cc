@@ -47,31 +47,41 @@ UIFrame::run(PCallback cb)
   widgets.clear();
   entries.clear();
   cJSON_Delete(obj);
-  UIC::bindListener(
-      "UIDrawOK", [cb, this](const std::string &data, Callback fcb) -> void {
-        fcb("");
-        auto res = cJSON_Parse(data.c_str());
-        auto userChoice = cJSON_GetObjectItem(res, "userChoice");
-        if(cJSON_IsString(userChoice))
-          {
-            std::string jl = cJSON_GetStringValue(userChoice);
-            this->prog->eip = this->prog->labels[jl];
-            cb();
-            return;
-          }
-        auto userInput = cJSON_GetObjectItem(res, "userInput");
-        if(cJSON_IsArray(userInput))
-          {
-            auto sz = cJSON_GetArraySize(userInput);
-            for(int i = 0; i < sz; i++)
+  if(cb != nullptr)
+    {
+      UIC::bindListener(
+          "UIDrawOK",
+          [cb, this](const std::string &data, Callback fcb) -> void {
+            fcb("");
+            auto res = cJSON_Parse(data.c_str());
+            auto userChoice = cJSON_GetObjectItem(res, "userChoice");
+            if(cJSON_IsString(userChoice))
               {
-                auto cur = cJSON_GetArrayItem(userInput, i);
-                this->prog->stack.push_back(cJSON_GetStringValue(cur));
+                std::string jl = cJSON_GetStringValue(userChoice);
+                if(this->prog->labels.contains(jl))
+                  {
+                    // Do jump if contains, else will just continue from 'uic'
+                    this->prog->eip = this->prog->labels[jl];
+                  }
+
+                cb();
+
+                return;
               }
-            cb();
-            return;
-          }
-      });
+            auto userInput = cJSON_GetObjectItem(res, "userInput");
+            if(cJSON_IsArray(userInput))
+              {
+                auto sz = cJSON_GetArraySize(userInput);
+                for(int i = 0; i < sz; i++)
+                  {
+                    auto cur = cJSON_GetArrayItem(userInput, i);
+                    this->prog->stack.push_back(cJSON_GetStringValue(cur));
+                  }
+                cb();
+                return;
+              }
+          });
+    }
 }
 void
 UIFrame::mkWidget(const std::string &var)

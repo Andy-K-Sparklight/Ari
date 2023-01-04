@@ -41,6 +41,7 @@ body {
   transition: 200ms;
   cursor: pointer;
   transform: translateY(var(--dy));
+  background-color: var(--a2-bg);
 }
 
 .a2btn:hover {
@@ -69,7 +70,7 @@ body {
 
 .a2hintopt {
   color: var(--a2-opt);
-  font-size: 1rem;
+  font-size: 1.5rem;
 }
 
 .a2img {
@@ -97,7 +98,7 @@ body {
   padding-left: 2rem;
   padding-right: 1rem;
   padding-bottom: 2rem;
-  text-align: right;
+  float: right;
 }
 
 .a2optitle {
@@ -107,11 +108,6 @@ body {
   text-align: right;
 }
 
-.a2opsbtns {
-  float: right;
-  text-align: left;
-}
-
 .a2layer {
   position: fixed;
   z-index: -1;
@@ -119,7 +115,7 @@ body {
   height: 100vh;
   left: 0;
   top: 0;
-  transform: translateX(-20vw);
+  transform: translateX(-10vw);
 }
 .a2layer::after {
   content: "";
@@ -156,6 +152,7 @@ body {
   margin-top: 0.25rem;
   transition: 100ms;
 }
+
 .a2text:hover {
   color: var(--a2-title);
 }

@@ -1,12 +1,52 @@
+Guide:
+  Beginning:
+    Title: 你——好!
+    Hello: |
+      初次见面, 请多关照!
+      在接下来的几分钟里, 我们会引导你上手 A2.
+
+      按右边的按钮继续.
+    OK: 好的 (乖巧)
+    Ignore: 下次一定
+    Hint:
+      Opt: 这个按钮在跳动, 因为我们希望你这样做!
+      Warn: 这个按钮有警告颜色, 因为这样做可能很危险!
+
+  JRECheck:
+    Title: 正在检查 Java 环境...
+    Hint: 请稍等, 这不会需要太久.
+    NoJRE:
+      Title: 你没有 Java!
+      Desc: |
+        没有 Java 环境, 就不能玩 Minecraft!
+        让我们帮你安装 Java!
+    PartialJRE:
+      Title: 你有 Java, 但是...
+      Desc: |
+        在 Java 8 与 Java 17+ 中, 你缺少了一个.
+        这意味着, 有些版本你没法玩.
+        让我们帮你安装 Java!
+    FullJRE:
+      Title: 恭喜, 你已有 Java!
+      Desc: |
+        你可以畅玩 Minecraft!
+        让我们继续吧!
+    Btn:
+      Accept: 安装 Java
+      AcceptTag: 在几分钟之内就可以帮你搞定一切!
+      Ignore: 不要安装
+      IgnoreTag: 如果你有什么聪明的方法...
+      IgnoreWarn: 我知道我在做什么!
+      ContinueTag: 这太好了!
+      Continue: 继续
 Home:
   Title:
     - 欢迎使用 A2!
-    - 你——好!
+    - 欢迎回来!
   Greeting1:
     - 有不错的想法?
+    - 感觉动力十足?
   Greeting2:
-    - 新的冒险, 从 A2 这里开启!
+    - 那么, 新的冒险, 即刻开启!
+    - 生命不息, 探索不止, 出发!
   Exit: 离开
-Op:
-  Title:
-    - 如果想要什么, 就提出你的需求!

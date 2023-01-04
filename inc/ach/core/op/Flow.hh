@@ -88,7 +88,7 @@ public:
   std::list<int> output;           // Outputs containing stage ID
   Profile::VersionProfile profile; // Extended var
 
-  void run();
+  void run(std::function<void(bool)> cb = nullptr);
 
   void addTask(FlowTask t);
 };

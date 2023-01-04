@@ -28,6 +28,7 @@ enum InstrVerb
   JNC, // Jump if !carry
   ENT, // Append entry using previous settings
   UIC, // Wait for user input
+  UIP, // Display UI, but do not wait for user
   LN,  // Link this choice with a label in program
   PSH, // Push into stack
   POP, // Pop from stack

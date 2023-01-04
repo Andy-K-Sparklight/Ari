@@ -117,7 +117,7 @@ main(int argc, char **argv)
                         [w](const std::string &dat, UIC::Callback cb) -> void {
                           Sys::runOnWorkerThread([w]() -> void {
                             UIC::runProgram(
-                                "Home", []() -> void {}, UIC::getUserData());
+                                "Main", []() -> void {}, UIC::getUserData());
                           });
                           cb("");
                         });

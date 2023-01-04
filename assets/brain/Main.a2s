@@ -1,0 +1,11 @@
+cmp     $$GuideDone     1
+jc      skipGuide
+
+run     Guide/Beginning
+
+;mov     1       $$GuideDone
+
+
+::skipGuide
+
+run     Home

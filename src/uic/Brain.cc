@@ -4,6 +4,7 @@
 #include <fstream>
 #include <sstream>
 #include <log.hh>
+#include <regex>
 
 namespace Alicorn
 {
@@ -21,9 +22,9 @@ resolveName(const std::string &name)
 static std::map<std::string, unsigned int> VERBS
     = { { "nop", NOP }, { "ret", RET }, { "jmp", JMP }, { "run", RUN },
         { "sys", SYS }, { "wdg", WDG }, { "cmp", CMP }, { "jc", JC },
-        { "jnc", JNC }, { "ent", ENT }, { "uic", UIC }, { "ln", LN },
-        { "psh", PSH }, { "pop", POP }, { "mov", MOV }, { "pp", PP },
-        { "cr", CR } };
+        { "jnc", JNC }, { "ent", ENT }, { "uic", UIC }, { "uip", UIP },
+        { "ln", LN },   { "psh", PSH }, { "pop", POP }, { "mov", MOV },
+        { "pp", PP },   { "cr", CR } };
 
 static unsigned int
 getVerb(const std::string &v)
@@ -35,12 +36,39 @@ getVerb(const std::string &v)
   return 0;
 }
 
+static std::string
+preprocessProgram(const std::string src)
+{
+  auto sv = Commons::splitStr(src, "\n");
+  std::string srcp = src;
+
+  for(auto &l : sv)
+    {
+      // Defines
+      if(l.starts_with(".aka"))
+        {
+          std::string dname, dval, aka;
+          std::stringstream ss(l);
+          ss >> aka >> dname >> dval;
+          if(dname.size() > 0 && dval.size() > 0)
+            {
+              std::regex repl(dname);
+              while(srcp.contains(dname))
+                {
+                  srcp = std::regex_replace(srcp, repl, dval);
+                }
+            }
+        }
+    }
+  return srcp;
+}
+
 Program::Program(const std::string &src, const std::string &n, DataPool *s)
 {
   storage = s;
   name = n;
   frame.prog = this;
-  auto lines = Commons::splitStr(src, "\n");
+  auto lines = Commons::splitStr(preprocessProgram(src), "\n");
   unsigned int i = 0;
   for(auto s : lines)
     {
@@ -52,7 +80,7 @@ Program::Program(const std::string &src, const std::string &n, DataPool *s)
         {
           continue;
         }
-      if(s.starts_with(";"))
+      if(s.starts_with(";") || s.starts_with("."))
         {
           continue;
         }
@@ -145,7 +173,15 @@ Program::run(PCallback cb)
               cb();
               break;
             case JMP:
-              eip = labels[curInstr.a1];
+              if(!labels.contains(curInstr.a1))
+                {
+                  LOG("Warning: Invalid jump target " << curInstr.a1);
+                  eip++;
+                }
+              else
+                {
+                  eip = labels[curInstr.a1];
+                }
               break;
             case RUN:
               eip++;
@@ -210,6 +246,10 @@ Program::run(PCallback cb)
               eip++;
               running = false;
               frame.run([cb, this]() -> void { this->run(cb); });
+              break;
+            case UIP:
+              eip++;
+              frame.run(nullptr);
               break;
             case LN:
               frame.linkLabel = curInstr.a1; // Do not resolve

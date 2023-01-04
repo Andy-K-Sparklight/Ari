@@ -1,0 +1,84 @@
+.aka    #       Guide.JRECheck.
+
+pp      Msg     #Title
+wdg     Title
+
+pp      Msg     #Hint
+wdg     Text
+
+ent     Progress
+
+uip
+
+sys     ScanJava
+mov     Miss    %JRECheckResult
+
+cmp     %JRECheckResult OK
+jc      fullJRE
+
+cmp     %JRECheckResult Miss
+jc      partialJRE
+
+::partialJRE
+
+pp      Msg     #PartialJRE.Title
+wdg     Title
+
+pp      Msg     #PartialJRE.Desc
+wdg     Text
+
+jmp     btns
+
+::noJRE
+
+pp      Msg     #NoJRE.Title
+wdg     Title
+
+pp      Msg     #NoJRE.Desc
+wdg     Text
+
+::btns
+
+pp      Tag     #Btn.AcceptTag
+pp      Label   #Btn.Accept
+pp      Hint    opt
+ln      installJRE
+ent
+
+pp      Tag     #Btn.IgnoreTag
+pp      Label   #Btn.Ignore
+pp      Hint    warn
+pp      Warn    #Btn.IgnoreWarn
+ln      noInstallJRE
+ent
+
+jmp     end
+
+
+::fullJRE
+
+pp      Msg     #FullJRE.Title
+wdg     Title
+
+pp      Msg     #FullJRE.Desc
+wdg     Text
+
+pp      Tag     #Btn.ContinueTag
+pp      Label   #Btn.Continue
+pp      Hint    opt
+ln      ::noInstallJRE
+ent
+
+::end
+
+uic
+
+::installJRE
+
+sys     InstallJRE
+
+::noInstallJRE
+
+run     CreateGame
+
+ret

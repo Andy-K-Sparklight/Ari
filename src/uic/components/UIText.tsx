@@ -1,9 +1,21 @@
 import React from "react";
 
 interface UITextProps {
-  children?: React.ReactNode;
+  text?: string;
 }
 
 export function UIText(props: UITextProps): JSX.Element {
-  return <div className={"a2text"}>{props.children}</div>;
+  const lines = (props.text || "").split("\n");
+  return (
+    <>
+      {lines.map((t, i) => {
+        return (
+          <div key={i} className={"a2text"}>
+            {t}
+            <br />
+          </div>
+        );
+      })}
+    </>
+  );
 }
