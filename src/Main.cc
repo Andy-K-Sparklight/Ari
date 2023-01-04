@@ -81,7 +81,12 @@ main(int argc, char **argv)
                     std::cout << cJSON_GetStringValue(code) << std::endl;
                   }
               }
-            webview_terminate(loginWindow);
+            Alicorn::Sys::runOnMainThread(
+                [loginWindow]() -> void {
+                  webview_destroy(loginWindow);
+                  webview_terminate(loginWindow);
+                },
+                loginWindow);
           },
           w);
       webview_run(w);

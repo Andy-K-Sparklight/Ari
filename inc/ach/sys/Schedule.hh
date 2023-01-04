@@ -35,6 +35,10 @@ void stopUVThread();
 void runOnWorkerThreadMulti(std::function<std::function<void()>(int)> gen,
                             int times);
 
+// Run on main thread
+// Be careful, do not block the main thread!
+void runOnMainThread(std::function<void()> func, void* window);
+
 }
 }
 

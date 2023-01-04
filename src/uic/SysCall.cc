@@ -3,6 +3,7 @@
 #define WEBVIEW_HEADER
 #include <wv.hh>
 #include "ach/uic/Protocol.hh"
+#include "ach/sys/Schedule.hh"
 
 namespace Alicorn
 {
@@ -16,7 +17,13 @@ implExit(ACH_SC_ARGS)
 {
   cb();
   prog.eip = prog.bin.size(); // Make sure to stop the program
-  webview_terminate(getMainWindow());
+  Sys::runOnMainThread(
+      []() -> void {
+        auto mw = getMainWindow();
+        webview_destroy(mw);
+        webview_terminate(mw);
+      },
+      getMainWindow());
 }
 
 void

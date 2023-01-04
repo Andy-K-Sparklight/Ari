@@ -4,6 +4,8 @@
 #include <functional>
 #include <iostream>
 #include <log.hh>
+#define WEBVIEW_HEADER
+#include <wv.hh>
 
 namespace Alicorn
 {
@@ -140,6 +142,19 @@ runOnWorkerThreadMulti(std::function<std::function<void()>(int)> gen,
     {
       uv_thread_join(threads[i]);
     }
+}
+
+void
+runOnMainThread(std::function<void()> func, void *window)
+{
+  auto fp = new std::function<void()>;
+  *fp = func;
+  webview_dispatch(
+      window,
+      [](webview_t w, void *fpa) -> void {
+        (*(std::function<void()> *)fpa)();
+      },
+      (void *)fp);
 }
 
 }

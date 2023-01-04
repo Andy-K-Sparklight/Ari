@@ -1,10 +1,11 @@
 #include "ach/uic/Protocol.hh"
 
-#define WEBVIEW_HEADER
-#include <wv.hh>
 #include <map>
 #include <cJSON.h>
 #include <log.hh>
+#include "ach/sys/Schedule.hh"
+#define WEBVIEW_HEADER
+#include <wv.hh>
 
 namespace Alicorn
 {
@@ -39,14 +40,11 @@ initMainWindow(void *w)
                       std::string js = "if(window.a2Reply)window.a2Reply(`"
                                        + ret + "`," + std::to_string(pidInt)
                                        + ")";
-                      std::string *jsa = new std::string;
-                      *jsa = js;
-                      webview_dispatch(
-                          mainWindow,
-                          [](webview_t w, void *arg) -> void {
-                            webview_eval(w, ((std::string *)arg)->c_str());
+                      Sys::runOnMainThread(
+                          [js]() -> void {
+                            webview_eval(mainWindow, js.c_str());
                           },
-                          jsa);
+                          mainWindow);
                     };
                     if(parStr != NULL)
                       {
@@ -68,16 +66,8 @@ void
 sendMessage(const std::string &channel, const std::string &dat)
 {
   auto js = "if(window.a2Call)window.a2Call(`" + channel + "`,`" + dat + "`)";
-  std::string *str = new std::string;
-  *str = js;
-  webview_dispatch(
-      mainWindow,
-      [](webview_t w, void *jsa) -> void {
-        auto js = (std::string *)jsa;
-        webview_eval(w, js->c_str());
-        delete js;
-      },
-      str);
+  Sys::runOnMainThread(
+      [js]() -> void { webview_eval(mainWindow, js.c_str()); }, mainWindow);
 }
 
 static Listener NOP = [](const std::string &s, Callback cb) -> void {};
