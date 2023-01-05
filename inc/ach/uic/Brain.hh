@@ -35,6 +35,7 @@ enum InstrVerb
   MOV, // Copy data
   PP,  // Assign property
   CR,  // Set carry flag
+  HLT, // Halt, no more ops
 };
 
 typedef struct

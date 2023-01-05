@@ -11,7 +11,7 @@ namespace UIC
 {
 
 void
-UIFrame::run(PCallback cb)
+UIFrame::run(PCallback cb, bool wait)
 {
   auto wgs = cJSON_CreateArray();
   for(auto &w : widgets)
@@ -43,14 +43,13 @@ UIFrame::run(PCallback cb)
   auto obj = cJSON_CreateObject();
   cJSON_AddItemToObject(obj, "widgets", wgs);
   cJSON_AddItemToObject(obj, "entries", ets);
-  UIC::sendMessage("UIDraw", cJSON_Print(obj));
   widgets.clear();
   entries.clear();
-  cJSON_Delete(obj);
-  if(cb != nullptr)
+
+  if(wait)
     {
       UIC::bindListener(
-          "UIDrawOK",
+          "UIResponse",
           [cb, this](const std::string &data, Callback fcb) -> void {
             fcb("");
             auto res = cJSON_Parse(data.c_str());
@@ -80,8 +79,21 @@ UIFrame::run(PCallback cb)
                 cb();
                 return;
               }
-          });
+          },
+          true);
     }
+  else
+    {
+      UIC::bindListener(
+          "UIDrew",
+          [cb](const std::string &data, Callback fcb) -> void {
+            fcb("");
+            cb();
+          },
+          true);
+    }
+  UIC::sendMessage("UIDraw", cJSON_Print(obj));
+  cJSON_Delete(obj);
 }
 void
 UIFrame::mkWidget(const std::string &var)

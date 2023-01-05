@@ -31,6 +31,9 @@ function App() {
         const ins = e.detail;
         setDrawInstr(ins);
         setSubmitLock(false);
+        setTimeout(() => {
+          sendMessage("UIDrew", "");
+        }, 200);
       }
     });
   }, []);
@@ -55,27 +58,26 @@ function App() {
         {obj.entries.map((e, i) => {
           if (e.variant == "Choice" || e.variant == "") {
             return (
-              <>
-                <Button
-                  key={i}
-                  tag={tr(e.props["Tag"])}
-                  text={tr(e.props["Label"])}
-                  hint={e.props["Hint"]}
-                  warn={tr(e.props["Warn"])}
-                  img={e.props["Img"]}
-                  onClick={() => {
-                    if (!submitLock) {
-                      setSubmitLock(true);
-                      setTimeout(() => {
-                        sendMessage(
-                          "UIDrawOK",
-                          JSON.stringify({ userChoice: e.jmpLabel })
-                        );
-                      }, 200);
-                    }
-                  }}
-                />
-              </>
+              <Button
+                key={i}
+                tag={tr(e.props["Tag"])}
+                text={tr(e.props["Label"])}
+                hint={e.props["Hint"]}
+                warn={tr(e.props["Warn"])}
+                img={e.props["Img"]}
+                onClick={() => {
+                  if (!submitLock) {
+                    setSubmitLock(true);
+                    setTimeout(() => {
+                      console.log("SEND UIRESPONSE");
+                      sendMessage(
+                        "UIResponse",
+                        JSON.stringify({ userChoice: e.jmpLabel })
+                      );
+                    }, 200);
+                  }
+                }}
+              />
             );
           } else if (e.variant == "Progress") {
             return <Progress key={i} />;

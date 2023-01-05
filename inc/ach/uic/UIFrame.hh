@@ -32,7 +32,7 @@ public:
   std::vector<Entry> entries;
   Program *prog;
 
-  void run(PCallback cb);
+  void run(PCallback cb, bool wait = true);
   void mkWidget(const std::string &var);
   void mkEntry(const std::string &var);
 };

@@ -24,7 +24,7 @@ static std::map<std::string, unsigned int> VERBS
         { "sys", SYS }, { "wdg", WDG }, { "cmp", CMP }, { "jc", JC },
         { "jnc", JNC }, { "ent", ENT }, { "uic", UIC }, { "uip", UIP },
         { "ln", LN },   { "psh", PSH }, { "pop", POP }, { "mov", MOV },
-        { "pp", PP },   { "cr", CR } };
+        { "pp", PP },   { "cr", CR },   { "hlt", HLT } };
 
 static unsigned int
 getVerb(const std::string &v)
@@ -245,11 +245,12 @@ Program::run(PCallback cb)
             case UIC:
               eip++;
               running = false;
-              frame.run([cb, this]() -> void { this->run(cb); });
+              frame.run([cb, this]() -> void { this->run(cb); }, true);
               break;
             case UIP:
               eip++;
-              frame.run(nullptr);
+              running = false;
+              frame.run([cb, this]() -> void { this->run(cb); }, false);
               break;
             case LN:
               frame.linkLabel = curInstr.a1; // Do not resolve
@@ -290,6 +291,10 @@ Program::run(PCallback cb)
                   carry = true;
                 }
               eip++;
+              break;
+            case HLT:
+              eip++;
+              running = false;
               break;
             }
         }
