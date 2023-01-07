@@ -34,6 +34,9 @@ jobs:
   build-osx:
     runs-on: macos-latest
     steps:
+      - uses: maxim-lobanov/setup-xcode@v1
+        with:
+          xcode-version: "14.2"
       - name: Install Deps
         uses: ConorMacBride/install-package@v1
         with:
