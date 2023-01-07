@@ -26,6 +26,7 @@ Flow::run(std::function<void(bool)> cb)
         }
       return;
     }
+  onProgress(-1); // Set as indefinite first
   FlowTask t = *(tasks.begin());
   tasks.pop_front();
   t(this, [&, cb](int sig) -> void {

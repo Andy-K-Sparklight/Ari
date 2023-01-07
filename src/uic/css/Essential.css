@@ -230,3 +230,22 @@ body {
 .a2logmt {
   color: #939393;
 }
+
+@keyframes Spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(180deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+.a2progindef {
+  animation-name: Spin;
+  animation-iteration-count: infinite;
+  animation-duration: 3s;
+  animation-timing-function: linear;
+}
