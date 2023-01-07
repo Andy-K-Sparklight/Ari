@@ -11,6 +11,11 @@ namespace UIC
 typedef std::function<void(const std::string &)> Callback;
 typedef std::function<void(const std::string &, Callback)> Listener;
 
+#define ACH_DEFAULT_PROGRESS                                                  \
+  [](double p) -> void {                                                      \
+    UIC::sendMessage("SetProgress", std::to_string(p * 100));                 \
+  };
+
 void initMainWindow(void *w);
 
 void sendMessage(const std::string &channel, const std::string &dat);

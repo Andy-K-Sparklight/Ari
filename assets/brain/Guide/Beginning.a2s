@@ -1,19 +1,18 @@
 .aka    #       Guide.Beginning.
 
-pp      Msg     #Title
-wdg     Title
+wdg     Icon    Diamond
+wdg     Title   #Title
+wdg     Text    #Hello
+wdg     Text    #Continue
 
-pp      Msg     #Hello
-wdg     Text
-
-pp      Msg     #Continue
-wdg     Text
-
+pp      Icon    ArrowRight
 pp      Label   #OK 
 pp      Hint    opt
 pp      Tag     #Hint.Opt
+
 ent
 
+pp      Icon    Grin
 pp      Label   #Ignore
 pp      Hint    warn
 pp      Tag     #Hint.Warn

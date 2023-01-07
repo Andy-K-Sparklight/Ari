@@ -18,7 +18,7 @@ namespace Env
 void scanJVM(std::function<void(std::list<std::string>)> cb);
 
 // Install corresponding JVMs.
-void installJVM(std::function<void(bool)> cb);
+void installJVM(std::function<void(bool)> cb, Op::FlowProgress pg);
 
 // Flow task to configure JVM
 void configureJVM(Op::Flow *flow, Op::FlowCallback cb);

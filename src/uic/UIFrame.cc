@@ -64,7 +64,6 @@ UIFrame::run(PCallback cb, bool wait)
                   }
 
                 cb();
-
                 return;
               }
             auto userInput = cJSON_GetObjectItem(res, "userInput");

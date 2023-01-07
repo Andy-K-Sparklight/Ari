@@ -1,17 +1,14 @@
 .aka    #       Guide.JRECheck.
 
-pp      Msg     #Title
-wdg     Title
-
-pp      Msg     #Hint
-wdg     Text
+wdg     Icon    Java
+wdg     Title   #Title
+wdg     Text    #Hint
 
 ent     Progress
 
 uip
 
 sys     ScanJava
-mov     Miss    %JRECheckResult
 
 cmp     %JRECheckResult OK
 jc      fullJRE
@@ -21,30 +18,28 @@ jc      partialJRE
 
 ::partialJRE
 
-pp      Msg     #PartialJRE.Title
-wdg     Title
-
-pp      Msg     #PartialJRE.Desc
-wdg     Text
+wdg     Icon    Java
+wdg     Title   #PartialJRE.Title
+wdg     Text    #PartialJRE.Desc
 
 jmp     btns
 
 ::noJRE
 
-pp      Msg     #NoJRE.Title
-wdg     Title
-
-pp      Msg     #NoJRE.Desc
-wdg     Text
+wdg     Icon    Java
+wdg     Title   #NoJRE.Title
+wdg     Text    #NoJRE.Desc
 
 ::btns
 
+pp      Icon    Install
 pp      Tag     #Btn.AcceptTag
 pp      Label   #Btn.Accept
 pp      Hint    opt
 ln      installJRE
 ent
 
+pp      Icon    Skip
 pp      Tag     #Btn.IgnoreTag
 pp      Label   #Btn.Ignore
 pp      Hint    warn
@@ -57,16 +52,15 @@ jmp     end
 
 ::fullJRE
 
-pp      Msg     #FullJRE.Title
-wdg     Title
+wdg     Icon    Java
+wdg     Title   #FullJRE.Title
+wdg     Text    #FullJRE.Desc
 
-pp      Msg     #FullJRE.Desc
-wdg     Text
-
+pp      Icon    ArrowRight
 pp      Tag     #Btn.ContinueTag
 pp      Label   #Btn.Continue
 pp      Hint    opt
-ln      ::noInstallJRE
+ln      noInstallJRE
 ent
 
 ::end
@@ -75,7 +69,16 @@ uic
 
 ::installJRE
 
+wdg     Title   #InstallJRE.Title
+wdg     Text    #InstallJRE.Desc
+
+ent     Progress
+
+uip
+
 sys     InstallJRE
+
+jmp     fullJRE
 
 ::noInstallJRE
 

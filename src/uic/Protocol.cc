@@ -3,6 +3,7 @@
 #include <map>
 #include <cJSON.h>
 #include <log.hh>
+#include <algorithm>
 #include "ach/sys/Schedule.hh"
 #define WEBVIEW_HEADER
 #include <wv.hh>
@@ -13,6 +14,7 @@ namespace UIC
 {
 
 static webview_t mainWindow;
+static bool mainWindowReady = false;
 static std::map<std::string, Listener> LISTENERS_CTL;
 
 void
@@ -31,8 +33,14 @@ initMainWindow(void *w)
             int pidInt = (int)cJSON_GetNumberValue(pid);
             if(cJSON_IsString(chn))
               {
-                auto fn
-                    = LISTENERS_CTL[std::string(cJSON_GetStringValue(chn))];
+                auto chnStr = std::string(cJSON_GetStringValue(chn));
+                // Tweak to set ready flag
+                if(chnStr == "Ready")
+                  {
+                    mainWindowReady = true;
+                  }
+
+                auto fn = LISTENERS_CTL[chnStr];
                 if(fn != nullptr)
                   {
                     auto parStr = cJSON_GetStringValue(par);
@@ -65,9 +73,22 @@ initMainWindow(void *w)
 void
 sendMessage(const std::string &channel, const std::string &dat)
 {
-  auto js = "if(window.a2Call)window.a2Call(`" + channel + "`,`" + dat + "`)";
-  Sys::runOnMainThread(
-      [js]() -> void { webview_eval(mainWindow, js.c_str()); }, mainWindow);
+  if(mainWindowReady)
+    {
+      std::string datr = dat;
+      size_t start_pos = 0;
+      while((start_pos = datr.find("\\", start_pos)) != std::string::npos)
+        {
+          datr = datr.replace(start_pos, 1, "\\\\");
+          start_pos += 2;
+        }
+      auto js
+          = "if(window.a2Call)window.a2Call(`" + channel + "`,`" + datr + "`)";
+
+      Sys::runOnMainThread(
+          [js]() -> void { webview_eval(mainWindow, js.c_str()); },
+          mainWindow);
+    }
 }
 
 static Listener NOP = [](const std::string &s, Callback cb) -> void {};
@@ -83,8 +104,8 @@ bindListener(const std::string &channel, Listener l, bool once)
     {
       LISTENERS_CTL[channel]
           = [l, channel](const std::string &s, Callback cb) -> void {
-        l(s, cb);
         LISTENERS_CTL[channel] = NOP;
+        l(s, cb);
       };
     }
 }

@@ -71,6 +71,8 @@ typedef std::function<void(int)> FlowCallback;
 
 typedef std::function<void(Flow *flow, FlowCallback cb)> FlowTask;
 
+typedef std::function<void(double)> FlowProgress;
+
 // A flow is a tracker to complete the install progress
 // It will collect files and track progress of each task
 // This is a endpoint, there are no return value or callback.
@@ -87,6 +89,7 @@ public:
   unsigned int completedStage = 0, totalStage = 0; // Counter
   std::list<int> output;           // Outputs containing stage ID
   Profile::VersionProfile profile; // Extended var
+  FlowProgress onProgress = nullptr;
 
   void run(std::function<void(bool)> cb = nullptr);
 

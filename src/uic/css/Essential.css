@@ -28,6 +28,7 @@ body {
 
 .a2btn {
   cursor: pointer;
+  display: flex;
   color: var(--a2-text);
   width: 35vw;
   margin-top: 1vh;
@@ -60,6 +61,7 @@ body {
 .a2btncompact .a2img {
   transform: translateY(1vh);
   height: 4vh;
+  width: 4vh;
   margin-left: 1vw;
 }
 
@@ -74,14 +76,21 @@ body {
 }
 
 .a2img {
-  transform: translateY(1.5vh);
+  transform: translateY(2vh);
   height: 6vh;
+  width: 6vh;
   margin-left: 1vw;
+  margin-right: 1vw;
+}
+
+.a2img > svg {
+  color: var(--a2-base);
 }
 
 .a2tag {
   color: var(--a2-subtext);
   margin-top: 2vh;
+  font-weight: lighter;
 }
 .a2ops {
   position: fixed;
@@ -196,4 +205,28 @@ body {
   animation-name: A2OptJump;
   animation-duration: 1s;
   animation-iteration-count: infinite;
+}
+
+@keyframes Glow {
+  from {
+    filter: drop-shadow(0 0 0px var(--a2-typo));
+    color: var(--a2-typo);
+  }
+  to {
+    filter: drop-shadow(0 0 2px var(--a2-typo));
+    color: var(--a2-title);
+  }
+}
+
+.a2glowing > svg {
+  animation-name: Glow;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+  animation-duration: 2s;
+  color: var(--a2-typo);
+  transform: translateX(-1vw);
+}
+
+.a2logmt {
+  color: #939393;
 }

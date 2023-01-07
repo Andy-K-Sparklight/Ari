@@ -12,6 +12,9 @@ import { Button } from "./components/Button";
 import { tr } from "./components/TP";
 import { Mask } from "./components/Mask";
 import { Progress } from "./components/Progress";
+import { IMAGES } from "./components/ImgSrc";
+import { NetSpeed } from "./components/NetSpeed";
+import { Logs } from "./components/Logs";
 
 interface DrawInstr {
   widgets: { variant: string; props: Record<string, string> }[];
@@ -29,11 +32,21 @@ function App() {
     window.addEventListener("UIDraw", (e) => {
       if (e instanceof CustomEvent) {
         const ins = e.detail;
-        setDrawInstr(ins);
-        setSubmitLock(false);
-        setTimeout(() => {
-          sendMessage("UIDrew", "");
-        }, 200);
+        const draw = () => {
+          setDrawInstr(ins);
+          setSubmitLock(false);
+          setTimeout(() => {
+            sendMessage("UIDrew", "");
+          }, 200);
+        };
+        if (!submitLock) {
+          setSubmitLock(true);
+          setTimeout(() => {
+            draw();
+          }, 200);
+        } else {
+          draw();
+        }
       }
     });
   }, []);
@@ -44,13 +57,25 @@ function App() {
   return (
     <>
       <Layer />
+      <Logs />
       <Mask color={"orange"} />
       <DisPanel show={!submitLock}>
         {obj.widgets.map((w, i) => {
+          const def = w.props["Argv0"];
           if (w.variant == "Title") {
-            return <DisTitle key={i}>{tr(w.props["Msg"])}</DisTitle>;
+            return <DisTitle key={i}>{tr(def || w.props["Msg"])}</DisTitle>;
           } else if (w.variant == "Text") {
-            return <UIText key={i} text={tr(w.props["Msg"])} />;
+            return <UIText key={i} text={tr(def || w.props["Msg"])} />;
+          } else if (w.variant == "Icon") {
+            return (
+              <div
+                key={i}
+                className={"a2img a2glowing"}
+                style={{ width: "4rem", height: "4rem" }}
+              >
+                {IMAGES[def || w.props["Icon"]]}
+              </div>
+            );
           }
         })}
       </DisPanel>
@@ -64,12 +89,11 @@ function App() {
                 text={tr(e.props["Label"])}
                 hint={e.props["Hint"]}
                 warn={tr(e.props["Warn"])}
-                img={e.props["Img"]}
+                img={e.props["Icon"]}
                 onClick={() => {
                   if (!submitLock) {
                     setSubmitLock(true);
                     setTimeout(() => {
-                      console.log("SEND UIRESPONSE");
                       sendMessage(
                         "UIResponse",
                         JSON.stringify({ userChoice: e.jmpLabel })
@@ -84,6 +108,7 @@ function App() {
           }
         })}
       </OpPanel>
+      <NetSpeed />
     </>
   );
 }

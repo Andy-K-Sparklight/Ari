@@ -30,17 +30,20 @@ implExit(ACH_SC_ARGS)
       getMainWindow());
 }
 
+#define ACH_SCANJAVA_VAR "%JRECheckResult"
+
 static void
 implScanJava(ACH_SC_ARGS)
 {
   Op::Flow *flow = new Op::Flow;
   flow->data[AL_FLOWVAR_DLJVM] = "0";
+  flow->onProgress = ACH_DEFAULT_PROGRESS;
   flow->addTask(Extra::Env::configureJVM);
   flow->run([&prog, cb, flow](bool) -> void {
     bool has8, has17;
     if(Profile::JVM_PROFILES.size() == 0)
       {
-        prog.locals["%JRECheckResult"] = "No";
+        prog.locals[ACH_SCANJAVA_VAR] = "No";
       }
     for(auto &p : Profile::JVM_PROFILES)
       {
@@ -55,14 +58,27 @@ implScanJava(ACH_SC_ARGS)
       }
     if(has8 && has17)
       {
-        prog.locals["%JRECheckResult"] = "OK";
+        prog.locals[ACH_SCANJAVA_VAR] = "OK";
       }
     else
       {
-        prog.locals["%JRECheckResult"] = "Miss";
+        prog.locals[ACH_SCANJAVA_VAR] = "Miss";
       }
     cb();
     delete flow;
+  });
+}
+
+static void
+implInstallJRE(ACH_SC_ARGS)
+{
+  Op::Flow *flow = new Op::Flow;
+  flow->data[AL_FLOWVAR_DLJVM] = "1";
+  flow->addTask(Extra::Env::configureJVM);
+  flow->onProgress = ACH_DEFAULT_PROGRESS;
+  flow->run([&prog, cb](bool suc) -> void {
+    prog.carry = suc;
+    cb();
   });
 }
 
@@ -71,6 +87,7 @@ bindAllSysCalls()
 {
   bindSysCall("Exit", implExit);
   bindSysCall("ScanJava", implScanJava);
+  bindSysCall("InstallJRE", implInstallJRE);
 }
 
 }

@@ -152,7 +152,7 @@ scanJVM(std::function<void(std::list<std::string>)> cb)
 #define ACH_JVM_DL_GNU "gnu.zip"
 
 void
-installJVM(std::function<void(bool)> cb)
+installJVM(std::function<void(bool)> cb, Op::FlowProgress pg)
 {
   std::string dlUrl = ACH_JVM_DL_ROOT;
   if(Platform::OS_TYPE == Platform::OS_MSDOS)
@@ -194,6 +194,7 @@ installJVM(std::function<void(bool)> cb)
   pk.addTask(meta);
   pk.assignUpdateCallback([=](const Network::DownloadPack *pack) -> void {
     auto stat = pack->getStat();
+    pg((double)stat.completedSize / stat.totalSize);
     if(stat.completed + stat.failed == stat.total)
       {
         if(stat.failed == 0)
@@ -288,7 +289,7 @@ configureJVM(Op::Flow *flow, Op::FlowCallback cb)
     }
   else
     {
-      installJVM(anyCb);
+      installJVM(anyCb, flow->onProgress);
     }
 }
 

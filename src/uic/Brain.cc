@@ -204,6 +204,7 @@ Program::run(PCallback cb)
                 }
               break;
             case WDG:
+              frame.props["Argv0"] = curInstr.a2; // Fallback parameter
               frame.mkWidget(curInstr.a1);
               eip++;
               break;

@@ -1,17 +1,18 @@
-pp  Msg Home.Title
-wdg Title
-pp  Msg Home.Greeting1
-wdg Text
-pp  Msg Home.Greeting2
-wdg Text
+.aka    #       Home.
 
-pp  Label   Home.Exit
-pp  Hint    warn
-ln  0
-ent Choice
+wdg     Title   #Title
+wdg     Text    #Greeting1
+wdg     Text    #Greeting2
+
+pp      Icon    PowerOff
+pp      Label   Home.Exit
+pp      Hint    warn
+ln      0
+ent     Choice
 
 uic
 
 ::0
-sys Exit
+
+sys     Exit
 ret

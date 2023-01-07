@@ -9,6 +9,7 @@
 #include "ach/util/Commons.hh"
 #include "ach/core/network/Mirror.hh"
 #include "ach/sys/Storage.hh"
+#include "ach/uic/Protocol.hh"
 #include <log.hh>
 
 namespace Alicorn
@@ -306,6 +307,7 @@ setupDownloadsSync()
             }
           Sys::runOnWorkerThread([]() -> void {
             downloadsSyncing = true;
+            size_t dlSpeed = 0;
             for(size_t i = 0; i < ALL_DOWNLOADS.size(); i++)
               {
                 auto d = ALL_DOWNLOADS[i];
@@ -317,7 +319,9 @@ setupDownloadsSync()
                     LOG("Erased one finished download.")
                     i--;
                   }
+                dlSpeed += s.speed;
               }
+            UIC::sendMessage("SetNetSpeed", std::to_string(dlSpeed));
             downloadsSyncing = false;
           });
         },

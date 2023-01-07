@@ -29,13 +29,36 @@ export function Button(props: ButtonProps): JSX.Element {
 
   return (
     <>
-      {props.tag ? <div className={"a2tag"}>{props.tag}</div> : ""}
+      {props.tag ? (
+        <div className={"a2tag"}>
+          <br />
+          {props.tag.split("\n").map((s, i) => {
+            if (s) {
+              return (
+                <React.Fragment key={i}>
+                  {s}
+                  <br />
+                </React.Fragment>
+              );
+            }
+          })}
+        </div>
+      ) : (
+        ""
+      )}
       <div
         style={{
           borderColor:
             props.hint == "warn" ? "var(--a2-warn)" : "var(--a2-base)",
         }}
-        onClick={props.onClick}
+        onClick={() => {
+          if (props.onClick) {
+            props.onClick();
+          }
+          if (props.hint == "warn") {
+            window.dispatchEvent(new CustomEvent("-A2WarnMask"));
+          }
+        }}
         className={cname}
         onMouseEnter={() => {
           if (props.hint == "warn") {
@@ -48,9 +71,11 @@ export function Button(props: ButtonProps): JSX.Element {
           }
         }}
       >
-        <img className={"a2img"} src={IMAGES[props.img || ""]}></img>
-        {" " + (props.text || "") + " "}
-        <span className={"a2hint" + (props.hint || "")}>{hintContent}</span>
+        <div className={"a2img"}>{IMAGES[props.img || ""]}</div>
+        <div>
+          {" " + (props.text || "") + " "}
+          <span className={"a2hint" + (props.hint || "")}>{hintContent}</span>
+        </div>
       </div>
     </>
   );

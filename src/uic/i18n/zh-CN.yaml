@@ -9,9 +9,8 @@ Guide:
     OK: 好的 (乖巧)
     Ignore: 下次一定
     Hint:
-      Opt: 这个按钮在跳动, 因为我们希望你这样做!
-      Warn: 这个按钮有警告颜色, 因为这样做可能很危险!
-
+      Opt: 这个按钮在跳动, 点它就对了!
+      Warn: 一般不点橙色的按钮, 除非你很有经验!
   JRECheck:
     Title: 正在检查 Java 环境...
     Hint: 请稍等, 这不会需要太久.
@@ -31,6 +30,11 @@ Guide:
       Desc: |
         你可以畅玩 Minecraft!
         让我们继续吧!
+    InstallJRE:
+      Title: 请稍等...
+      Desc: |
+        正在下载和安装 Java 环境.
+        这可能需要几分钟, 请不要着急...的说.
     Btn:
       Accept: 安装 Java
       AcceptTag: 在几分钟之内就可以帮你搞定一切!

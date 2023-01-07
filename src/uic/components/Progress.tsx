@@ -8,8 +8,8 @@ export function Progress(_props: {}): JSX.Element {
   useState(() => {
     const foo = (e: Event) => {
       if (e instanceof CustomEvent) {
-        const pst = parseInt(e.detail);
-        setProgress(pst);
+        const pst = parseFloat(e.detail) || 0;
+        setProgress(Math.floor(pst * 100) / 100);
       }
     };
     window.addEventListener("SetProgress", foo);
