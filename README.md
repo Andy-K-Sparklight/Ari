@@ -58,6 +58,8 @@ brew link openssl@1.1 --force
 
 Make sure you've also got `clang` installed to compile some codebase with Apple's extensions.
 
+According to our CI, you also need to install Xcode version 14.1 beta 3 or any newer version to avoid LD bugs.
+
 Then we're ready.
 
 ### GNU/Linux Prerequisites
@@ -128,6 +130,7 @@ Make sure also to update your other packages to the latest version, including `g
 5. Now build the JS part:
    
    ```bash
+   yarn install
    chmod +x ./jsbuild
    ./jsbuild
    cp ./dist/* ./
@@ -143,7 +146,7 @@ Make sure also to update your other packages to the latest version, including `g
 
 ## Licensing
 
-Copyright (C) 2022 
+Copyright (C) 2022 A2 Craftware Tek MC.
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
