@@ -146,7 +146,9 @@ Make sure also to update your other packages to the latest version, including `g
 
 ## Licensing
 
-Copyright (C) 2022 A2 Craftware Tek MC.
+Copyright (C) 2022-2023 A2 Craftware Tek MC.
+
+This program is distributed under the GNU General Public License (Version 3). If a later version is available, then the latest one applies.
 
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
