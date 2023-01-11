@@ -249,3 +249,26 @@ body {
   animation-duration: 3s;
   animation-timing-function: linear;
 }
+
+.a2input {
+  font-family: "Source Code Pro", "Fira Code", Monaco, Consolas, "Courier New",
+    Courier, monospace;
+  border: 2px solid #aeaeae;
+  border-radius: 1rem;
+  min-height: 2em;
+  width: 32vw;
+  font-size: 1.2em;
+  color: var(--a2-base);
+  padding-left: 1em;
+  padding-right: 1em;
+  transition: 100ms;
+  margin-top: 1vh;
+}
+.a2input::placeholder {
+  color: #aeaeae;
+}
+
+.a2input:focus {
+  border: 2px solid var(--a2-base);
+  outline: none;
+}

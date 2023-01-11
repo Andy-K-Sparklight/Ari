@@ -1,5 +1,6 @@
 import React from "react";
 import { IMAGES } from "./ImgSrc";
+import { Tag } from "./Tag";
 
 interface ButtonProps {
   onClick?: () => void;
@@ -29,23 +30,7 @@ export function Button(props: ButtonProps): JSX.Element {
 
   return (
     <>
-      {props.tag ? (
-        <div className={"a2tag"}>
-          <br />
-          {props.tag.split("\n").map((s, i) => {
-            if (s) {
-              return (
-                <React.Fragment key={i}>
-                  {s}
-                  <br />
-                </React.Fragment>
-              );
-            }
-          })}
-        </div>
-      ) : (
-        ""
-      )}
+      <Tag s={props.tag} />
       <div
         style={{
           borderColor:

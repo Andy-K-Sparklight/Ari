@@ -24,6 +24,10 @@ export function tr(k?: string): string {
   if (k === undefined) {
     return "";
   }
+  if (k.startsWith("!")) {
+    // Means no translation
+    return k.slice(1);
+  }
   const vals = findVal(k);
   if (vals instanceof Array) {
     return vals[Math.floor(Math.random() * vals.length)] || "";

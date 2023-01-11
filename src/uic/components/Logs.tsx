@@ -41,7 +41,7 @@ export function Logs(_props: {}): JSX.Element {
       <p
         style={{
           fontFamily:
-            "'Source Code Pro', 'Fira Code', Monaco, Consolas, 'Courier New', Courier, monospaced",
+            "'Source Code Pro', 'Fira Code', Monaco, Consolas, 'Courier New', Courier, monospace",
           width: "90%",
           height: "90%",
           overflowY: "scroll",

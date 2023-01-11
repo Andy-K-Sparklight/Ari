@@ -15,6 +15,7 @@ import { Progress } from "./components/Progress";
 import { IMAGES } from "./components/ImgSrc";
 import { NetSpeed } from "./components/NetSpeed";
 import { Logs } from "./components/Logs";
+import { TextInput } from "./components/TextInput";
 
 interface DrawInstr {
   widgets: { variant: string; props: Record<string, string> }[];
@@ -28,6 +29,7 @@ interface DrawInstr {
 function App() {
   const [drawInstr, setDrawInstr] = useState("{}");
   const [submitLock, setSubmitLock] = useState(false);
+  const [dataStack, setDataStack] = useState<string[]>([]);
   useEffect(() => {
     window.addEventListener("UIDraw", (e) => {
       if (e instanceof CustomEvent) {
@@ -105,6 +107,22 @@ function App() {
             );
           } else if (e.variant == "Progress") {
             return <Progress key={i} />;
+          } else if (e.variant == "Input") {
+            console.log(e.props);
+            return (
+              <TextInput
+                key={i}
+                tag={tr(e.props["Tag"])}
+                value={dataStack[i] || ""}
+                type={tr(e.props["Type"])}
+                onChange={(s) => {
+                  const p = dataStack.concat();
+                  p[i] = s;
+                  setDataStack(p);
+                }}
+                placeholder={tr(e.props["Ph"])}
+              />
+            );
           }
         })}
       </OpPanel>
