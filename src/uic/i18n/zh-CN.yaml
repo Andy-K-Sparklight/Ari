@@ -43,6 +43,12 @@ Guide:
       IgnoreWarn: 我知道我在做什么!
       ContinueTag: 这太好了!
       Continue: 继续
+  AddAccount:
+    Title: 添加帐户
+    Desc: |
+      MC 需要登录帐户来游玩, 我们现在就做这个!
+      按右边的按钮开始!
+    Btn: 继续
 Home:
   Title:
     - 欢迎使用 A2!

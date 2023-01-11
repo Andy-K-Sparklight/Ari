@@ -1,0 +1,10 @@
+.aka    #       Guide.AddAccount.
+wdg     Icon    UserAdd
+wdg     Title   #Title
+wdg     Text    #Desc
+
+pp      Label   #Btn
+pp      Icon    ArrowRight
+ent
+uic
+run     Account/NewAccount

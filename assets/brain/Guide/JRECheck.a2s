@@ -82,6 +82,6 @@ jmp     fullJRE
 
 ::noInstallJRE
 
-run     CreateGame
+run     Guide/AddAccount
 
 ret

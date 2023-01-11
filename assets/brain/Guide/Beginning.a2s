@@ -3,10 +3,9 @@
 wdg     Icon    Diamond
 wdg     Title   #Title
 wdg     Text    #Hello
-wdg     Text    #Continue
 
 pp      Icon    ArrowRight
-pp      Label   #OK 
+pp      Label   #OK
 pp      Hint    opt
 pp      Tag     #Hint.Opt
 
