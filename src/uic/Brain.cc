@@ -89,8 +89,10 @@ Program::Program(const std::string &src, const std::string &n, DataPool *s)
           s = Commons::splitStr(s, ";")[0];
         }
       std::stringstream ss(s);
-      std::string verb, a1, a2;
+      std::string verb, a1, a2, re;
       ss >> verb >> a1 >> a2;
+      std::getline(ss, re);
+      a2 += re; // Read the rest with spaces
       if(verb.size() > 0)
         {
           if(verb.starts_with("::"))
