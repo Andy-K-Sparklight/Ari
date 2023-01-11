@@ -2,7 +2,8 @@
   "license": "GPL-3.0-or-later",
   "private": true,
   "scripts": {
-    "make": "yarn webpack --config webpack.config.js"
+    "makedev": "yarn webpack --config webpack.config.dev.js",
+    "make": "yarn webpack --config webpack.config.prod.js"
   },
   "dependencies": {
     "react": "^18.2.0",
