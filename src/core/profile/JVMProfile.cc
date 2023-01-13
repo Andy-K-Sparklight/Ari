@@ -4,6 +4,7 @@
 #include "ach/util/Commons.hh"
 #include "ach/util/Proc.hh"
 #include "ach/sys/Schedule.hh"
+#include "ach/core/platform/OSType.hh"
 #include <cstdio>
 #include <iostream>
 #include <memory>
@@ -142,6 +143,19 @@ appendJVM(const std::string &bin, std::function<void(bool)> cb)
 
                 // A random one will be fine
                 prof.id = Commons::genUUID();
+
+                // On Windows it's better to use 'javaw.exe'
+                if(Platform::OS_TYPE == Platform::OS_MSDOS)
+                  {
+                    auto npt = std::filesystem::path(prof.bin).parent_path()
+                               / "javaw.exe";
+                    if(std::filesystem::exists(npt))
+                      {
+                        LOG("Relocated executable " << prof.bin << " -> "
+                                                    << npt.string());
+                        prof.bin = npt.string();
+                      }
+                  }
 
                 JVM_PROFILES.push_back(prof);
                 LOG("Registered new JVM with version "
