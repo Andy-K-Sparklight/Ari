@@ -18,7 +18,7 @@ export function Progress(_props: {}): JSX.Element {
     };
   });
   return (
-    <div style={{ width: "15rem", overflow: "hidden" }}>
+    <div style={{ width: "15rem", overflow: "hidden", marginRight: "4vw" }}>
       <CircularProgressbar
         value={progress >= 0 ? progress : 33}
         text={progress >= 0 ? Math.floor(progress) + "%" : ""}

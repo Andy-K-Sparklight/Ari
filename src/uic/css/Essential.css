@@ -94,11 +94,11 @@ body {
 }
 .a2ops {
   position: fixed;
-  right: 5vw;
+  right: 3vw;
   top: 50vh;
   transition: 500ms;
   transform: translateY(-50%);
-  max-height: 90vh;
+  max-height: 101;
   overflow-y: auto;
   max-width: 60vw;
 }
