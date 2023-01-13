@@ -5,6 +5,7 @@ wdg     Text    #Desc
 
 pp      Label   #Btn
 pp      Icon    ArrowRight
+pp      Hint    opt
 ent
 uic
 run     Account/NewAccount
