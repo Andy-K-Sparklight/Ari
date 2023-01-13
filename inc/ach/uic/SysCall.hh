@@ -3,6 +3,8 @@
 
 #include "ach/uic/Brain.hh"
 
+#define ACH_SC_ARGS Program &prog, PCallback cb
+
 namespace Alicorn
 {
 namespace UIC
