@@ -1,0 +1,50 @@
+.aka    #       Account.NewAccount.
+wdg     Icon    UserAdd
+wdg     Title   #ChooseType.Title
+wdg     Text    #ChooseType.Desc
+
+pp      Icon    MS
+pp      Label   #ChooseType.Optn.MS
+pp      Tag     #ChooseType.Tag.MS
+pp      Hint    opt
+ln      useMS
+ent
+
+pp      Hint
+
+pp      Icon    External
+pp      Label   #ChooseType.Optn.YG
+pp      Tag     #ChooseType.Tag.YG
+pp      Hint    warn
+pp      Warn    #ChooseType.WarnYG
+ln      useYG
+ent
+
+pp      Hint
+pp      Warn
+
+pp      Icon    Offline
+pp      Label   #ChooseType.Optn.LC
+pp      Tag     #ChooseType.Tag.LC
+ln      useLC
+ent
+
+uic
+
+::useMS
+
+jmp     end
+
+::useYG
+
+jmp     end
+
+::useLC
+
+run     Account/NewLocal
+
+::end
+
+; Show finish screen and go to profile creation
+
+

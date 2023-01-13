@@ -272,3 +272,24 @@ body {
   border: 2px solid var(--a2-base);
   outline: none;
 }
+
+@keyframes Blink {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 100;
+  }
+}
+
+.a2submit {
+  text-align: center;
+  line-height: 5rem;
+  font-size: 1.2rem;
+  height: 5rem;
+  cursor: pointer;
+  animation-name: Blink;
+  animation-duration: 500ms;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}

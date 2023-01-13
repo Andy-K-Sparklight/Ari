@@ -1,0 +1,17 @@
+.aka    #       Account.NewAccount.Local.
+
+wdg     Icon    UserAdd
+wdg     Title   #Title
+wdg     Text    #Desc
+
+pp      Tag     #Tag
+pp      Ph      #Ph
+pp      Type    PlayerID
+ent     Input
+
+ent     Submit
+uic
+
+pop     %UserName
+sys     AddLocalAccount
+ret

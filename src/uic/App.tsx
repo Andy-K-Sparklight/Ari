@@ -16,6 +16,7 @@ import { IMAGES } from "./components/ImgSrc";
 import { NetSpeed } from "./components/NetSpeed";
 import { Logs } from "./components/Logs";
 import { TextInput } from "./components/TextInput";
+import { Submit } from "./components/Submit";
 
 interface DrawInstr {
   widgets: { variant: string; props: Record<string, string> }[];
@@ -30,6 +31,7 @@ function App() {
   const [drawInstr, setDrawInstr] = useState("{}");
   const [submitLock, setSubmitLock] = useState(false);
   const [dataStack, setDataStack] = useState<string[]>([]);
+  const [dataErrStack, setDataErrStack] = useState<boolean[]>([true]);
   useEffect(() => {
     window.addEventListener("UIDraw", (e) => {
       if (e instanceof CustomEvent) {
@@ -55,6 +57,13 @@ function App() {
   const obj = JSON.parse(drawInstr) as DrawInstr;
   if (Object.keys(obj).length == 0) {
     return <></>;
+  }
+  let ok = true;
+  for (const p of dataErrStack) {
+    if (p) {
+      ok = false;
+      break;
+    }
   }
   return (
     <>
@@ -108,19 +117,42 @@ function App() {
           } else if (e.variant == "Progress") {
             return <Progress key={i} />;
           } else if (e.variant == "Input") {
-            console.log(e.props);
             return (
               <TextInput
                 key={i}
                 tag={tr(e.props["Tag"])}
                 value={dataStack[i] || ""}
-                type={tr(e.props["Type"])}
-                onChange={(s) => {
+                type={e.props["Type"]}
+                onChange={(s, e) => {
                   const p = dataStack.concat();
                   p[i] = s;
                   setDataStack(p);
+
+                  const ep = dataErrStack.concat();
+                  ep[i] = e;
+                  setDataErrStack(ep);
                 }}
                 placeholder={tr(e.props["Ph"])}
+              />
+            );
+          } else if (e.variant == "Submit") {
+            return (
+              <Submit
+                ok={ok}
+                onClick={() => {
+                  if (!ok) {
+                    return;
+                  }
+                  if (!submitLock) {
+                    setSubmitLock(true);
+                    setTimeout(() => {
+                      sendMessage(
+                        "UIResponse",
+                        JSON.stringify({ userInput: dataStack })
+                      );
+                    }, 200);
+                  }
+                }}
               />
             );
           }
