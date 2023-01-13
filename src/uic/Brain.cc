@@ -24,7 +24,7 @@ static std::map<std::string, unsigned int> VERBS
         { "sys", SYS }, { "wdg", WDG }, { "cmp", CMP }, { "jc", JC },
         { "jnc", JNC }, { "ent", ENT }, { "uic", UIC }, { "uip", UIP },
         { "ln", LN },   { "psh", PSH }, { "pop", POP }, { "mov", MOV },
-        { "pp", PP },   { "cr", CR },   { "hlt", HLT } };
+        { "pp", PP },   { "cr", CR },   { "hlt", HLT }, { "put", PUT } };
 
 static unsigned int
 getVerb(const std::string &v)
@@ -298,6 +298,10 @@ Program::run(PCallback cb)
             case HLT:
               eip++;
               running = false;
+              break;
+            case PUT:
+              eip++;
+              LOG("Program debug output: " << resolveValue(curInstr.a1));
               break;
             }
         }

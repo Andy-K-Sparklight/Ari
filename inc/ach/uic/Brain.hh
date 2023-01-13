@@ -36,6 +36,7 @@ enum InstrVerb
   PP,  // Assign property
   CR,  // Set carry flag
   HLT, // Halt, no more ops
+  PUT, // Debug output
 };
 
 typedef struct
