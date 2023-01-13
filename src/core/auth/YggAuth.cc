@@ -55,14 +55,7 @@ bool
 yggAuth(Profile::AccountProfile &acc, const std::string &pp)
 {
   std::string server = acc.server;
-  if(server.size() == 0)
-    {
-      server = "https://authserver.mojang.com"; // Use mojang
-    }
-  else
-    {
-      server += "/authserver"; // Suffix for authlib-injector
-    }
+  server += "/authserver"; // Suffix for authlib-injector
   LOG("Authenticating Yggdrasil account with server " << server);
   auto u = LUrlParser::ParseURL::parseURL(server);
 
