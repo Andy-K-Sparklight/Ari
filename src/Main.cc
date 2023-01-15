@@ -68,6 +68,7 @@ main(int argc, char **argv)
           "u=window.location.href;if(u.includes(\"code=\")){u=u.split(\"code="
           "\")[1];if(u.includes(\"&lc=\"))u=u.split(\"&lc=\")[0];window."
           "tellCode(u);}}");
+      webview_set_title(w, "Login with Microsoft");
       webview_bind(
           w, "tellCode",
           [](const char *seq, const char *req, void *arg) -> void {
