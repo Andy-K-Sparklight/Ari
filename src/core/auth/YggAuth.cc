@@ -19,6 +19,10 @@ mkYggAccount(const std::string &email, const std::string &server)
   p.email = email;
   p.id = Commons::genUUID();
   p.server = server;
+  if(server.ends_with("/"))
+    {
+      p.server.pop_back();
+    }
   return p;
 }
 
@@ -51,15 +55,58 @@ extractCredits(Profile::AccountProfile &acc, const std::string &response)
   return true;
 }
 
+// Gets the corresponding ALI path for Yggdrasil authenticating
+static std::string
+getALIPath(const std::string &origin)
+{
+  auto u = LUrlParser::ParseURL::parseURL(origin);
+  httplib::Client cli(u.connectionName_);
+  auto res = cli.Get(u.pathName_);
+  if(res != nullptr)
+    {
+      for(auto &pa : res->headers)
+        {
+          std::string k = pa.first;
+          std::transform(k.begin(), k.end(), k.begin(),
+                         [](unsigned char c) { return std::tolower(c); });
+          if(k == "x-authlib-injector-api-location")
+            {
+              if(pa.second.contains("://"))
+                {
+                  return pa.second;
+                }
+              else
+                {
+                  // Relative path, most likely to work
+                  if(pa.second.starts_with("/"))
+                    {
+                      return origin + pa.second;
+                    }
+                  else
+                    {
+                      return origin + "/" + pa.second;
+                    }
+                }
+            }
+        }
+    }
+  return origin; // If not found then this one is it
+}
+
 bool
 yggAuth(Profile::AccountProfile &acc, const std::string &pp)
 {
+
+  LOG("Processing ALI pointer for " << acc.server);
+  acc.server = getALIPath(acc.server); // Process
+
   std::string server = acc.server;
   server += "/authserver"; // Suffix for authlib-injector
   LOG("Authenticating Yggdrasil account with server " << server);
   auto u = LUrlParser::ParseURL::parseURL(server);
 
   httplib::Client cli(u.connectionName_);
+
   if(acc.mcToken.size() > 0)
     {
       LOG("Trying refresh token.");
