@@ -37,6 +37,7 @@ enum InstrVerb
   CR,  // Set carry flag
   HLT, // Halt, no more ops
   PUT, // Debug output
+  AC,  // Acknowledge variable for frontend
 };
 
 typedef struct

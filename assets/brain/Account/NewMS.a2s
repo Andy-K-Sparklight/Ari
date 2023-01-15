@@ -1,0 +1,42 @@
+.aka    #       Account.NewAccount.
+::start
+wdg     Title   #MS.Title
+wdg     Text    #MS.Desc
+
+ent     Progress
+
+uip
+
+sys     AddMSAccount
+jnc      ok
+
+::fail
+
+wdg     Icon    Warn
+wdg     Title   #MSFail.Title
+wdg     Text    #MSFail.Desc
+
+pp      Tag     #MSFail.Retry.Tag
+pp      Label   #MSFail.Retry.Btn
+pp      Icon    Retry
+pp      Hint    opt
+ent
+uic
+
+jmp     start
+
+::ok
+
+pop     %UserName
+wdg     Icon    UserAdd
+
+pp      UserName        %UserName
+wdg     Title   #MSOK.Title
+wdg     Text    #MSOK.Desc
+
+pp      Label   #MSOK.Btn
+pp      Icon    ArrowRight
+pp      Hint    opt
+ent
+uic
+ret

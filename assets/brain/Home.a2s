@@ -5,8 +5,9 @@ wdg     Text    #Greeting1
 wdg     Text    #Greeting2
 
 pp      Icon    PowerOff
-pp      Label   Home.Exit
+pp      Label   #Exit
 pp      Hint    warn
+pp      Warn    #ExitWarn
 ln      0
 ent     Choice
 

@@ -238,6 +238,7 @@ msAuth(Profile::AccountProfile &acc, std::function<void(bool)> cb)
   getMSCode(acc.id, [=, &acc](std::string code) -> void {
     if(code.size() == 0)
       {
+        LOG("Unexpected empty code, what have you done?");
         cb(false);
         return;
       }

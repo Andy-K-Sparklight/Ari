@@ -12,6 +12,8 @@ namespace SysCall
 
 void implAddLocalAccount(ACH_SC_ARGS);
 
+void implAddMSAccount(ACH_SC_ARGS);
+
 }
 }
 }

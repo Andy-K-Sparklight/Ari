@@ -71,13 +71,31 @@ Account:
         LC: 本地帐户
     Local:
       Title: 你的名字是...?
-      Desc: |
-        这会是你在游戏里面的名字.
+      Desc: 这会是你在游戏里面的名字.
       Tag: |
         能回忆起你的名字吗?
         你的名字长度为 3-16, 只能使用字母, 数字和下划线.
       Ph: Player
-
+    MS:
+      Title: 请稍等...
+      Desc: |
+        请在弹出的窗口中完成登录.
+        登录完成后请等一小会, 我们要做些后续处理.
+    MSOK:
+      Title: 你好, {UserName}!
+      Desc: 身份验证完成, 欢迎回来!
+      Btn: 完成
+    MSFail:
+      Title: 糟糕...
+      Desc: |
+        等等等等一下, 你的登录还没有成功!
+        请检查:
+          • 你的网络通畅吗?
+          • 你的帐户和密码是否正确?
+          • 你是用这个帐户购买的 MC 吗?
+      Retry:
+        Tag: 检查没有问题后, 点此再试一次.
+        Btn: 再试一次
 Home:
   Title:
     - 欢迎使用 A2!
@@ -88,8 +106,10 @@ Home:
   Greeting2:
     - 那么, 新的冒险, 即刻开启!
     - 生命不息, 探索不止, 出发!
-  Exit: 离开
+  Exit: 退出
+  ExitWarn: 你确定吗?
 
 Commons:
   Submit: 点击任意处继续
   SubmitFail: 检查你的输入...
+  Connecting: 正在连接 {Host}

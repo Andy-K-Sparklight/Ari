@@ -19,12 +19,13 @@ resolveName(const std::string &name)
   return "brain/" + name + ".a2s";
 }
 
-static std::map<std::string, unsigned int> VERBS
-    = { { "nop", NOP }, { "ret", RET }, { "jmp", JMP }, { "run", RUN },
-        { "sys", SYS }, { "wdg", WDG }, { "cmp", CMP }, { "jc", JC },
-        { "jnc", JNC }, { "ent", ENT }, { "uic", UIC }, { "uip", UIP },
-        { "ln", LN },   { "psh", PSH }, { "pop", POP }, { "mov", MOV },
-        { "pp", PP },   { "cr", CR },   { "hlt", HLT }, { "put", PUT } };
+static std::map<std::string, unsigned int> VERBS = {
+  { "nop", NOP }, { "ret", RET }, { "jmp", JMP }, { "run", RUN },
+  { "sys", SYS }, { "wdg", WDG }, { "cmp", CMP }, { "jc", JC },
+  { "jnc", JNC }, { "ent", ENT }, { "uic", UIC }, { "uip", UIP },
+  { "ln", LN },   { "psh", PSH }, { "pop", POP }, { "mov", MOV },
+  { "pp", PP },   { "cr", CR },   { "hlt", HLT }, { "put", PUT },
+};
 
 static unsigned int
 getVerb(const std::string &v)

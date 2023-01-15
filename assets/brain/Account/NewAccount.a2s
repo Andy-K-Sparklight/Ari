@@ -33,6 +33,7 @@ uic
 
 ::useMS
 
+run     Account/NewMS
 jmp     end
 
 ::useYG
@@ -45,6 +46,6 @@ run     Account/NewLocal
 
 ::end
 
-; Show finish screen and go to profile creation
+ret
 
 

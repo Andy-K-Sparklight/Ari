@@ -20,5 +20,6 @@ ent
 uic
 
 run     Guide/JRECheck
+run     Guide/AddAccount
 
 ret

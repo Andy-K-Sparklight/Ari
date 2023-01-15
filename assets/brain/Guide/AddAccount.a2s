@@ -8,4 +8,7 @@ pp      Icon    ArrowRight
 pp      Hint    opt
 ent
 uic
+
 run     Account/NewAccount
+
+ret

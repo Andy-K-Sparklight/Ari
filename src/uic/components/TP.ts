@@ -20,7 +20,7 @@ function findVal(s: string): string[] {
   return cur;
 }
 
-export function tr(k?: string): string {
+export function tr(k?: string, vars: Record<string, string> = {}): string {
   if (k === undefined) {
     return "";
   }
@@ -29,11 +29,17 @@ export function tr(k?: string): string {
     return k.slice(1);
   }
   const vals = findVal(k);
+  let s: string;
   if (vals instanceof Array) {
-    return vals[Math.floor(Math.random() * vals.length)] || "";
+    s = vals[Math.floor(Math.random() * vals.length)] || "";
   } else {
-    return String(vals);
+    s = String(vals);
   }
+  for (const [x, v] of Object.entries(vars)) {
+    console.log(x + " -> " + v);
+    s = s.replace(new RegExp("\\{" + x + "\\}", "g"), v);
+  }
+  return s;
 }
 
 export function useTr(k: string): [string, () => void] {

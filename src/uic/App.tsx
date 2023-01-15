@@ -39,6 +39,7 @@ function App() {
         const draw = () => {
           setDrawInstr(ins);
           setSubmitLock(false);
+          window.dispatchEvent(new CustomEvent("HTTPReq", { detail: "" })); // Reset host
           setTimeout(() => {
             sendMessage("UIDrew", "");
           }, 200);
@@ -74,9 +75,11 @@ function App() {
         {obj.widgets.map((w, i) => {
           const def = w.props["Argv0"];
           if (w.variant == "Title") {
-            return <DisTitle key={i}>{tr(def || w.props["Msg"])}</DisTitle>;
+            return (
+              <DisTitle key={i}>{tr(def || w.props["Msg"], w.props)}</DisTitle>
+            );
           } else if (w.variant == "Text") {
-            return <UIText key={i} text={tr(def || w.props["Msg"])} />;
+            return <UIText key={i} text={tr(def || w.props["Msg"], w.props)} />;
           } else if (w.variant == "Icon") {
             return (
               <div
@@ -96,10 +99,10 @@ function App() {
             return (
               <Button
                 key={i}
-                tag={tr(e.props["Tag"])}
-                text={tr(e.props["Label"])}
+                tag={tr(e.props["Tag"], e.props)}
+                text={tr(e.props["Label"], e.props)}
                 hint={e.props["Hint"]}
-                warn={tr(e.props["Warn"])}
+                warn={tr(e.props["Warn"], e.props)}
                 img={e.props["Icon"]}
                 onClick={() => {
                   if (!submitLock) {
@@ -120,7 +123,7 @@ function App() {
             return (
               <TextInput
                 key={i}
-                tag={tr(e.props["Tag"])}
+                tag={tr(e.props["Tag"], e.props)}
                 value={dataStack[i] || ""}
                 type={e.props["Type"]}
                 onChange={(s, e) => {
@@ -132,7 +135,7 @@ function App() {
                   ep[i] = e;
                   setDataErrStack(ep);
                 }}
-                placeholder={tr(e.props["Ph"])}
+                placeholder={tr(e.props["Ph"], e.props)}
               />
             );
           } else if (e.variant == "Submit") {

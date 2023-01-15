@@ -16,6 +16,7 @@ bindAllSysCalls()
   bindSysCall("ScanJava", SysCall::implScanJava);
   bindSysCall("InstallJRE", SysCall::implInstallJRE);
   bindSysCall("AddLocalAccount", SysCall::implAddLocalAccount);
+  bindSysCall("AddMSAccount", SysCall::implAddMSAccount);
 }
 
 }

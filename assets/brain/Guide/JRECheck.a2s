@@ -82,6 +82,4 @@ jmp     fullJRE
 
 ::noInstallJRE
 
-run     Guide/AddAccount
-
 ret
