@@ -41,13 +41,11 @@ Flow::run(std::function<void(bool)> cb)
       }
     else if(sig == AL_OK)
       {
-        LOG("Flow received OK signal.");
         completedStage++;
         this->run(cb); // Run again for next task
       }
     else
       {
-        LOG("Flow received signal " << sig);
         output.push_back(sig); // Collect signal
       }
   });
