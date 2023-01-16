@@ -17,6 +17,8 @@ bindAllSysCalls()
   bindSysCall("InstallJRE", SysCall::implInstallJRE);
   bindSysCall("AddLocalAccount", SysCall::implAddLocalAccount);
   bindSysCall("AddMSAccount", SysCall::implAddMSAccount);
+  bindSysCall("ValidateYggServer", SysCall::implValidateYggServer);
+  bindSysCall("AddYGAccount", SysCall::implAddYGAccount);
 }
 
 }

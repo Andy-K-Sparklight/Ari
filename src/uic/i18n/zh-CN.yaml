@@ -42,7 +42,6 @@ Guide:
       Ignore: 不要安装
       IgnoreTag: 如果你有什么聪明的方法...
       IgnoreWarn: 我知道我在做什么!
-      ContinueTag: 这太好了!
       Continue: 继续
   AddAccount:
     Title: 添加帐户
@@ -81,7 +80,7 @@ Account:
       Desc: |
         请在弹出的窗口中完成登录.
         登录完成后请等一小会, 我们要做些后续处理.
-    MSOK:
+    LoginOK:
       Title: 你好, {UserName}!
       Desc: 身份验证完成, 欢迎回来!
       Btn: 完成
@@ -96,6 +95,62 @@ Account:
       Retry:
         Tag: 检查没有问题后, 点此再试一次.
         Btn: 再试一次
+    YggFail:
+      Title: 糟糕...
+      Desc: |
+        看上去, 一定是哪里出了问题...
+        请检查:
+          • 你能不能连接 {ServerAddr}?
+          • 你的帐户和密码是否正确?
+        如果还是解决不了, 试试联系
+        {ServerAddr} 的管理员!
+      Retry:
+        Tag: 检查没有问题后, 点此再试一次.
+        Btn: 再试一次
+    YggServer:
+      Title: 首先, 登录到哪里?
+      DescAuto: |
+        如果你看到这样的东西, 现在就这么做!
+      DescManual: |
+        如果没有这个按钮, 请在右侧填写认证服务器的 API 地址.
+      URL:
+        Tag: 将按钮拖进来, 或在此输入认证服务器的地址.
+        Ph: https://example.com/api/yggdrasil
+    YggSecurity:
+      Title: 诶...请小心!
+      Desc: |
+        你正在尝试登录 {ServerAddr}
+        这个服务器未经 A2 的验证, 我们不能确保它安全!
+
+        <b>绝不要在你不认识的服务器上输入用户名和密码!</b>
+      Continue:
+        Tag: 你确实相信...?
+        Btn: 继续登录
+        Warn: 我知道我在做什么!
+      GiveUp:
+        Tag: 我并不是很确定...
+        Btn: 放弃登录
+
+    YggAcc:
+      Title: 登录到所选服务器
+      Desc: |
+        你的用户名和密码会被发送到:
+        {ServerAddr}
+        用于进行验证.
+
+        <b>如果你不信任这个服务器, 请绝不要输入你的密码!</b>
+      UserName:
+        Tag: 你是否记得你的用户名...
+        Ph: player@example.com
+      Pwd:
+        Tag: ...以及你的密码?
+    YggAuth:
+      Title: 请稍等...
+      Desc: |
+        我们正在和
+        {ServerAddr}
+        验证你的身份.
+        请放心, 这不会需要太久的.
 Home:
   Title:
     - 欢迎使用 A2!
@@ -110,6 +165,6 @@ Home:
   ExitWarn: 你确定吗?
 
 Commons:
-  Submit: 点击任意处继续
+  Submit: 点击这里以继续
   SubmitFail: 检查你的输入...
   Connecting: 正在连接 {Host}

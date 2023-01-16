@@ -21,6 +21,10 @@ export function Logs(_props: {}): JSX.Element {
     window.addEventListener("keyup", (e) => {
       if (e.key == "Tab") {
         setShow((s) => !s);
+        const ele = document.getElementById("logs");
+        if (ele) {
+          ele.scrollTop = Number.MAX_SAFE_INTEGER;
+        }
       }
     });
   }, []);
@@ -39,6 +43,7 @@ export function Logs(_props: {}): JSX.Element {
       }}
     >
       <p
+        id={"logs"}
         style={{
           fontFamily:
             "'Source Code Pro', 'Fira Code', Monaco, Consolas, 'Courier New', Courier, monospace",

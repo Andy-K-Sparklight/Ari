@@ -256,7 +256,7 @@ body {
   border: 2px solid #aeaeae;
   border-radius: 1rem;
   min-height: 2em;
-  width: 32vw;
+  width: 35vw;
   font-size: 1.2em;
   color: var(--a2-base);
   padding-left: 1em;
@@ -286,7 +286,7 @@ body {
   text-align: center;
   line-height: 5rem;
   font-size: 1.2rem;
-  height: 5rem;
+  height: 3rem;
   cursor: pointer;
   animation-name: Blink;
   animation-duration: 500ms;

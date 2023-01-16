@@ -36,7 +36,6 @@ export function tr(k?: string, vars: Record<string, string> = {}): string {
     s = String(vals);
   }
   for (const [x, v] of Object.entries(vars)) {
-    console.log(x + " -> " + v);
     s = s.replace(new RegExp("\\{" + x + "\\}", "g"), v);
   }
   return s;

@@ -14,6 +14,10 @@ void implAddLocalAccount(ACH_SC_ARGS);
 
 void implAddMSAccount(ACH_SC_ARGS);
 
+void implValidateYggServer(ACH_SC_ARGS);
+
+void implAddYGAccount(ACH_SC_ARGS);
+
 }
 }
 }

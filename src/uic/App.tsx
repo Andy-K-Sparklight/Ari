@@ -90,6 +90,14 @@ function App() {
                 {IMAGES[def || w.props["Icon"]]}
               </div>
             );
+          } else if (w.variant == "Img") {
+            return (
+              <React.Fragment key={i}>
+                {IMAGES[def || w.props["Image"]]}
+                <br />
+                <br />
+              </React.Fragment>
+            );
           }
         })}
       </DisPanel>
@@ -148,6 +156,8 @@ function App() {
                   }
                   if (!submitLock) {
                     setSubmitLock(true);
+                    setDataStack([]);
+                    setDataErrStack([true]);
                     setTimeout(() => {
                       sendMessage(
                         "UIResponse",

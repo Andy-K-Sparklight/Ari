@@ -1,0 +1,108 @@
+.aka    #       Account.NewAccount.Ygg
+.aka    \*       Account.NewAccount.
+::head
+wdg     Icon    UserAdd
+wdg     Title   #Server.Title
+wdg     Text    #Server.DescAuto
+wdg     Img     GuideYggdrasilServer
+wdg     Text    #Server.DescManual
+
+pp      Type    YggServer
+pp      Tag     #Server.URL.Tag
+pp      Ph      #Server.URL.Ph
+ent     Input
+ent     Submit
+
+uic
+
+pop     %ServerAddr
+
+sys     ValidateYggServer
+jc      trustServer
+
+wdg     Icon    Warn
+wdg     Title   #Security.Title
+pp      ServerAddr      %ServerAddr
+wdg     Text    #Security.Desc
+
+pp      Tag     #Security.Continue.Tag
+pp      Icon    ArrowRight
+pp      Label   #Security.Continue.Btn
+pp      Hint    warn
+pp      Warn    #Security.Continue.Warn
+ln      trustServer
+ent
+
+pp      Tag     #Security.GiveUp.Tag
+pp      Icon    Retry
+pp      Label   #Security.GiveUp.Btn
+pp      Hint    opt
+ln      head
+ent
+uic
+
+::trustServer
+wdg     Icon    UserAdd
+wdg     Title   #Acc.Title
+pp      ServerAddr      %ServerAddr
+wdg     Text    #Acc.Desc
+
+pp      Type    text
+pp      Tag     #Acc.UserName.Tag
+pp      Ph      #Acc.UserName.Ph
+ent     Input
+
+pp      Type    password
+pp      Tag     #Acc.Pwd.Tag
+pp      Ph      
+ent     Input
+ent     Submit
+
+uic
+
+pop     %Pwd
+pop     %UserName
+
+wdg     Icon    UserAdd
+wdg     Title   #Auth.Title
+pp      ServerAddr      %ServerAddr
+wdg     Text    #Auth.Desc
+
+ent     Progress
+uip
+
+sys     AddYGAccount
+
+jc     ok
+
+::fail
+
+wdg     Icon    Warn
+wdg     Title   #Fail.Title
+wdg     Text    #Fail.Desc
+
+pp      Tag     #Fail.Retry.Tag
+pp      Label   #Fail.Retry.Btn
+pp      Icon    Retry
+pp      Hint    opt
+ent
+uic
+
+jmp     head
+
+::ok
+
+pop     %PlayerName
+wdg     Icon    UserAdd
+
+pp      UserName        %PlayerName
+wdg     Title   *LoginOK.Title
+wdg     Text    *LoginOK.Desc
+
+pp      Tag
+pp      Label   *LoginOK.Btn
+pp      Icon    ArrowRight
+pp      Hint    opt
+ent
+uic
+ret

@@ -31,10 +31,10 @@ pop     %UserName
 wdg     Icon    UserAdd
 
 pp      UserName        %UserName
-wdg     Title   #MSOK.Title
-wdg     Text    #MSOK.Desc
+wdg     Title   #LoginOK.Title
+wdg     Text    #LoginOK.Desc
 
-pp      Label   #MSOK.Btn
+pp      Label   #LoginOK.Btn
 pp      Icon    ArrowRight
 pp      Hint    opt
 ent

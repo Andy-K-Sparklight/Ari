@@ -10,10 +10,11 @@ export function UIText(props: UITextProps): JSX.Element {
     <>
       {lines.map((t, i) => {
         return (
-          <div key={i} className={"a2text"}>
-            {t}
-            <br />
-          </div>
+          <div
+            key={i}
+            className={"a2text"}
+            dangerouslySetInnerHTML={{ __html: t + "<br/>" }}
+          />
         );
       })}
     </>

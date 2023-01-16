@@ -38,6 +38,7 @@ jmp     end
 
 ::useYG
 
+run     Account/NewYgg
 jmp     end
 
 ::useLC
