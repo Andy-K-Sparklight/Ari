@@ -79,56 +79,56 @@ Make sure also to update your other packages to the latest version, including `g
 ### Build
 
 1. First, clone the repository:
-   
+
    ```bash
    git clone https://github.com/Andy-K-Sparklight/ACH.git --depth 1
    cd ACH
    ```
 
 2. Run the configure script:
-   
+
    For macOS please first run:
-   
+
    ```bash
    chmod +x ./macpb
    ./macpb
    ```
-   
+
    Then for all platforms, run:
-   
+
    ```bash
    autoreconf --install
    ./configure
    ```
-   
+
    If you are using macOS, `configure` might complain about the built-in `make`. If this is the case, run `./configure MAKE=gmake` as the output says.
 
 3. Run the build.
-   
+
    For macOS:
-   
+
    ```bash
    gmake CC=gcc-12 CPP=g++-12 CXX=g++-12 LD=g++-12
    ```
-   
+
    If you've got a later gcc version available, just change the suffix to the proper one.
-   
+
    For other systems, just:
-   
+
    ```bash
    make
    ```
-   
+
    If you want the build to be faster, append flag `-jX` where X is the same as the count of your CPU cores.
 
 4. If building for Windows, run:
-   
+
    ```bash
    ./winfix
    ```
 
 5. Now build the JS part:
-   
+
    ```bash
    yarn install
    chmod +x ./jsbuild
@@ -137,9 +137,9 @@ Make sure also to update your other packages to the latest version, including `g
    ```
 
 6. Make sure to copy the assets we needed:
-   
+
    ```
-   cp ./assets/* ./
+   cp -r ./assets/* ./
    ```
 
 7. The binary output `AlicornCH.exe` or `AlicornCH` is now available under your CWD, just run it and try!
