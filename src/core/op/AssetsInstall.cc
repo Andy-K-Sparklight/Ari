@@ -108,6 +108,8 @@ installAssets(Flow *flow, FlowCallback cb)
     }
   Network::DownloadPack pak;
   LOG("Getting " << assets.size() << " assets.");
+  size_t theoryTotalSize
+      = 0; // Aria2 will only give the size when task loaded. So use a tweak.
   for(auto &a : assets)
     {
       Network::DownloadMeta meta;
@@ -120,10 +122,12 @@ installAssets(Flow *flow, FlowCallback cb)
                    / path(ind) / a.hash)
                       .string();
       meta.size = a.size;
+      theoryTotalSize += meta.size;
       pak.addTask(meta);
     }
   pak.assignUpdateCallback([=](const Network::DownloadPack *p) -> void {
     auto ps = p->getStat();
+    flow->onProgress((double)ps.completedSize / theoryTotalSize);
     if((ps.completed + ps.failed) == ps.total)
       {
         // All processed

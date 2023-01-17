@@ -257,7 +257,7 @@ Program::run(PCallback cb)
               frame.run([cb, this]() -> void { this->run(cb); }, false);
               break;
             case LN:
-              frame.linkLabel = curInstr.a1; // Do not resolve
+              frame.linkLabel = resolveValue(curInstr.a1);
               eip++;
               break;
             case PSH:

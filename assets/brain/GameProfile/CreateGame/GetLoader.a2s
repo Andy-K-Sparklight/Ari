@@ -1,0 +1,85 @@
+.aka    #       GameProfile.CreateGame.SelectLoader.
+.aka    \*      GameProfile.CreateGame.LoadingLoader.
+.aka    &       GameProfile.CreateGame.SelectLoaderVersion.
+
+wdg     Icon    AddItem
+wdg     Title   #Title
+wdg     Text    #Desc
+
+pp      Compact 1
+pp      Label   #Loaders.None.Name
+pp      Tag     #Loaders.None.Tag
+pp      Icon    Minecraft
+pp      Hint    opt
+ln      None
+ent
+
+pp      Label   #Loaders.Fabric.Name
+pp      Tag     #Loaders.Fabric.Tag
+pp      Icon    Fabric
+ln      Fabric
+ent
+
+pp      Hint
+pp      Label   #Loaders.Forge.Name
+pp      Tag     #Loaders.Forge.Tag
+pp      Icon    Forge
+ln      Forge
+ent
+
+pp      Label   #Loaders.Quilt.Name
+pp      Tag     #Loaders.Quilt.Tag
+pp      Icon    Quilt
+pp      Warn    #Loaders.Quilt.Warn
+pp      Hint    warn
+ln      Quilt
+ent
+
+uic
+
+pop     $Loader
+
+wdg     Icon    AddItem
+wdg     Title   *Title
+wdg     Text    *Desc
+
+ent     Progress
+uip
+cmp     $Loader
+jc      noLoader
+
+sys     GetLoaderList
+
+wdg     Icon    AddItem
+wdg     Title   &Title
+wdg     Text    &Desc
+
+::lp
+
+pop     %ldv
+cmp     %ldv
+jc      end
+pp      Tag
+pp      Compact 1
+pp      Icon    Pkg
+pp      Label   %ldv
+cmp     %optfound       1
+jc      noOpt
+pp      Hint    opt
+mov     1       %optfound
+jmp     f
+::noOpt
+pp      Hint
+::f
+
+ln      %ldv
+ent
+jmp     lp
+::end
+uic
+
+pop     $LoaderVersion
+
+::noLoader
+
+ret

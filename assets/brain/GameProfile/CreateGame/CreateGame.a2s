@@ -1,0 +1,5 @@
+run     GameProfile/CreateGame/GetVersion
+run     GameProfile/CreateGame/GetLoader
+run     GameProfile/CreateGame/MkProfile
+run     GameProfile/CreateGame/InstallProfile
+ret

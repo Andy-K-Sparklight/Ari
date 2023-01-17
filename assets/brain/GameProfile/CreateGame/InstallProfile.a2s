@@ -1,0 +1,12 @@
+.aka    #       GameProfile.CreateGame.Installing.
+
+wdg     Icon    AddItem
+wdg     Title   #Title
+wdg     Text    #Desc
+
+ent     Progress
+uip
+
+sys     InstallProfile
+put     OK
+hlt

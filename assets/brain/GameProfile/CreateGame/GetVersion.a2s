@@ -1,0 +1,83 @@
+.aka    #       GameProfile.CreateGame.
+::head
+wdg     Icon    AddItem
+wdg     Title   #LoadVersion.Title
+wdg     Text    #LoadVersion.Desc
+
+ent     Progress
+uip
+
+sys     GetVersions
+jc      ok
+
+wdg     Icon    Warn
+wdg     Title   #LoadVersionFail.Title
+wdg     Text    #LoadVersionFail.Desc
+pp      Label   #LoadVersionFail.Btn
+pp      Icon    Retry
+ent
+uic
+
+jmp     head
+
+::ok
+
+wdg     Icon    AddItem
+wdg     Title   #SelectVersion.Title
+wdg     Text    #SelectVersion.Desc
+
+::lp
+pop     %id
+cmp     %id
+jc      end
+
+pop     %type
+
+pp      Label   %id
+ln      %id
+
+cmp     %type   R
+jc      release
+
+cmp     %type   S
+jc      snapshot
+jmp     old
+
+::release
+cmp     %latestFound    1
+jc      noHint
+pp      Hint    opt
+mov     1       %latestFound
+jmp     f
+::noHint
+pp      Hint
+
+::f
+pp      Icon    PkgPlus
+jmp     fin
+
+
+::snapshot
+pp      Icon    Pkg
+pp      Hint    warn
+pp      Warn    #SelectVersion.Warn.Snapshot
+jmp     fin
+::old
+pp      Icon    Pkg
+pp      Hint    warn
+pp      Warn    #SelectVersion.Warn.Old
+
+::fin
+pp      Compact 1
+
+; Decrease size of data transfer
+pp      Argv0
+ent
+
+jmp     lp
+
+::end
+
+uic
+pop     $GameVersion
+ret

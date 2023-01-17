@@ -1,0 +1,13 @@
+.aka    #       GameProfile.CreateGame.Naming.
+wdg     Icon    AddItem
+wdg     Title   #Title
+wdg     Text    #Desc
+
+pp      Type    text
+pp      Tag     #Input.Tag
+pp      Ph      #Input.Ph
+ent     Input
+ent     Submit
+uic
+pop     $ProfileName
+ret

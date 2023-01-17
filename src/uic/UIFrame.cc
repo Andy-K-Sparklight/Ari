@@ -62,7 +62,14 @@ UIFrame::run(PCallback cb, bool wait)
                     // Do jump if contains, else will just continue from 'uic'
                     this->prog->eip = this->prog->labels[jl];
                   }
-
+                else
+                  {
+                    if(jl.size() > 0)
+                      {
+                        // As variable
+                        this->prog->stack.push_back(jl);
+                      }
+                  }
                 cb();
                 return;
               }

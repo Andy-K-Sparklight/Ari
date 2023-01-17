@@ -3,6 +3,7 @@
 #include "ach/uic/syscalls/App.hh"
 #include "ach/uic/syscalls/JVM.hh"
 #include "ach/uic/syscalls/Account.hh"
+#include "ach/uic/syscalls/Game.hh"
 
 namespace Alicorn
 {
@@ -19,6 +20,9 @@ bindAllSysCalls()
   bindSysCall("AddMSAccount", SysCall::implAddMSAccount);
   bindSysCall("ValidateYggServer", SysCall::implValidateYggServer);
   bindSysCall("AddYGAccount", SysCall::implAddYGAccount);
+  bindSysCall("GetVersions", SysCall::implGetVersions);
+  bindSysCall("GetLoaderList", SysCall::implGetLoaderList);
+  bindSysCall("InstallProfile", SysCall::implInstallProfile);
 }
 
 }

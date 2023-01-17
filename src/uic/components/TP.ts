@@ -24,11 +24,10 @@ export function tr(k?: string, vars: Record<string, string> = {}): string {
   if (k === undefined) {
     return "";
   }
-  if (k.startsWith("!")) {
-    // Means no translation
-    return k.slice(1);
-  }
   const vals = findVal(k);
+  if (vals.length == 0) {
+    return k;
+  }
   let s: string;
   if (vals instanceof Array) {
     s = vals[Math.floor(Math.random() * vals.length)] || "";

@@ -66,6 +66,7 @@ function App() {
       break;
     }
   }
+  let autofcd = false;
   return (
     <>
       <Layer />
@@ -107,6 +108,7 @@ function App() {
             return (
               <Button
                 key={i}
+                compact={e.props["Compact"]?.length > 0}
                 tag={tr(e.props["Tag"], e.props)}
                 text={tr(e.props["Label"], e.props)}
                 hint={e.props["Hint"]}
@@ -128,9 +130,15 @@ function App() {
           } else if (e.variant == "Progress") {
             return <Progress key={i} />;
           } else if (e.variant == "Input") {
+            let autof = false;
+            if (!autofcd) {
+              autof = true;
+              autofcd = true;
+            }
             return (
               <TextInput
                 key={i}
+                autoFocus={autof}
                 tag={tr(e.props["Tag"], e.props)}
                 value={dataStack[i] || ""}
                 type={e.props["Type"]}
@@ -184,12 +192,13 @@ async function main() {
   console.log(await sendMessage("Ping", ""));
 
   // Render
+  console.log("Rendering main element.");
   const ele = document.getElementById("a2root");
   if (ele) {
     const root = createRoot(ele);
     root.render(<App />);
   }
-
+  console.log("Frontend initialized, requesting for instruction.");
   void sendMessage("Ready", "");
 }
 

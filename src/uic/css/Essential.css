@@ -65,6 +65,11 @@ body {
   margin-left: 1vw;
 }
 
+.a2img > img {
+  width: 100%;
+  height: 100%;
+}
+
 .a2hintwarn {
   color: var(--a2-warn);
   font-size: 1rem;
@@ -98,12 +103,13 @@ body {
   top: 50vh;
   transition: 500ms;
   transform: translateY(-50%);
-  max-height: 101;
+  max-height: 101vh;
   overflow-y: auto;
   max-width: 60vw;
 }
 
 .a2opsin {
+  padding-top: 2rem;
   padding-left: 2rem;
   padding-right: 1rem;
   padding-bottom: 2rem;
@@ -204,6 +210,7 @@ body {
 .a2opt {
   animation-name: A2OptJump;
   animation-duration: 1s;
+  animation-delay: 0.01s;
   animation-iteration-count: infinite;
 }
 

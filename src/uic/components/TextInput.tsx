@@ -7,6 +7,7 @@ interface TextInputProps {
   value?: string;
   onChange?: (s: string, err: boolean) => void;
   type?: string;
+  autoFocus?: boolean;
 }
 
 const PLAYER_NAME_REG = /^[0-9a-z_]{3,16}$/i;
@@ -51,6 +52,7 @@ export function TextInput(props: TextInputProps): JSX.Element {
           borderColor:
             err && (props.value || "").length > 0 ? "red" : undefined,
         }}
+        autoFocus={props.autoFocus}
         className={"a2input"}
         type={type}
         value={props.value}

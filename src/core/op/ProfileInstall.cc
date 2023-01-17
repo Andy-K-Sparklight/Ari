@@ -209,6 +209,7 @@ installClient(Flow *flow, FlowCallback sender)
 
     clientPack.assignUpdateCallback([=](const DownloadPack *p) -> void {
       auto ps = p->getStat();
+      flow->onProgress((double)ps.completedSize / ps.totalSize);
       if((ps.completed + ps.failed) == ps.total)
         {
           // All processed

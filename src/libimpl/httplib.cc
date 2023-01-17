@@ -8104,7 +8104,10 @@ SSLClient::check_host_name(const char *pattern, size_t pattern_len) const
 Client::Client(const std::string &scheme_host_port)
     : Client(scheme_host_port, std::string(), std::string())
 {
-  Alicorn::UIC::sendMessage("HTTPReq", scheme_host_port);
+  if(!scheme_host_port.contains("localhost"))
+    {
+      Alicorn::UIC::sendMessage("HTTPReq", scheme_host_port);
+    }
 }
 
 Client::Client(const std::string &scheme_host_port,

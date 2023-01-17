@@ -49,7 +49,97 @@ Guide:
       MC 需要登录帐户来游玩, 我们现在就做这个!
       按右边的按钮开始!
     Btn: 继续
+  AddGame:
+    Title: 创建游戏
+    Desc: |
+      现在该来创建你的第一个游戏了!
+      我们现在就开始!
+    Btn: 继续
 
+GameProfile:
+  CreateGame:
+    LoadVersion:
+      Title: 请稍等...
+      Desc: |
+        正在加载版本列表.
+        请放心, 这不会需要太久的.
+    LoadVersionFail:
+      Title: 糟糕...
+      Desc: |
+        加载版本列表失败, 请检查:
+          • 你的网络是否通畅?
+
+        你可以使用右边的按钮再试一次.
+      Btn: 重新加载
+    SelectVersion:
+      Title: 你希望游玩哪个版本?
+      Desc: |
+        不同的 Minecraft 版本有不同的特性!
+        如果没有什么要求, 推荐选择最新版本!
+
+        PS: 按 Ctrl + F 可以搜索想要的版本哦.
+      Warn:
+        Snapshot: 快照可能不稳定!
+        Old: 旧版可能不稳定!
+
+    SelectLoader:
+      Title: 使用哪个 Mod 加载器?
+      Desc: |
+        请根据你要玩的 Mod 选择对应的加载器.
+        如果你没有 Mod 要玩, 就选择跳过!
+      Loaders:
+        Fabric:
+          Tag: |
+            新一代加载器, 速度快, 小巧.
+            只在 1.13 及以上版本可用.
+          Name: Fabric
+        Forge:
+          Tag: |
+            老一代加载器, 有些 Mod 还在用.
+            如果你的 Mod 用到了, 就选择它.
+          Name: Forge
+        Quilt:
+          Tag: |
+            Fabric 的改进版, 当前还在测试中.
+            可以兼容 Fabric, 但也许不稳定.
+            只在 1.13 及以上版本可用.
+          Name: Quilt
+          Warn: 可能不稳定!
+        None:
+          Tag: |
+            不使用 Mod 加载器, 游玩原汁原味的 MC!
+          Name: 不使用
+
+    LoadingLoader:
+      Title: 请稍等...
+      Desc: |
+        正在获取加载器版本列表.
+        请放心, 这不会需要太久的.
+
+    SelectLoaderVersion:
+      Title: 需要哪个加载器版本?
+      Desc: |
+        选择你需要的加载器版本.
+        如果没有特别需求, 就选最新版本!
+
+    Naming:
+      Title: 你想怎么称呼这个游戏?
+      Desc: |
+        为这个游戏档案取名, 例如 "直播用的".
+        这有助于你在启动的时候找到它.
+
+        当你确认之后, 下一步我们将开始安装它.
+      Input:
+        Tag: 名字应以简单好记为要, 不过最好别太长!
+        Ph: 新的游戏档案
+    Installing:
+      Title: 请稍等...
+      Desc: |
+        我们正在下载一些必要的文件.
+        这可能需要几分钟, 取决于你的网络速度.
+
+        进度条可能多次读满后归零, 因为有多个步骤要执行.
+        你可以随时按 Tab 打开日志查看当前状况.
 Account:
   NewAccount:
     ChooseType:
@@ -87,7 +177,8 @@ Account:
     MSFail:
       Title: 糟糕...
       Desc: |
-        等等等等一下, 你的登录还没有成功!
+        等等等等一下, 我们遇到了一些故障!
+
         请检查:
           • 你的网络通畅吗?
           • 你的帐户和密码是否正确?
@@ -98,10 +189,12 @@ Account:
     YggFail:
       Title: 糟糕...
       Desc: |
-        看上去, 一定是哪里出了问题...
+        身份验证失败, 登录不成功!
+
         请检查:
           • 你能不能连接 {ServerAddr}?
           • 你的帐户和密码是否正确?
+
         如果还是解决不了, 试试联系
         {ServerAddr} 的管理员!
       Retry:
@@ -151,6 +244,7 @@ Account:
         {ServerAddr}
         验证你的身份.
         请放心, 这不会需要太久的.
+
 Home:
   Title:
     - 欢迎使用 A2!

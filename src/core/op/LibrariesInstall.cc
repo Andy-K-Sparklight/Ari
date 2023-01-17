@@ -74,6 +74,7 @@ installLibraries(Flow *flow, FlowCallback cb)
   Profile::VersionProfile profile = flow->profile;
 
   Network::DownloadPack librariesPack;
+  size_t theoryTotalSize = 0;
   for(auto &lib : profile.libraries)
     {
       if(lib.noDownload)
@@ -84,6 +85,7 @@ installLibraries(Flow *flow, FlowCallback cb)
         {
           auto meta = Network::DownloadMeta::mkFromLibrary(
               lib, Platform::getInstallPath("libraries"));
+          theoryTotalSize += meta.size;
           librariesPack.addTask(meta);
         }
     }
@@ -91,6 +93,7 @@ installLibraries(Flow *flow, FlowCallback cb)
   librariesPack.assignUpdateCallback(
       [=](const Network::DownloadPack *p) -> void {
         auto ps = p->getStat();
+        flow->onProgress((double)ps.completedSize / theoryTotalSize);
         if((ps.completed + ps.failed) == ps.total)
           {
             // All processed

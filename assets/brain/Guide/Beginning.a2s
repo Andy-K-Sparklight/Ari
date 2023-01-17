@@ -19,7 +19,8 @@ ent
 
 uic
 
-run     Guide/JRECheck
-run     Guide/AddAccount
+;run     Guide/JRECheck
+;run     Guide/AddAccount
+run     Guide/AddGame
 
 ret

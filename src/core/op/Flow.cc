@@ -42,7 +42,8 @@ Flow::run(std::function<void(bool)> cb)
     else if(sig == AL_OK)
       {
         completedStage++;
-        this->run(cb); // Run again for next task
+        this->onProgress(-1); // Reset progress
+        this->run(cb);        // Run again for next task
       }
     else
       {

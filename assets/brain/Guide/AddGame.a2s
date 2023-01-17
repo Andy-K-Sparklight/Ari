@@ -1,0 +1,14 @@
+.aka    #       Guide.AddGame.
+
+wdg     Icon    AddItem
+wdg     Title   #Title
+wdg     Text    #Desc
+
+pp      Icon    ArrowRight
+pp      Hint    opt
+pp      Label   #Btn
+ent
+
+uic
+run     GameProfile/CreateGame/CreateGame
+ret
