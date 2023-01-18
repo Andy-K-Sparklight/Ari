@@ -91,9 +91,6 @@ uic
 
 pop     $LoaderVersion
 
-put     $Loader
-put     $LoaderVersion
-
 ::noLoader
 
 ret
