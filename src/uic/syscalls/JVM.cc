@@ -20,6 +20,7 @@ implScanJava(ACH_SC_ARGS)
   Op::Flow *flow = new Op::Flow;
   flow->data[AL_FLOWVAR_DLJVM] = "0";
   flow->onProgress = ACH_DEFAULT_PROGRESS;
+  flow->onStep = ACH_DEFAULT_STEP;
   flow->addTask(Extra::Env::configureJVM);
   flow->run([&prog, cb, flow](bool) -> void {
     bool has8, has17;
@@ -58,6 +59,7 @@ implInstallJRE(ACH_SC_ARGS)
   flow->data[AL_FLOWVAR_DLJVM] = "1";
   flow->addTask(Extra::Env::configureJVM);
   flow->onProgress = ACH_DEFAULT_PROGRESS;
+  flow->onStep = ACH_DEFAULT_STEP;
   flow->run([&prog, cb](bool suc) -> void {
     prog.carry = suc;
     cb();

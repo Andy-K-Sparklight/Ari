@@ -26,7 +26,10 @@ Flow::run(std::function<void(bool)> cb)
         }
       return;
     }
-  onProgress(-1); // Set as indefinite first
+  if(onProgress != nullptr)
+    {
+      onProgress(-1); // Set as indefinite first
+    }
   FlowTask t = *(tasks.begin());
   tasks.pop_front();
   t(this, [&, cb](int sig) -> void {
@@ -42,15 +45,21 @@ Flow::run(std::function<void(bool)> cb)
     else if(sig == AL_OK)
       {
         completedStage++;
-        this->onProgress(-1); // Reset progress
-        this->run(cb);        // Run again for next task
+        if(this->onProgress != nullptr)
+          {
+            this->onProgress(-1); // Reset progress}
+            this->run(cb);        // Run again for next task
+          }
       }
     else
       {
+        if(this->onStep != nullptr)
+          {
+            this->onStep(sig);
+          }
         output.push_back(sig); // Collect signal
       }
   });
 }
-
 }
 }

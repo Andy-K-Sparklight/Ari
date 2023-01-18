@@ -16,6 +16,9 @@ typedef std::function<void(const std::string &, Callback)> Listener;
     UIC::sendMessage("SetProgress", std::to_string(p * 100));                 \
   };
 
+#define ACH_DEFAULT_STEP                                                      \
+  [](int s) -> void { UIC::sendMessage("SetStep", std::to_string(s)); };
+
 void initMainWindow(void *w);
 
 void sendMessage(const std::string &channel, const std::string &dat);

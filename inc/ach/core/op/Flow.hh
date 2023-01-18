@@ -5,14 +5,12 @@
 // If the code is not 0, then the last stage reported is where it happened.
 #define AL_ERR -1
 #define AL_OK 0
-#define AL_WARN 1
 
 // Definitions of stages and vars
 #define AL_MANIFEST 0x01
 #define AL_FINDPROF 0x02
 #define AL_GETPROF 0x03
 #define AL_GETCLIENT 0x04
-#define AL_SCANNAT 0x05
 #define AL_UNPACKNAT 0x06
 #define AL_GETLIBS 0x07
 #define AL_GETASSETINDEX 0x08
@@ -31,6 +29,7 @@
 #define AL_DLJVM 0x16
 #define AL_SCANJVM 0x17
 #define AL_CFGLP 0x18
+#define AL_INSLOADER 0x19
 
 #define AL_FLOWVAR_PROFILEID "profileID"
 #define AL_FLOWVAR_ASSETINDEX "assetIndex"
@@ -72,6 +71,7 @@ typedef std::function<void(int)> FlowCallback;
 typedef std::function<void(Flow *flow, FlowCallback cb)> FlowTask;
 
 typedef std::function<void(double)> FlowProgress;
+typedef std::function<void(int)> FlowStep;
 
 // A flow is a tracker to complete the install progress
 // It will collect files and track progress of each task
@@ -90,6 +90,7 @@ public:
   std::list<int> output;           // Outputs containing stage ID
   Profile::VersionProfile profile; // Extended var
   FlowProgress onProgress = nullptr;
+  FlowStep onStep = nullptr;
 
   void run(std::function<void(bool)> cb = nullptr);
 

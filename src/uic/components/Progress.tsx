@@ -1,11 +1,13 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CircularProgressbar, buildStyles } from "react-circular-progressbar";
 import "react-circular-progressbar/dist/styles.css";
+import { tr } from "./TP";
 
 export function Progress(_props: {}): JSX.Element {
   const [progress, setProgress] = useState(-1);
+  const [step, setStep] = useState("");
 
-  useState(() => {
+  useEffect(() => {
     const foo = (e: Event) => {
       if (e instanceof CustomEvent) {
         const pst = parseFloat(e.detail) || 0;
@@ -15,6 +17,19 @@ export function Progress(_props: {}): JSX.Element {
     window.addEventListener("SetProgress", foo);
     return () => {
       window.removeEventListener("SetProgress", foo);
+    };
+  });
+
+  useEffect(() => {
+    const foo = (e: Event) => {
+      if (e instanceof CustomEvent) {
+        const pst = e.detail;
+        setStep(pst);
+      }
+    };
+    window.addEventListener("SetStep", foo);
+    return () => {
+      window.removeEventListener("SetStep", foo);
     };
   });
   return (
@@ -28,6 +43,23 @@ export function Progress(_props: {}): JSX.Element {
           textColor: "var(--a2-text)",
         })}
       />
+      {step ? (
+        <>
+          <div
+            style={{
+              textAlign: "center",
+              color: "var(--a2-base)",
+              marginTop: "2vh",
+            }}
+            className={".a2submit"} // Borrow this
+          >
+            <br /> <br />
+            {tr("FlowSteps." + step)}
+          </div>
+        </>
+      ) : (
+        ""
+      )}
     </div>
   );
 }

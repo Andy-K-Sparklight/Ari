@@ -13,6 +13,8 @@
 #include "ach/uic/UserData.hh"
 #include "ach/core/auto/AutoForge.hh"
 #include "ach/core/auto/AutoLoader.hh"
+#include "ach/core/profile/LaunchProfile.hh"
+#include "ach/util/Commons.hh"
 #include <cJSON.h>
 #include <log.hh>
 
@@ -130,18 +132,28 @@ implGetLoaderList(ACH_SC_ARGS)
 void
 implInstallProfile(ACH_SC_ARGS)
 {
+  Profile::LaunchProfile lp;
+  auto lpName = (*UIC::getUserData())["$ProfileName"];
+  lp.id = Commons::genUUID(lpName);
+  lp.displayName = lpName;
   Op::Flow *flow = new Op::Flow;
-  flow->data[AL_FLOWVAR_PROFILEID] = (*UIC::getUserData())["$GameVersion"];
+  auto mcv = (*UIC::getUserData())["$GameVersion"];
+  flow->data[AL_FLOWVAR_PROFILEID] = mcv;
   auto type = (*UIC::getUserData())["$Loader"];
   if(type == "None")
     {
       type = "";
+      lp.baseProfile = mcv;
     }
   else
     {
-      flow->data[AL_FLOWVAR_LOADERVER]
-          = (*UIC::getUserData())["$LoaderVersion"];
+      auto ldv = (*UIC::getUserData())["$LoaderVersion"];
+      flow->data[AL_FLOWVAR_LOADERVER] = ldv;
+      lp.baseProfile = mcv + "+" + type + "-" + ldv;
     }
+  lp.isDemo = false;
+  lp.runtime = lp.id; // Use this
+
   flow->data[AL_FLOWVAR_LOADERTYPE] = type;
   flow->addTask(Op::installProfile);
   flow->addTask(Op::flipInstall);
@@ -157,8 +169,13 @@ implInstallProfile(ACH_SC_ARGS)
   flow->addTask(Op::autoProfile);
   flow->addTask(Op::flipInstall);
   flow->onProgress = ACH_DEFAULT_PROGRESS;
-  flow->run([&prog, cb, flow](bool s) -> void {
+  flow->onStep = ACH_DEFAULT_STEP;
+  flow->run([&prog, cb, flow, lp](bool s) -> void {
     prog.carry = s;
+    if(s)
+      {
+        Profile::LAUNCH_PROFILES.push_back(lp);
+      }
     cb();
     delete flow;
   });

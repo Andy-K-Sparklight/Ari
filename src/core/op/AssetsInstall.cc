@@ -154,6 +154,11 @@ void
 copyAssets(Flow *flow, FlowCallback cb)
 {
   using namespace Platform;
+  if(flow->profile.assetIndexArtifact.path != "pre-1.6")
+    {
+      cb(AL_OK); // Skip this
+      return;
+    }
   cb(AL_COPYASSETS);
   std::string assetIndexSrc = flow->data[AL_FLOWVAR_ASSETINDEX];
   if(assetIndexSrc.size() == 0)
