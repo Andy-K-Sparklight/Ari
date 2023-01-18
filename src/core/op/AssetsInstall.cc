@@ -122,8 +122,10 @@ installAssets(Flow *flow, FlowCallback cb)
                    / path(ind) / a.hash)
                       .string();
       meta.size = a.size;
-      theoryTotalSize += meta.size;
-      pak.addTask(meta);
+      if(pak.addTask(meta) != std::numeric_limits<unsigned int>::max())
+        {
+          theoryTotalSize += meta.size;
+        }
     }
   pak.assignUpdateCallback([=](const Network::DownloadPack *p) -> void {
     auto ps = p->getStat();

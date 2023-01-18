@@ -321,7 +321,6 @@ autoForge(const std::string &url, std::function<void(bool)> cb)
   forgeInstallerMeta.baseURL = url;
   std::string installerName = "fgi-" + Commons::getNameHash(url) + ".jar";
   std::string installerPath = Platform::getTempPath(installerName);
-  LOG(installerPath);
   forgeInstallerMeta.path = installerPath;
   Network::DownloadPack pk;
   pk.addTask(forgeInstallerMeta);

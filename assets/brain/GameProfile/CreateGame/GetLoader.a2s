@@ -45,7 +45,7 @@ wdg     Text    *Desc
 
 ent     Progress
 uip
-cmp     $Loader
+cmp     $Loader None
 jc      noLoader
 
 sys     GetLoaderList
@@ -59,6 +59,11 @@ wdg     Text    &Desc
 pop     %ldv
 cmp     %ldv
 jc      end
+cmp     $Loader Forge
+jnc     noExPop
+mov     %ldv    %lurl
+pop     %ldv
+::noExPop
 pp      Tag
 pp      Compact 1
 pp      Icon    Pkg
@@ -72,13 +77,22 @@ jmp     f
 pp      Hint
 ::f
 
+cmp     $Loader Forge
+jnc     noUrl
+ln      %lurl
+jmp     xf
+::noUrl
 ln      %ldv
+::xf
 ent
 jmp     lp
 ::end
 uic
 
 pop     $LoaderVersion
+
+put     $Loader
+put     $LoaderVersion
 
 ::noLoader
 

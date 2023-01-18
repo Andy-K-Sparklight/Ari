@@ -52,10 +52,7 @@ getMirrors(const std::string &source)
             }
         }
     }
-  if(resultURLS.size() == 0)
-    {
-      resultURLS.push_back(source); // Use source
-    }
+  resultURLS.push_back(source); // Use source as fallback anyway
   return resultURLS;
 }
 

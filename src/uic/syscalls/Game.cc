@@ -92,6 +92,10 @@ implGetLoaderList(ACH_SC_ARGS)
           {
             for(auto &v : vers)
               {
+                auto urlParts = Commons::splitStr(v, "/");
+                auto version = urlParts[6];
+                auto fgv = Commons::splitStr(version, "-")[1];
+                prog.stack.push_back(fgv);
                 prog.stack.push_back(v);
               }
           }
