@@ -55,12 +55,6 @@ main(int argc, char **argv)
   if(args[1] == "mslogin")
     {
       // Start login
-      webview_navigate(
-          w, "https://login.live.com/"
-             "oauth20_authorize.srf?client_id=00000000402b5328&response_type="
-             "code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&"
-             "redirect_uri=https%3A%2F%2Flogin.live."
-             "com%2Foauth20_desktop.srf");
       webview_init(
           w,
           "window.onload=function(){window.tellSize(screen.availWidth,screen."
@@ -68,6 +62,12 @@ main(int argc, char **argv)
           "u=window.location.href;if(u.includes(\"code=\")){u=u.split(\"code="
           "\")[1];if(u.includes(\"&lc=\"))u=u.split(\"&lc=\")[0];window."
           "tellCode(u);}}");
+      webview_navigate(
+          w, "https://login.live.com/"
+             "oauth20_authorize.srf?client_id=00000000402b5328&response_type="
+             "code&scope=service%3A%3Auser.auth.xboxlive.com%3A%3AMBI_SSL&"
+             "redirect_uri=https%3A%2F%2Flogin.live."
+             "com%2Foauth20_desktop.srf");
       webview_set_title(w, "Login with Microsoft");
       webview_bind(
           w, "tellCode",
@@ -111,9 +111,7 @@ main(int argc, char **argv)
       Sys::initSys();
       auto boot = "window.onload=()=>{" + js + "}";
       webview_init(w, boot.c_str());
-      webview_set_html(w, "<!DOCTYPE html><html><body><div "
-                          "id=\"a2root\"></"
-                          "div></body></html>");
+      webview_navigate(w, "about:blank");
       UIC::bindListener("Ready",
                         [w](const std::string &dat, UIC::Callback cb) -> void {
                           Sys::runOnWorkerThread([w]() -> void {

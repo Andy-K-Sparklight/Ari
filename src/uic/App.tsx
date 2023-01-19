@@ -193,11 +193,10 @@ async function main() {
 
   // Render
   console.log("Rendering main element.");
-  const ele = document.getElementById("a2root");
-  if (ele) {
-    const root = createRoot(ele);
-    root.render(<App />);
-  }
+  const ele = document.createElement("div");
+  document.body.appendChild(ele);
+  const root = createRoot(ele);
+  root.render(<App />);
   console.log("Frontend initialized, requesting for instruction.");
   void sendMessage("Ready", "");
 }
