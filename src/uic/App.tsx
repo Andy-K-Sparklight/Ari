@@ -186,7 +186,7 @@ function App() {
 
 async function main() {
   // Init
-  initProtocol();
+  await initProtocol();
   console.log("Checking protocol.");
   console.log('"What makes you fly is not the wind..."');
   console.log(await sendMessage("Ping", ""));

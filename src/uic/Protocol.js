@@ -1,7 +1,7 @@
 const PROTOCOL_CTL = new Map();
 let pid = 0;
 
-export function initProtocol() {
+export async function initProtocol() {
   window.tellSize(
     screen.availWidth,
     screen.availHeight,
@@ -17,6 +17,14 @@ export function initProtocol() {
       f(msg);
     }
   };
+  // Wait for window.SYS
+  return new Promise((res) => {
+    setInterval(() => {
+      if (window.SYS) {
+        res();
+      }
+    }, 10);
+  });
 }
 
 export function sendMessage(chn, msg) {
