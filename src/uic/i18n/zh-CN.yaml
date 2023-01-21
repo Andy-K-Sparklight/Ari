@@ -262,6 +262,9 @@ Commons:
   Submit: 点击这里以继续
   SubmitFail: 检查你的输入...
   Connecting: 正在连接 {Host}
+  Cancel: |
+    <b>取消操作可能会丢失数据!</b>
+    如果你坚持, 请再按一下 Esc.
 
 FlowSteps:
   1: 正在获取版本列表

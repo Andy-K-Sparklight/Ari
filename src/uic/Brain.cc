@@ -197,9 +197,30 @@ Program::run(PCallback cb)
               eip++;
               if(SYSCALLCTL.contains(curInstr.a1))
                 {
+                  std::string localSys = curInstr.a1;
+                  waitingSys = curInstr.a1;
                   running = false;
-                  auto foo = SYSCALLCTL[curInstr.a1];
-                  foo(*this, [cb, this]() -> void { this->run(cb); });
+                  auto foo = SYSCALLCTL[localSys];
+                  bindListener(
+                      "RequestBreak",
+                      [cb, this, localSys](const std::string &,
+                                           Callback) -> void {
+                        if(this->waitingSys == localSys)
+                          {
+                            this->carry = false;   // Will be treated as failed
+                            this->waitingSys = ""; // Takeover control
+                            this->run(cb);         // Let the program run
+                          }
+                      },
+                      true);
+                  foo(*this, [cb, this, localSys]() -> void {
+                    if(this->waitingSys == localSys)
+                      {
+                        // Haven't been broken
+                        this->waitingSys = "";
+                        this->run(cb); // I can safely continue this
+                      }
+                  });
                 }
               else
                 {

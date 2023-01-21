@@ -98,6 +98,7 @@ implGetLoaderList(ACH_SC_ARGS)
                 prog.stack.push_back(fgv);
                 prog.stack.push_back(v);
               }
+            prog.carry = true;
           }
         else
           {
@@ -123,6 +124,7 @@ implGetLoaderList(ACH_SC_ARGS)
               {
                 prog.stack.push_back(v);
               }
+            prog.carry = true;
           }
         else
           {
@@ -160,16 +162,13 @@ implInstallProfile(ACH_SC_ARGS)
 
   flow->data[AL_FLOWVAR_LOADERTYPE] = type;
   flow->addTask(Op::installProfile);
-  flow->addTask(Op::flipInstall);
   flow->addTask(Op::loadProfile);
   flow->addTask(Op::installClient);
   flow->addTask(Op::installLibraries);
   flow->addTask(Op::installAssetIndex);
   flow->addTask(Op::installAssets);
-  flow->addTask(Op::flipInstall);
   flow->addTask(Op::copyAssets);
   flow->addTask(Op::collectNatives);
-  flow->addTask(Op::flipInstall);
   flow->addTask(Op::autoProfile);
   flow->addTask(Op::flipInstall);
   flow->onProgress = ACH_DEFAULT_PROGRESS;

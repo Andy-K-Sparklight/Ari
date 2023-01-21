@@ -8,7 +8,7 @@ ent     Progress
 uip
 
 sys     AddMSAccount
-jnc      ok
+jc      ok
 
 ::fail
 

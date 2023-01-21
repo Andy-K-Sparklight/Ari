@@ -59,7 +59,6 @@ body {
 }
 
 .a2btncompact .a2img {
-  transform: translateY(1vh);
   height: 4vh;
   width: 4vh;
   margin-left: 1vw;

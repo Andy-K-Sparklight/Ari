@@ -49,6 +49,7 @@ class Program
 {
 public:
   unsigned int eip = 0;
+  std::string waitingSys;
   std::string name;
   std::vector<Instr> bin;
   std::list<std::string> stack;

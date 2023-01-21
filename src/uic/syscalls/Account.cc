@@ -30,7 +30,7 @@ implAddMSAccount(ACH_SC_ARGS)
   auto ac = new Profile::AccountProfile();
   *ac = Auth::mkMsAccount();
   Auth::msAuth(*ac, [&prog, ac, cb](bool s) -> void {
-    prog.carry = !s;
+    prog.carry = s;
     if(s)
       {
         prog.stack.push_back(ac->userName);
