@@ -47,7 +47,7 @@ installAssetIndex(Flow *flow, FlowCallback cb)
   // Write the profile to temp install path
   std::string fileName = profile.assetIndexArtifact.path + ".json";
   std::string tempPath
-      = getInstallPath(std::filesystem::path("assets") / "indexes" / fileName);
+      = getStoragePath(std::filesystem::path("assets") / "indexes" / fileName);
 
   mkParentDirs(tempPath);
 
@@ -118,9 +118,9 @@ installAssets(Flow *flow, FlowCallback cb)
           = std::string(ACH_MOJANG_RESOURCES_HOST) + "/" + ind + "/" + a.hash;
       meta.hash = "sha-1=" + a.hash;
       using namespace std::filesystem;
-      meta.path = (path(Platform::getInstallPath(path("assets") / "objects"))
+      meta.path = (path(Platform::getStoragePath(path("assets") / "objects"))
                    / path(ind) / a.hash)
-                      .string();
+                      .string(); // Direct installation
       meta.size = a.size;
       if(pak.addTask(meta) != std::numeric_limits<unsigned int>::max())
         {
@@ -175,7 +175,8 @@ copyAssets(Flow *flow, FlowCallback cb)
       auto src = getStoragePath("assets/objects/" + a.hash.substr(0, 2) + "/"
                                 + a.hash);
 
-      auto target1 = getInstallPath("assets/legacy/" + a.name);
+      auto target1
+          = getStoragePath("assets/legacy/" + a.name); // Direct installation
       auto target2 = getRuntimePath(flow->data[AL_FLOWVAR_RUNTIME]
                                     + "/resources/" + a.name);
       mkParentDirs(target1);

@@ -35,6 +35,13 @@ autoProfile(Flow *flow, FlowCallback cb)
   auto variant = flow->data[AL_FLOWVAR_LOADERTYPE];
   auto mcv = flow->data[AL_FLOWVAR_PROFILEID];
   auto ldv = flow->data[AL_FLOWVAR_LOADERVER];
+  if(variant.size() == 0)
+    {
+      LOG("No loader specified, skipped loader installation.");
+      cb(AL_OK);
+      return;
+    }
+  cb(AL_INSLOADER);
   if(variant == "Fabric")
     {
       LOG("AutoProfile is installing Fabric " << ldv);
@@ -78,6 +85,11 @@ autoProfile(Flow *flow, FlowCallback cb)
             cb(AL_ERR);
           }
       });
+    }
+  else
+    {
+      LOG("Unsupported loader " << variant);
+      cb(AL_ERR);
     }
 }
 }

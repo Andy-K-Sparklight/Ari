@@ -159,7 +159,7 @@ installProfile(Flow *flow, FlowCallback sender)
 
     // Write the profile to temp install path
     std::string fileName = targetID + ".json";
-    std::string tempPath = Platform::getInstallPath(
+    std::string tempPath = Platform::getStoragePath(
         std::filesystem::path("versions") / targetID / (targetID + ".json"));
     Platform::mkParentDirs(tempPath);
 
@@ -196,7 +196,8 @@ installClient(Flow *flow, FlowCallback sender)
     using namespace Network;
     DownloadMeta clientMeta, clientMappingsMeta;
     DownloadPack clientPack;
-    auto installPrefix = Platform::getInstallPath("versions");
+    auto installPrefix
+        = Platform::getStoragePath("versions"); // Direct install
 
     clientMeta
         = DownloadMeta::mkFromArtifact(profile.clientArtifact, installPrefix);

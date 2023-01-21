@@ -84,7 +84,8 @@ installLibraries(Flow *flow, FlowCallback cb)
       if(parseLibRule(lib.rules))
         {
           auto meta = Network::DownloadMeta::mkFromLibrary(
-              lib, Platform::getInstallPath("libraries"));
+              lib, Platform::getStoragePath(
+                       "libraries")); // Direct installation will be faster
           theoryTotalSize += meta.size;
           librariesPack.addTask(meta);
         }

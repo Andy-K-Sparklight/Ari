@@ -26,7 +26,8 @@ collectNatives(Flow *flow, FlowCallback cb)
     Profile::VersionProfile profile = flow->profile;
     LOG("Collecting native libraries for " << profile.id);
     auto base = getStoragePath("libraries");
-    auto target = getInstallPath("versions/" + profile.id + "/.natives");
+    auto target = getStoragePath("versions/" + profile.id
+                                 + "/.natives"); // Direct install
     auto unpackwd = getTempPath("unpack/" + profile.id);
     std::filesystem::create_directories(unpackwd);
     std::filesystem::create_directories(target);

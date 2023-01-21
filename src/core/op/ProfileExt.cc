@@ -117,7 +117,7 @@ linkClient(Flow *flow, FlowCallback cb)
   LOG("Linking client for " << id);
   Sys::runOnWorkerThread([=]() -> void {
     std::string target
-        = Platform::getInstallPath("versions/" + id + "/" + id + ".jar");
+        = Platform::getStoragePath("versions/" + id + "/" + id + ".jar");
     if(!std::filesystem::exists(target))
       {
         try
