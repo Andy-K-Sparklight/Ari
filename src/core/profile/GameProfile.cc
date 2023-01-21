@@ -114,7 +114,7 @@ Artifact::Artifact(const cJSON *src)
     }
 
   cJSON *sizeItem = cJSON_GetObjectItem(src, "size");
-  if(cJSON_IsNumber(sha1Item))
+  if(cJSON_IsNumber(sizeItem))
     {
       size = (size_t)cJSON_GetNumberValue(sizeItem);
     }
@@ -142,6 +142,7 @@ Library::Library(const cJSON *src, bool checkReq)
       auto parts = Commons::splitStr(name, ":");
       isNative = parts.size() == 4; // If it has 4 parts
       cJSON *urlItem = cJSON_GetObjectItem(src, "url");
+      cJSON *sizeItem = cJSON_GetObjectItem(src, "size");
       std::string url;
       if(cJSON_IsString(urlItem))
         {
@@ -159,7 +160,7 @@ Library::Library(const cJSON *src, bool checkReq)
       group = std::regex_replace(group, dot, "/");
       artifact.path = group + "/" + proj + "/" + version + "/" + proj + "-"
                       + version + ".jar";
-      artifact.size = 0;
+      artifact.size = 0; // Placeholder
       artifact.sha1 = "";
       artifact.url = url + group + "/" + proj + "/" + version + "/" + proj
                      + "-" + version + ".jar";
