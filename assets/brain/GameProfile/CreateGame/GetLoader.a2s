@@ -1,6 +1,7 @@
 .aka    #       GameProfile.CreateGame.SelectLoader.
 .aka    \*      GameProfile.CreateGame.LoadingLoader.
 .aka    &       GameProfile.CreateGame.SelectLoaderVersion.
+.aka    \^      GameProfile.CreateGame.LoadVersionFail.
 
 wdg     Icon    AddItem
 wdg     Title   #Title
@@ -39,16 +40,33 @@ uic
 
 pop     $Loader
 
+::reload
+cmp     $Loader None
+jc      noLoader
+
 wdg     Icon    AddItem
 wdg     Title   *Title
 wdg     Text    *Desc
 
 ent     Progress
 uip
-cmp     $Loader None
-jc      noLoader
 
 sys     GetLoaderList
+jc      ok
+
+wdg     Icon    Warn
+wdg     Title   ^Title
+wdg     Text    ^Desc
+pp      Tag
+pp      Hint
+pp      Label   ^Btn
+pp      Icon    Retry
+ent
+uic
+
+jmp     reload
+
+::ok
 
 wdg     Icon    AddItem
 wdg     Title   &Title
