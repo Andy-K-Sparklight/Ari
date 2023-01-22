@@ -58,6 +58,9 @@ configure~
 config.h
 .vscode
 build
+libs
+*.jar
+*.prog
 .VSCodeCounter
 
 # NodeJS
