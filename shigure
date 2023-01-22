@@ -1,0 +1,98 @@
+#!/bin/sh
+
+# Script to download essential files and setup environment
+echo "Shigure | Simple build script for A2"
+
+base_dir=$(dirname "$0")
+if ! test $1
+then
+echo "What do you want to do?"
+exit
+fi
+
+if [[ $1 == "setup" ]]
+then
+assets_file=$base_dir/shigure.assets
+echo "Checking required tools..."
+command -v curl 1>/dev/null && dlt=curl && dlf='--output'
+command -v wget 1>/dev/null && dlt=wget && dlf='-O'
+
+if ! test $dlt
+then
+echo "Missing curl and wget, at least one need to be present."
+exit
+fi
+
+while read -r line; do
+    larr=($line)
+    fname=${larr[0]}
+    furl=${larr[1]}
+    msysonly=${larr[2]}
+    if [[ $msysonly == 'msys-only' ]]
+    then
+    if [[ -z $MSYSTEM ]]
+    then
+    continue
+    fi
+    fi
+    echo
+    echo "Downloading asset $fname from $furl"
+    echo
+    mkdir -p `dirname "$base_dir/$fname"`
+    $dlt $furl $dlf $base_dir/$fname
+done <$assets_file
+fi
+
+if [[ $1 == "build" ]]
+then
+cd $base_dir
+echo
+echo "WARNING!"
+echo "Shigure build is ONLY an automation of the build instructions in README.md"
+echo "I won't check all required tools. Please make sure you've installed them."
+echo "If there is any error, consider manually build instead."
+echo
+echo "Press Enter to continue."
+read a
+
+vmake='make'
+if [[ $OSTYPE == 'darwin'* ]]; then
+command -v 'gmake' && vmake='gmake'
+chmod +x ./macpb
+sh ./macpb
+fi
+
+mkdir -p build
+autoreconf --install
+chmod +x ./configure
+chmod +x ./scansrc
+sh ./scansrc
+cd build
+sh ../configure
+cpunum=$(grep -c ^processor /proc/cpuinfo)
+if [[ $OSTYPE == 'darwin'* ]]; then
+$vmake -j $cpunum CC=gcc-12 CPP=g++-12 CXX=g++-12 LD=g++-12
+else
+$vmake -j $cpunum
+fi
+$vmake check
+if test $MSYSTEM
+then
+sh ../winfix
+fi
+cd ..
+yarn install
+chmod +x ./jsbuild
+./jsbuild
+cd build
+cp -f ../dist/* ./
+cp -rf ../assets/* ./
+
+fi
+
+if [[ $1 == "test" ]]
+then
+./build/AlicornCH
+fi
+
+echo    "Finished."
