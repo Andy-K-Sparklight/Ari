@@ -10,14 +10,23 @@ namespace Network
 // Predifined, usually won't need to change
 #define ACH_MIRROR_RULES                                                      \
   "piston-meta.mojang.com|download.mcbbs.net;"                                \
+  "piston-meta.mojang.com|bmclapi2.bangbang93.com;"                           \
   "launcher.mojang.com|download.mcbbs.net;"                                   \
+  "launcher.mojang.com|bmclapi2.bangbang93.com;"                              \
   "launchermeta.mojang.com|download.mcbbs.net;"                               \
+  "launchermeta.mojang.com|bmclapi2.bangbang93.com;"                          \
   "resources.download.minecraft.net|download.mcbbs.net/assets;"               \
+  "resources.download.minecraft.net|bmclapi2.bangbang93.com/assets;"          \
   "libraries.minecraft.net|download.mcbbs.net/maven;"                         \
+  "libraries.minecraft.net|bmclapi2.bangbang93.com/maven;"                    \
   "files.minecraftforge.net/maven|download.mcbbs.net/maven;"                  \
+  "files.minecraftforge.net/maven|bmclapi2.bangbang93.com/maven;"             \
   "maven.minecraftforge.net|download.mcbbs.net/maven;"                        \
+  "maven.minecraftforge.net|bmclapi2.bangbang93.com/maven;"                   \
   "meta.fabricmc.net|download.mcbbs.net/fabric-meta;"                         \
+  "meta.fabricmc.net|bmclapi2.bangbang93.com/fabric-meta;"                    \
   "maven.fabricmc.net|download.mcbbs.net/maven;"                              \
+  "maven.fabricmc.net|bmclapi2.bangbang93.com/maven;"                         \
   "github.com|ghproxy.com/https://github.com;"
 
 static std::vector<std::pair<std::string, std::string>> mirrorRules;
