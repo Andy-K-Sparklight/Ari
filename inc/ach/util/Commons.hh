@@ -25,6 +25,9 @@ std::string genUUID();
 // Generate UUID base on name
 std::string genUUID(const std::string &name);
 
+// Check the size of a file
+size_t getFileSize(const std::string &path);
+
 }
 }
 

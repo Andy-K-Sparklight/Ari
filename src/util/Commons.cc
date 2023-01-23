@@ -3,6 +3,7 @@
 #include <string>
 #include <random>
 #include <uuid.h>
+#include <sys/stat.h>
 #include <openssl/md5.h>
 
 namespace Alicorn
@@ -74,6 +75,14 @@ genUUID(const std::string &name)
   MD5((unsigned char *)name.c_str(), name.size(), result);
   uuids::uuid id{ result };
   return uuids::to_string(id);
+}
+
+size_t
+getFileSize(const std::string &path)
+{
+  struct stat stat_buf;
+  int rc = stat(path.c_str(), &stat_buf);
+  return rc == 0 ? stat_buf.st_size : -1;
 }
 
 }

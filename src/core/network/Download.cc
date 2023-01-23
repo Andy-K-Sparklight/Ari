@@ -68,6 +68,15 @@ DownloadPack::addTask(const DownloadMeta &meta)
   DownloadProcess p;
   p.hash = meta.hash;
   p.path = meta.path;
+  if(meta.size > 0)
+    {
+      auto esz = Commons::getFileSize(meta.path);
+      if(meta.size == esz)
+        {
+          return std::numeric_limits<unsigned int>::max(); // Skipped
+        }
+    }
+
   if(Sys::getValue(ACH_CFG_DLM, ACH_CFG_DLM_ACC) == ACH_CFG_DLM_ACC)
     {
       auto mirrors = getMirrors(meta.baseURL);
@@ -88,6 +97,12 @@ DownloadPack::addTask(const DownloadMeta &meta)
 void
 DownloadPack::commit()
 {
+  if(procs.size() == 0)
+    {
+      // This must be synced
+      this->updateFunc(this);
+      return;
+    }
   using namespace AlicornDrivers;
   Aria2::Aria2Daemon daemon = Aria2::ARIA2_DAEMON;
   std::list<std::pair<std::string, std::list<cJSON *>>> batchOps;
