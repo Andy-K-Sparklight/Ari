@@ -142,7 +142,6 @@ Library::Library(const cJSON *src, bool checkReq)
       auto parts = Commons::splitStr(name, ":");
       isNative = parts.size() == 4; // If it has 4 parts
       cJSON *urlItem = cJSON_GetObjectItem(src, "url");
-      cJSON *sizeItem = cJSON_GetObjectItem(src, "size");
       std::string url;
       if(cJSON_IsString(urlItem))
         {
