@@ -82,6 +82,20 @@ implAddYGAccount(ACH_SC_ARGS)
   });
 }
 
+void
+implGetAllAccounts(ACH_SC_ARGS)
+{
+  prog.stack.push_back("");
+  for(auto &a : Profile::ACCOUNT_PROFILES)
+    {
+      prog.stack.push_back(std::to_string(a.type));
+      prog.stack.push_back(a.userName);
+      prog.stack.push_back(a.email);
+      prog.stack.push_back(a.id);
+    }
+  cb();
+}
+
 }
 }
 }

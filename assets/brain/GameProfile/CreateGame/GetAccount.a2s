@@ -1,0 +1,61 @@
+.aka    #       GameProfile.CreateGame.SelectAccount.
+
+::head
+sys     GetAllAccounts
+
+wdg     Icon    AddItem
+wdg     Title   #Title
+wdg     Text    #Desc
+
+::lp
+pop     %id
+cmp     %id
+jc      end
+pop     %email
+pop     %name
+pop     %type
+
+pp      Compact 1
+pp      Hint
+pp      Label   %name
+ln      %id
+cmp     %email
+jc      noEmail
+pp      Tag     %email
+::noEmail
+
+cmp     %type   0
+jc      isMS
+cmp     %type   1
+jc      isYG
+pp      Icon    Offline
+jmp     e
+
+::isMS
+pp      Icon    MS
+jmp     e
+::isYG
+pp      Icon    External
+::e
+
+ent
+
+jmp     lp
+::end
+
+pp      Icon    AddItem
+pp      Label   #Add
+ln      addAccount 
+ent
+uic
+
+pop     %choice
+jmp     noAdd
+
+::addAccount
+run     Account/NewAccount
+jmp     head
+
+::noAdd
+mov     %choice $Account
+ret

@@ -18,6 +18,8 @@ void implValidateYggServer(ACH_SC_ARGS);
 
 void implAddYGAccount(ACH_SC_ARGS);
 
+void implGetAllAccounts(ACH_SC_ARGS);
+
 }
 }
 }

@@ -1,5 +1,7 @@
-run     GameProfile/CreateGame/GetVersion
-run     GameProfile/CreateGame/GetLoader
-run     GameProfile/CreateGame/MkProfile
-run     GameProfile/CreateGame/InstallProfile
+.aka    #       GameProfile/CreateGame/
+run     #GetVersion
+run     #GetLoader
+run     #GetAccount
+run     #MkProfile
+run     #InstallProfile
 ret

@@ -23,6 +23,7 @@ bindAllSysCalls()
   bindSysCall("GetVersions", SysCall::implGetVersions);
   bindSysCall("GetLoaderList", SysCall::implGetLoaderList);
   bindSysCall("InstallProfile", SysCall::implInstallProfile);
+  bindSysCall("GetAllAccounts", SysCall::implGetAllAccounts);
 }
 
 }

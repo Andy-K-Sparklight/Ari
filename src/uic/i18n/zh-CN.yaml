@@ -140,6 +140,15 @@ GameProfile:
 
         进度条可能多次读满后归零, 因为有多个步骤要执行.
         你可以随时按 Tab 打开日志查看当前状况.
+
+    SelectAccount:
+      Title: 你想如何登录游戏?
+      Desc: |
+        选择你希望用于启动游戏的帐户.
+
+        请注意: 如果你要玩服务器, 在开启了正版验证的服务器上, 必须使用微软帐户登录.
+      Add: 添加新帐户
+
 Account:
   NewAccount:
     ChooseType:

@@ -139,13 +139,16 @@ void
 implInstallProfile(ACH_SC_ARGS)
 {
   Profile::LaunchProfile lp;
-  auto lpName = (*UIC::getUserData())["$ProfileName"];
+  auto upool = UIC::getUserData();
+  auto lpName = (*upool)["$ProfileName"];
+  auto accID = (*upool)["$Account"];
   lp.id = Commons::genUUID(lpName);
   lp.displayName = lpName;
+  lp.account = accID;
   Op::Flow *flow = new Op::Flow;
-  auto mcv = (*UIC::getUserData())["$GameVersion"];
+  auto mcv = (*upool)["$GameVersion"];
   flow->data[AL_FLOWVAR_PROFILEID] = mcv;
-  auto type = (*UIC::getUserData())["$Loader"];
+  auto type = (*upool)["$Loader"];
   if(type == "None")
     {
       type = "";
@@ -153,7 +156,7 @@ implInstallProfile(ACH_SC_ARGS)
     }
   else
     {
-      auto ldv = (*UIC::getUserData())["$LoaderVersion"];
+      auto ldv = (*upool)["$LoaderVersion"];
       flow->data[AL_FLOWVAR_LOADERVER] = ldv;
       lp.baseProfile = mcv + "+" + type + "-" + ldv;
     }
