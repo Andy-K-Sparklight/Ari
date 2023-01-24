@@ -27,6 +27,8 @@ interface DrawInstr {
   }[];
 }
 
+let RENDERSIGCTL = false;
+
 function App() {
   const [drawInstr, setDrawInstr] = useState("{}");
   const [submitLock, setSubmitLock] = useState(false);
@@ -54,6 +56,10 @@ function App() {
         }
       }
     });
+    if (!RENDERSIGCTL) {
+      void sendMessage("Ready", "");
+      RENDERSIGCTL = true;
+    }
   }, []);
   const obj = JSON.parse(drawInstr) as DrawInstr;
   if (Object.keys(obj).length == 0) {
@@ -194,11 +200,11 @@ async function main() {
   // Render
   console.log("Rendering main element.");
   const ele = document.createElement("div");
+  document.body.innerHTML = "";
   document.body.appendChild(ele);
   const root = createRoot(ele);
   root.render(<App />);
   console.log("Frontend initialized, requesting for instruction.");
-  void sendMessage("Ready", "");
 }
 
 (() => {

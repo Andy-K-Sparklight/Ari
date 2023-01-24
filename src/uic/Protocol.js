@@ -2,12 +2,6 @@ const PROTOCOL_CTL = new Map();
 let pid = 0;
 
 export async function initProtocol() {
-  window.tellSize(
-    screen.availWidth,
-    screen.availHeight,
-    window.outerWidth,
-    window.outerHeight
-  );
   window.a2Call = (chn, msg) => {
     window.dispatchEvent(new CustomEvent(chn, { detail: msg }));
   };
@@ -19,9 +13,16 @@ export async function initProtocol() {
   };
   // Wait for window.SYS
   return new Promise((res) => {
-    setInterval(() => {
+    const p = setInterval(() => {
       if (window.SYS) {
+        window.tellSize(
+          screen.availWidth,
+          screen.availHeight,
+          window.outerWidth,
+          window.outerHeight
+        );
         res();
+        clearInterval(p);
       }
     }, 10);
   });

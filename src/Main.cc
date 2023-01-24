@@ -102,6 +102,17 @@ main(int argc, char **argv)
                         [](const std::string &s, UIC::Callback cb) -> void {
                           cb("\"...It's courage.\"");
                         });
+      UIC::bindListener(
+          "Ready",
+          [w](const std::string &dat, UIC::Callback cb) -> void {
+            LOG("Start executing main entry script.");
+            Sys::runOnWorkerThread([w]() -> void {
+              UIC::runProgram(
+                  "Main", []() -> void {}, UIC::getUserData());
+            });
+            cb("");
+          },
+          true);
 
       // Load Script
       std::ifstream jsf("Main.js");
@@ -109,18 +120,13 @@ main(int argc, char **argv)
       jss << jsf.rdbuf();
       std::string js = jss.str();
       Sys::initSys();
-      auto boot = "window.onload=()=>{" + js + "}";
+      auto boot = "window.addEventListener('load', ()=>{" + js + "});";
       webview_init(w, boot.c_str());
-      webview_navigate(w, "about:blank");
-      UIC::bindListener("Ready",
-                        [w](const std::string &dat, UIC::Callback cb) -> void {
-                          Sys::runOnWorkerThread([w]() -> void {
-                            UIC::runProgram(
-                                "Main", []() -> void {}, UIC::getUserData());
-                          });
-                          cb("");
-                        });
-
+      webview_navigate(w, "data:text/html,<!DOCTYPE "
+                          "html><html><body><style>body{text-align:center;} "
+                          "h1{width:100%;} p{width:100%;}</"
+                          "style><h1>Please Wait...</h1><p>Loading "
+                          "components</p></body></html>");
       webview_run(w);
       Sys::downSys();
     }
