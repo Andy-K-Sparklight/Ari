@@ -43,6 +43,16 @@ export function NetSpeed(_props: {}): JSX.Element {
       <div
         style={{
           position: "absolute",
+          color: "var(--a2-typo)",
+          left: "1vw",
+          bottom: "2px",
+        }}
+      >
+        {"Alicorn: The Corrupted Heart // Insider"}
+      </div>
+      <div
+        style={{
+          position: "absolute",
           right: "1vw",
           bottom: "2px",
           color: "var(--a2-base)",
