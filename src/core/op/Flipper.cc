@@ -29,27 +29,17 @@ flipInstall(Flow *flow, FlowCallback cb)
       }
     LOG("Flipping dir " << base);
 
-    std::list<std::string> filesOp;
-
     // Run sync ops first
     for(auto &f : files)
       {
         auto target = getStoragePath(std::filesystem::relative(f, base));
-        auto originSz = Commons::getFileSize(f);
-        auto targetSz = Commons::getFileSize(target);
-        if(targetSz > 0 && originSz == targetSz)
-          {
-            // Skip if exists with the same size
-            continue;
-          }
         mkParentDirs(target);
-        filesOp.push_back(f);
       }
 
-    int *total = new int(filesOp.size());
+    int *total = new int(files.size());
     int *count = new int(0);
     Sys::runOnUVThread([=]() -> void {
-      for(auto &f : filesOp)
+      for(auto &f : files)
         {
           auto target = getStoragePath(std::filesystem::relative(f, base));
           moveFileAsync(f, target, [=](bool stat) -> void {

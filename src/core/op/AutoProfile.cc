@@ -41,6 +41,11 @@ autoProfile(Flow *flow, FlowCallback cb)
       cb(AL_OK);
       return;
     }
+  else
+    {
+      flow->data[AL_FLOWVAR_PROFILEID]
+          = mcv + "+" + variant + "-" + ldv; // In favor for profile installing
+    }
   cb(AL_INSLOADER);
   if(variant == "Fabric")
     {

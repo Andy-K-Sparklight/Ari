@@ -1,0 +1,64 @@
+.aka    #       Launch.Launching.
+.aka    \^      Launch.LaunchOK.
+.aka    \*      Launch.LaunchFail.
+.aka    \+      Launch.Crash.
+
+::head
+
+wdg     Icon    Launch
+wdg     Title   #Title
+wdg     Text    #Desc
+
+ent     Progress
+uip
+
+sys     LaunchGame
+jnc     lcfail
+pop     $GamePID
+
+wdg     Icon    Launch
+wdg     Title   ^Title
+wdg     Text    ^Desc
+
+ent     Progress
+uip
+sys     MonitorGame
+jc     end
+
+
+
+::crash
+wdg     Icon    Warn
+wdg     Title   +Title
+wdg     Text    +Desc
+pp      Tag     +Fine.Tag
+pp      Hint
+pp      Icon    ArrowRight
+pp      Label   +Fine.Btn
+ln      end
+ent
+
+pp      Tag     +Prob.Tag
+pp      Icon    Retry
+pp      Label   +Prob.Btn
+ent
+uic
+jmp     head
+
+
+::lcfail
+
+wdg     Icon    Warn
+wdg     Title   *Title
+wdg     Text    *Desc
+
+pp      Icon    Retry
+pp      Hint    opt
+pp      Tag
+pp      Label   *Retry
+ent
+uic
+jmp     head
+
+::end
+ret

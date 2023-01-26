@@ -1,0 +1,44 @@
+.aka    #       Launch.Select.
+
+::head
+wdg     Icon    Launch
+wdg     Title   #Title
+wdg     Text    #Desc
+
+sys     GetLaunchProfiles
+
+::lp
+
+pop     %pid
+cmp     %pid
+jc      end
+
+pop     %profile
+pop     %name
+
+pp      Hint
+pp      Version %profile
+pp      Tag     #Tag
+pp      Label   %name
+pp      Icon    Pkg
+ln      %pid
+ent
+
+jmp     lp
+::end
+
+pp      Tag     #New.Tag
+pp      Label   #New.Btn
+pp      Icon    AddItem
+ln      new
+ent
+
+uic
+
+pop     $Profile
+run     Launch/LaunchGame
+
+ret
+::new
+run     GameProfile/CreateGame/CreateGame
+jmp     head

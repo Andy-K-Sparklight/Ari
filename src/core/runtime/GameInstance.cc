@@ -66,6 +66,10 @@ onExit(uv_process_t *proc, int64_t code, int sig)
   uv_read_stop((uv_stream_t *)&self->outPipes[1]);
   uv_close((uv_handle_t *)&self->outPipes[0], NULL);
   uv_close((uv_handle_t *)&self->outPipes[1], NULL);
+  if(self->exitListener != nullptr)
+    {
+      self->exitListener();
+    }
 }
 
 // Not reusable!

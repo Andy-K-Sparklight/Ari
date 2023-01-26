@@ -1,4 +1,5 @@
 .aka    #       Guide.Beginning.
+.aka    \^      Guide.Finish.
 
 wdg     Icon    Diamond
 wdg     Title   #Title
@@ -19,8 +20,19 @@ ent
 
 uic
 
-;run     Guide/JRECheck
-;run     Guide/AddAccount
+run     Guide/JRECheck
+run     Guide/AddAccount
 run     Guide/AddGame
 
+wdg     Icon    Diamond
+wdg     Title   ^Title
+wdg     Text    ^Desc
+
+pp      Icon    ArrowRight
+pp      Label   ^Home
+pp      Hint    opt
+pp      Tag
+
+ent
+uic
 ret

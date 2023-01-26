@@ -46,7 +46,7 @@ export function Logs(_props: {}): JSX.Element {
         id={"logs"}
         style={{
           fontFamily:
-            "'Source Code Pro', 'Fira Code', Monaco, Consolas, 'Courier New', Courier, monospace",
+            "'Source Code Pro', 'Fira Code', Monaco, Consolas, 'Courier New', Courier, 'Open Sans', 'Microsoft YaHei UI', monospace",
           width: "90%",
           height: "90%",
           overflowY: "scroll",

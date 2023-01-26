@@ -230,7 +230,6 @@ installClient(Flow *flow, FlowCallback sender)
     Sys::runOnWorkerThread([=]() mutable -> void {
       LOG("Started downloading client.");
       clientPack.commit();
-      ALL_DOWNLOADS.push_back(clientPack);
     });
   });
 }

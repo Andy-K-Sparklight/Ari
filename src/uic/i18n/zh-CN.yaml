@@ -55,6 +55,13 @@ Guide:
       现在该来创建你的第一个游戏了!
       我们现在就开始!
     Btn: 继续
+  Finish:
+    Title: 教程结束
+    Desc: |
+      引导部分到此结束了.
+      相信你已经了解了 A2 的用法!
+      按下右侧的按钮后, 我们将回到主页.
+    Home: 完成
 
 GameProfile:
   CreateGame:
@@ -86,7 +93,7 @@ GameProfile:
       Title: 使用哪个 Mod 加载器?
       Desc: |
         请根据你要玩的 Mod 选择对应的加载器.
-        如果你没有 Mod 要玩, 就选择跳过!
+        如果你没有 Mod 要玩, 选择 Fabric!
       Loaders:
         Fabric:
           Tag: |
@@ -108,7 +115,9 @@ GameProfile:
         None:
           Tag: |
             不使用 Mod 加载器, 游玩原汁原味的 MC!
-          Name: 不使用
+            在 1.19 以上版本, 请不要使用! 你的数据会泄露!
+          Name: 原版
+          Warn: 不推荐!
 
     LoadingLoader:
       Title: 请稍等...
@@ -132,12 +141,33 @@ GameProfile:
       Input:
         Tag: 名字应以简单好记为要, 不过最好别太长!
         Ph: 新的游戏档案
+
     Installing:
       Title: 请稍等...
       Desc: |
         我们正在下载一些必要的文件.
         这可能需要几分钟, 取决于你的网络速度.
         在中国大陆, BMCLAPI 为你提供加速下载服务.
+
+    InstallOK:
+      Title: 恭喜!
+      Desc: |
+        游戏已经成功安装.
+        你可以现在开始畅玩, 也可以等会再开始!
+      Play: 立即启动!
+      Done: 完成
+
+    InstallFail:
+      Title: 诶?! 但是...
+      Desc: |
+        游戏安装中遇到了些问题!
+        请检查:
+          • 网络是否通畅?
+          • 硬盘空间是否充足?
+            (MC 大约需要 1 GiB 的空间)
+        然后再试一次.
+        如果仍有问题, 请联系我们!
+      Retry: 再试一次
 
     SelectAccount:
       Title: 你想如何登录游戏?
@@ -253,17 +283,60 @@ Account:
         请放心, 这不会需要太久的.
 
 Home:
-  Title:
-    - 欢迎使用 A2!
-    - 欢迎回来!
+  Title: 欢迎回来!
   Greeting1:
     - 有不错的想法?
     - 感觉动力十足?
   Greeting2:
     - 那么, 新的冒险, 即刻开启!
     - 生命不息, 探索不止, 出发!
+  Launch: 启动游戏
   Exit: 退出
   ExitWarn: 你确定吗?
+
+Launch:
+  Select:
+    Title: 启动哪个游戏?
+    Desc: |
+      选择你想启动的游戏, 或者创建新的游戏!
+    New:
+      Tag: 想来一次新的冒险?
+      Btn: 创建新游戏
+    Tag: 核心 {Version}
+  Launching:
+    Title: 正在启动...
+    Desc: |
+      正在启动你的游戏.
+      请稍等一会.
+  LaunchOK:
+    Title: 游戏运行中
+    Desc: |
+      游戏已经成功启动. 开始畅玩吧!
+      A2 会持续监测游戏状况, 如果遇到问题会通知你.
+
+  LaunchFail:
+    Title: 游戏启动失败...
+    Desc: |
+      你遇到了一些罕见的状况, 但你可以检查:
+        • 你是否修改了游戏文件? (请不要这么做!)
+        • 你是否没安装 Java? (你可能跳过了)
+      如果弄不清楚也可以按 Tab 查看系统日志!
+
+    Retry: 再试一次
+  Crash:
+    Title: 游戏崩溃!
+    Desc: |
+      我们发现游戏不正常地终止了.
+      游戏有没有正常运行?
+
+      A2 的崩溃分析功能在开发中, 很快将会上线.
+      但现在, 我们可以帮助你重新启动.
+    Fine:
+      Tag: 如果游戏已经正常运行, 这可能是误判.
+      Btn: 游戏已正常运行
+    Prob:
+      Tag: 如果游戏崩溃或启动失败, 请按此按钮.
+      Btn: 重新启动
 
 Commons:
   Submit: 点击这里以继续

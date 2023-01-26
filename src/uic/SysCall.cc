@@ -24,6 +24,9 @@ bindAllSysCalls()
   bindSysCall("GetLoaderList", SysCall::implGetLoaderList);
   bindSysCall("InstallProfile", SysCall::implInstallProfile);
   bindSysCall("GetAllAccounts", SysCall::implGetAllAccounts);
+  bindSysCall("LaunchGame", SysCall::implLaunchGame);
+  bindSysCall("MonitorGame", SysCall::implMonitorGame);
+  bindSysCall("GetLaunchProfiles", SysCall::implGetLaunchProfiles);
 }
 
 }

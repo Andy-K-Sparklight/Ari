@@ -11,6 +11,7 @@
 #include <filesystem>
 #include <map>
 #include <iostream>
+#include <unistd.h>
 #include "log.hh"
 
 namespace Alicorn
@@ -302,6 +303,56 @@ launchGame(Flow *flow, FlowCallback cb)
       }
     if(game->cwd.size() > 0)
       {
+        // Let's also link the default place
+        std::string linkPt;
+        if(Platform::OS_TYPE == Platform::OS_MSDOS)
+          {
+
+            char *appdata = getenv("APPDATA");
+            if(appdata != NULL)
+              {
+                linkPt = Commons::normalizePath(std::string(appdata)
+                                                + "/.minecraft");
+              }
+          }
+        else
+          {
+            char *homo = getenv("HOME");
+            if(homo != NULL)
+              {
+                if(Platform::OS_TYPE == Platform::OS_DARWIN)
+                  {
+                    linkPt = Commons::normalizePath(
+                        std::string(homo)
+                        + "/Library/Application Support/minecraft");
+                  }
+                else
+                  {
+                    linkPt = Commons::normalizePath(std::string(homo)
+                                                    + "/.minecraft");
+                  }
+              }
+          }
+        if(!std::filesystem::exists(linkPt)
+           || std::filesystem::is_symlink(linkPt))
+          {
+            try
+              {
+                std::filesystem::remove(linkPt);
+              }
+            catch(std::exception &e)
+              {
+              }
+            try
+              {
+                std::filesystem::create_symlink(game->cwd, linkPt);
+                LOG("Linked CWD to " << linkPt);
+              }
+            catch(std::exception &e)
+              {
+                LOG("Could not link CWD, skipped.");
+              }
+          }
         LOG("Set CWD to " << game->cwd);
       }
 
@@ -309,6 +360,7 @@ launchGame(Flow *flow, FlowCallback cb)
       {
         LOG("Successfully spawned game process with pid " << game->proc.pid);
         Runtime::GAME_INSTANCES[game->proc.pid] = game;
+        flow->data[AL_FLOWVAR_GAMEPID] = std::to_string(game->proc.pid);
         cb(AL_OK);
       }
     else

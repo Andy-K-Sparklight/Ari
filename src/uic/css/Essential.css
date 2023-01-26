@@ -80,7 +80,7 @@ body {
 }
 
 .a2img {
-  transform: translateY(2vh);
+  transform: translateY(25%);
   height: 6vh;
   width: 6vh;
   margin-left: 1vw;
@@ -252,13 +252,13 @@ body {
 .a2progindef {
   animation-name: Spin;
   animation-iteration-count: infinite;
-  animation-duration: 3s;
+  animation-duration: 1.5s;
   animation-timing-function: linear;
 }
 
 .a2input {
   font-family: "Source Code Pro", "Fira Code", Monaco, Consolas, "Courier New",
-    Courier, monospace;
+    Courier, "Open Sans", "Microsoft YaHei UI", monospace;
   border: 2px solid #aeaeae;
   border-radius: 1rem;
   min-height: 2em;

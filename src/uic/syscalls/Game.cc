@@ -14,7 +14,12 @@
 #include "ach/core/auto/AutoForge.hh"
 #include "ach/core/auto/AutoLoader.hh"
 #include "ach/core/profile/LaunchProfile.hh"
+#include "ach/core/op/Bootstrap.hh"
+#include "ach/core/op/GameLaunch.hh"
+#include "ach/core/op/Authenticate.hh"
+#include "ach/core/op/JVMCheck.hh"
 #include "ach/util/Commons.hh"
+#include "ach/core/runtime/GameInstance.hh"
 #include <cJSON.h>
 #include <log.hh>
 
@@ -158,6 +163,11 @@ implInstallProfile(ACH_SC_ARGS)
     {
       auto ldv = (*upool)["$LoaderVersion"];
       flow->data[AL_FLOWVAR_LOADERVER] = ldv;
+      if(type == "Forge")
+        {
+          ldv = Commons::splitStr(Commons::splitStr(ldv, "/")[6],
+                                  "-")[1]; // Get version from URL
+        }
       lp.baseProfile = mcv + "+" + type + "-" + ldv;
     }
   lp.isDemo = false;
@@ -174,6 +184,14 @@ implInstallProfile(ACH_SC_ARGS)
   flow->addTask(Op::collectNatives);
   flow->addTask(Op::autoProfile);
   flow->addTask(Op::flipInstall);
+  // Run a reload
+  if(type.size() > 0)
+    {
+      flow->addTask(Op::loadProfile);
+      flow->addTask(Op::installLibraries);
+      flow->addTask(Op::linkClient);
+    }
+
   flow->onProgress = ACH_DEFAULT_PROGRESS;
   flow->onStep = ACH_DEFAULT_STEP;
   flow->run([&prog, cb, flow, lp](bool s) -> void {
@@ -181,10 +199,90 @@ implInstallProfile(ACH_SC_ARGS)
     if(s)
       {
         Profile::LAUNCH_PROFILES.push_back(lp);
+        prog.stack.push_back(lp.id);
       }
     cb();
     delete flow;
   });
+}
+
+void
+implLaunchGame(ACH_SC_ARGS)
+{
+  auto data = UIC::getUserData();
+  auto lpid = (*data)["$Profile"];
+  Op::Flow *flow = new Op::Flow;
+  flow->data[AL_FLOWVAR_LCPROFILE] = lpid;
+  flow->addTask(Op::configureLaunch);
+  flow->addTask(Op::loadProfile);
+  flow->addTask(Op::selectJVM);
+  flow->addTask(Op::authAccount);
+  flow->addTask(Op::authlibPrefetch); // If any
+  flow->addTask(Op::launchGame);
+  flow->onProgress = ACH_DEFAULT_PROGRESS;
+  flow->onStep = ACH_DEFAULT_STEP;
+  flow->run([flow, &prog, cb](bool ok) -> void {
+    prog.carry = ok;
+    if(ok)
+      {
+        prog.stack.push_back(flow->data[AL_FLOWVAR_GAMEPID]);
+      }
+    cb();
+    delete flow;
+  });
+}
+
+void
+implMonitorGame(ACH_SC_ARGS)
+{
+
+  auto pids = (*UIC::getUserData())["$GamePID"];
+  if(pids.size() == 0)
+    {
+      prog.carry = true;
+      cb();
+      return;
+    }
+  int pid = std::stoi(pids);
+  if(Runtime::GAME_INSTANCES.contains(pid))
+    {
+      auto &ins = Runtime::GAME_INSTANCES[pid];
+      if(ins->stat == Runtime::GameInstanceStatus::GS_ENDED
+         || ins->stat == Runtime::GameInstanceStatus::GS_CRASHED
+         || ins->stat == Runtime::GameInstanceStatus::GS_KILLED)
+        {
+          prog.carry = false;
+          cb();
+          return;
+        }
+      else
+        {
+          ins->exitListener = [&prog, cb, &ins]() -> void {
+            prog.carry = ins->stat == Runtime::GameInstanceStatus::GS_ENDED;
+            cb();
+            return;
+          };
+        }
+    }
+  else
+    {
+      prog.carry = true;
+      cb();
+      return;
+    }
+}
+
+void
+implGetLaunchProfiles(ACH_SC_ARGS)
+{
+  prog.stack.push_back("");
+  for(auto &a : Profile::LAUNCH_PROFILES)
+    {
+      prog.stack.push_back(a.displayName);
+      prog.stack.push_back(a.baseProfile);
+      prog.stack.push_back(a.id);
+    }
+  cb();
 }
 
 }

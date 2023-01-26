@@ -1,19 +1,31 @@
 .aka    #       Home.
 
+::head
 wdg     Title   #Title
 wdg     Text    #Greeting1
 wdg     Text    #Greeting2
+
+pp      Icon    Launch
+pp      Label   #Launch
+pp      Hint    opt
+ln      launch
+ent
 
 pp      Icon    PowerOff
 pp      Label   #Exit
 pp      Hint    warn
 pp      Warn    #ExitWarn
-ln      0
-ent     Choice
+ln      ex
+ent
 
 uic
 
-::0
+::launch
+run     Launch/ChooseProfile
+jmp     head
+
+::ex
 
 sys     Exit
+
 ret

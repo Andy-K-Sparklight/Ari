@@ -249,7 +249,6 @@ installJVM(std::function<void(bool)> cb, Op::FlowProgress pg)
   Sys::runOnWorkerThread([=]() mutable -> void {
     LOG("Downloading JVM to " << meta.path);
     pk.commit();
-    Network::ALL_DOWNLOADS.push_back(pk);
   });
 }
 

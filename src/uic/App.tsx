@@ -164,6 +164,7 @@ function App() {
             return (
               <Submit
                 ok={ok}
+                key={i}
                 onClick={() => {
                   if (!ok) {
                     return;

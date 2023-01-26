@@ -273,7 +273,6 @@ finalizeForgeRun(Network::DownloadPack lpack, std::string installerPath,
   Sys::runOnWorkerThread([=]() mutable -> void {
     LOG("Crunching libraries for Forge.");
     lpack.commit();
-    Network::ALL_DOWNLOADS.push_back(lpack);
   });
 }
 
@@ -510,7 +509,6 @@ autoForge(const std::string &url, std::function<void(bool)> cb)
   Sys::runOnWorkerThread([=]() mutable -> void {
     LOG("Start downloading installer from " << url);
     pk.commit();
-    Network::ALL_DOWNLOADS.push_back(pk);
   });
 }
 }

@@ -216,7 +216,6 @@ dlModVersion(const std::string &v, std::function<void(bool)> cb)
       }
   });
   pk.commit();
-  Network::ALL_DOWNLOADS.push_back(pk);
   LOG("Started downloading mod version for " << v);
 }
 

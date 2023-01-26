@@ -1,4 +1,6 @@
 html {
+  font-family: -apple-system, "Open Sans", "Microsoft YaHei UI", Tahoma, Geneva,
+    Verdana, sans-serif;
   --a2-base: #24bfa5;
   --a2-text: #13ae94;
   --a2-typo: #c3ffee;

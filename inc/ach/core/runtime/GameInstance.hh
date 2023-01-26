@@ -6,6 +6,7 @@
 #include <sstream>
 #include <uv.h>
 #include <map>
+#include <functional>
 
 namespace Alicorn
 {
@@ -36,6 +37,7 @@ public:
   uv_process_options_t options = { 0 };
   GameInstanceStatus stat = GS_LOADED;
   std::string cwd;
+  std::function<void()> exitListener;
 
   // Create process with specified options
   // Always run this on UV thread!

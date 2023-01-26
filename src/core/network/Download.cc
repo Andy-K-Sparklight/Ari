@@ -174,6 +174,7 @@ DownloadPack::commit()
     }
 
   cJSON_Delete(stat);
+  Network::ALL_DOWNLOADS.push_back(*this);
   LOG("Commited one download task with " << procs.size() << " procs.");
   return;
 }

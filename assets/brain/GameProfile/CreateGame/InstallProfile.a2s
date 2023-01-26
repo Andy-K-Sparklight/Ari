@@ -1,4 +1,6 @@
 .aka    #       GameProfile.CreateGame.Installing.
+.aka    \^      GameProfile.CreateGame.InstallFail.
+.aka    \*      GameProfile.CreateGame.InstallOK.
 
 wdg     Icon    AddItem
 wdg     Title   #Title
@@ -7,6 +9,49 @@ wdg     Text    #Desc
 ent     Progress
 uip
 
+::head
+
 sys     InstallProfile
-put     OK
-hlt
+jc      ok
+
+
+wdg     Icon    Warn
+wdg     Title   ^Title
+wdg     Text    ^Desc
+
+pp      Tag
+pp      Hint    opt
+pp      Label   ^Retry
+pp      Icon    Retry
+ent
+
+uic
+jmp     head
+
+
+::ok
+pop     $Profile
+wdg     Icon    AddItem
+wdg     Title   *Title
+wdg     Text    *Desc
+
+pp      Tag
+pp      Hint    opt
+pp      Icon    Launch
+pp      Label   *Play
+ent
+
+pp      Icon    ArrowRight
+pp      Label   *Done
+pp      Hint
+ln      noLaunch
+ent
+
+uic
+
+::launch
+
+run     Launch/LaunchGame
+
+::noLaunch
+ret

@@ -20,6 +20,10 @@ Flow::run(std::function<void(bool)> cb)
   if(tasks.size() == 0)
     {
       LOG("All task finished, no errors reported.");
+      if(onStep)
+        {
+          onStep(0);
+        }
       if(cb != nullptr)
         {
           cb(true);

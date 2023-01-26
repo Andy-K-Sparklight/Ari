@@ -8,16 +8,12 @@ wdg     Title   #Title
 wdg     Text    #Desc
 
 pp      Compact 1
-pp      Label   #Loaders.None.Name
-pp      Tag     #Loaders.None.Tag
-pp      Icon    Minecraft
-pp      Hint    opt
-ln      None
-ent
+
 
 pp      Label   #Loaders.Fabric.Name
 pp      Tag     #Loaders.Fabric.Tag
 pp      Icon    Fabric
+pp      Hint    opt
 ln      Fabric
 ent
 
@@ -34,6 +30,14 @@ pp      Icon    Quilt
 pp      Warn    #Loaders.Quilt.Warn
 pp      Hint    warn
 ln      Quilt
+ent
+
+pp      Label   #Loaders.None.Name
+pp      Tag     #Loaders.None.Tag
+pp      Icon    Minecraft
+pp      Warn    #Loaders.None.Warn
+pp      Hint    warn
+ln      None
 ent
 
 uic

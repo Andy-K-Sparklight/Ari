@@ -148,7 +148,6 @@ installAssets(Flow *flow, FlowCallback cb)
   Sys::runOnWorkerThread([=]() mutable -> void {
     pak.commit();
     LOG("Start getting assets.");
-    Network::ALL_DOWNLOADS.push_back(pak);
   });
 }
 

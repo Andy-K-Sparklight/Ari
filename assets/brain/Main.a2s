@@ -3,8 +3,7 @@ jc      skipGuide
 
 run     Guide/Beginning
 
-;mov     1       $$GuideDone
-
+mov     1       $$GuideDone
 
 ::skipGuide
 

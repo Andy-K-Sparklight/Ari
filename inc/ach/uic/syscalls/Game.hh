@@ -16,6 +16,12 @@ void implGetLoaderList(ACH_SC_ARGS);
 
 void implInstallProfile(ACH_SC_ARGS);
 
+void implLaunchGame(ACH_SC_ARGS);
+
+void implMonitorGame(ACH_SC_ARGS);
+
+void implGetLaunchProfiles(ACH_SC_ARGS);
+
 }
 }
 }

@@ -52,6 +52,7 @@
 #define AL_FLOWVAR_LOADERVER "loaderVer"
 #define AL_FLOWVAR_DLJVM "dlJVM"
 #define AL_FLOWVAR_LCPROFILE "lcProfile"
+#define AL_FLOWVAR_GAMEPID "gamePID"
 
 #include <map>
 #include <string>
