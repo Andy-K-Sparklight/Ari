@@ -16,7 +16,7 @@ namespace SysCall
 void
 implExit(ACH_SC_ARGS)
 {
-  cb();
+  initMainWindow(nullptr);
   prog.eip = prog.bin.size(); // Make sure to stop the program
   Sys::runOnMainThread(
       []() -> void {

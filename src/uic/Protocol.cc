@@ -20,6 +20,11 @@ static std::map<std::string, Listener> LISTENERS_CTL;
 void
 initMainWindow(void *w)
 {
+  if(w == nullptr)
+    {
+      mainWindowReady = false;
+      return;
+    }
   mainWindow = (webview_t)w;
   webview_bind(
       mainWindow, "SYS",
