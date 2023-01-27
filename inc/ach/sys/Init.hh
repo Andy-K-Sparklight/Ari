@@ -8,6 +8,8 @@ namespace Sys
 
 void initSys();
 
+void saveData();
+
 void downSys();
 
 }
