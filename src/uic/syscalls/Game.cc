@@ -49,6 +49,35 @@ implGetVersions(ACH_SC_ARGS)
               {
                 ok = true;
                 int size = cJSON_GetArraySize(vers);
+                // Put releases on top
+                for(int i = size - 1; i >= 0; i--)
+                  {
+                    cJSON *cur = cJSON_GetArrayItem(vers, i);
+                    cJSON *id = cJSON_GetObjectItem(cur, "id");
+                    cJSON *type = cJSON_GetObjectItem(cur, "type");
+                    if(cJSON_IsString(id) && cJSON_IsString(type))
+                      {
+                        std::string ids = cJSON_GetStringValue(id);
+                        std::string types = cJSON_GetStringValue(type);
+                        std::string ctype;
+                        if(types == "release")
+                          {
+                            continue;
+                          }
+                        else if(types == "snapshot")
+                          {
+                            ctype = "S";
+                          }
+                        else
+                          {
+                            ctype = "O";
+                          }
+                        prog.stack.push_back(ctype);
+                        prog.stack.push_back(
+                            ids); // As constant for the translator
+                      }
+                  }
+                // Then snapshots
                 for(int i = size - 1; i >= 0; i--)
                   {
                     cJSON *cur = cJSON_GetArrayItem(vers, i);
@@ -63,17 +92,12 @@ implGetVersions(ACH_SC_ARGS)
                           {
                             ctype = "R";
                           }
-                        else if(types == "snapshot")
-                          {
-                            ctype = "S";
-                          }
                         else
                           {
-                            ctype = "O";
+                            continue;
                           }
                         prog.stack.push_back(ctype);
-                        prog.stack.push_back(
-                            ids); // As constant for the translator
+                        prog.stack.push_back(ids);
                       }
                   }
               }
