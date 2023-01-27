@@ -1,7 +1,7 @@
-assets/aria2c.prog https://github.com/Andy-K-Sparklight/ACH/releases/download/build/aria2c.prog msys-only
+assets/aria2c.prog https://github.com/Andy-K-Sparklight/Ari/releases/download/build/aria2c.prog msys-only
 assets/authlib-injector.jar    https://authlib-injector.yushi.moe/artifact/49/authlib-injector-1.2.1.jar
 assets/HarmonyForgeInstallerCLI.jar    https://github.com/Andy-K-Sparklight/HarmonyForgeInstallerCLI/releases/download/v1.0/HarmonyForgeInstallerCLI.jar
-libs/uv.dll https://github.com/Andy-K-Sparklight/ACH/releases/download/build/uv.dll msys-only
-libs/uv.lib https://github.com/Andy-K-Sparklight/ACH/releases/download/build/uv.lib msys-only
-libs/WebView2Loader.dll https://github.com/Andy-K-Sparklight/ACH/releases/download/build/WebView2Loader.dll msys-only
-libs/WebView2Loader.dll.lib https://github.com/Andy-K-Sparklight/ACH/releases/download/build/WebView2Loader.dll.lib msys-only
+libs/uv.dll https://github.com/Andy-K-Sparklight/Ari/releases/download/build/uv.dll msys-only
+libs/uv.lib https://github.com/Andy-K-Sparklight/Ari/releases/download/build/uv.lib msys-only
+libs/WebView2Loader.dll https://github.com/Andy-K-Sparklight/Ari/releases/download/build/WebView2Loader.dll msys-only
+libs/WebView2Loader.dll.lib https://github.com/Andy-K-Sparklight/Ari/releases/download/build/WebView2Loader.dll.lib msys-only
