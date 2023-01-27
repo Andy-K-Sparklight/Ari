@@ -41,11 +41,6 @@ autoProfile(Flow *flow, FlowCallback cb)
       cb(AL_OK);
       return;
     }
-  else
-    {
-      flow->data[AL_FLOWVAR_PROFILEID]
-          = mcv + "+" + variant + "-" + ldv; // In favor for profile installing
-    }
   cb(AL_INSLOADER);
   if(variant == "Fabric")
     {
@@ -57,6 +52,8 @@ autoProfile(Flow *flow, FlowCallback cb)
           return;
         }
       LOG("Installed Fabric " << ldv);
+      flow->data[AL_FLOWVAR_PROFILEID]
+          = mcv + "-" + variant + "-" + ldv; // In favor for profile installing
       cb(AL_OK);
       return;
     }
@@ -70,6 +67,7 @@ autoProfile(Flow *flow, FlowCallback cb)
           return;
         }
       LOG("Installed Quilt " << ldv);
+      flow->data[AL_FLOWVAR_PROFILEID] = mcv + "-" + variant + "-" + ldv;
       cb(AL_OK);
       return;
     }
@@ -82,6 +80,11 @@ autoProfile(Flow *flow, FlowCallback cb)
         if(s)
           {
             LOG("Installed Forge " << ldv);
+            // Hello Forge
+            flow->data[AL_FLOWVAR_PROFILEID]
+                = mcv + "-" + variant + "-"
+                  + Commons::splitStr(Commons::splitStr(ldv, "/")[6], "-")[1];
+
             cb(AL_OK);
           }
         else

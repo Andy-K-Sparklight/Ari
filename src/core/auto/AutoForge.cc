@@ -182,7 +182,7 @@ renameForge(const std::string &originName)
       if(mid.starts_with("Forge"))
         {
           mid = mid.substr(5);
-          nn = verSplit[0] + "+Forge-" + mid;
+          nn = verSplit[0] + "-Forge-" + mid;
         }
     }
   if(nn.size() == 0)
@@ -190,7 +190,7 @@ renameForge(const std::string &originName)
       if(verSplit.size() == 3)
         {
           // New Forge name
-          nn = verSplit[0] + "+Forge-" + verSplit[2];
+          nn = verSplit[0] + "-Forge-" + verSplit[2];
         }
       else
         {
