@@ -219,6 +219,37 @@ dlModVersion(const std::string &v, std::function<void(bool)> cb)
   LOG("Started downloading mod version for " << v);
 }
 
+static httplib::Server MODRINTH_RPC;
+
+void
+setupModrinthServer()
+{
+  MODRINTH_RPC.Post("/add",
+                    [](const httplib::Request &req, httplib::Response &res) {
+                      auto mid = req.body;
+                      if(mid.size() > 0)
+                        {
+                          LOG("Received install mod request: " << mid);
+                          if(getModMeta(mid))
+                            {
+                              res.status = 204;
+                            }
+                          else
+                            {
+                              res.status = 501;
+                            }
+                        }
+                      else
+                        {
+                          res.status = 400;
+                        }
+                      res.set_header("Access-Control-Allow-Origin", "*");
+                      res.set_content("", "text/plain");
+                    });
+  LOG("Modrinth RPC server is listening.");
+  MODRINTH_RPC.listen("127.0.0.1", 46432);
+}
+
 }
 }
 }

@@ -10,6 +10,7 @@
 #include "ach/core/profile/AccountProfile.hh"
 #include "ach/uic/UserData.hh"
 #include "ach/uic/SysCall.hh"
+#include "ach/extra/mod/provider/Modrinth.hh"
 #include <log.hh>
 
 namespace Alicorn
@@ -39,6 +40,8 @@ initSys()
       Network::setupDownloadsSync();
       Sys::runOnUVThread(
           []() -> void { AlicornDrivers::Aria2::ARIA2_DAEMON.run(); });
+      Sys::runOnWorkerThread(
+          []() -> void { Extra::Mod::Modrinth::setupModrinthServer(); });
       LOG("Finished system initializing.")
       UP = true;
     }

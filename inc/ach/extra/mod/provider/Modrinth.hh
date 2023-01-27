@@ -19,6 +19,8 @@ bool syncModVersions(const std::string &pid);
 
 void dlModVersion(const std::string &v, std::function<void(bool)> cb);
 
+void setupModrinthServer();
+
 }
 }
 }
