@@ -14,6 +14,7 @@
 #include "ach/uic/Brain.hh"
 #include "ach/sys/Schedule.hh"
 #include "ach/uic/UserData.hh"
+#include "ach/core/platform/OSType.hh"
 
 int
 main(int argc, char **argv)
@@ -122,11 +123,19 @@ main(int argc, char **argv)
       Sys::initSys();
       auto boot = "window.addEventListener('load', ()=>{" + js + "});";
       webview_init(w, boot.c_str());
-      webview_navigate(w, "data:text/html,<!DOCTYPE "
-                          "html><html><body><style>body{text-align:center;} "
-                          "h1{width:100%;} p{width:100%;}</"
-                          "style><h1>Please Wait...</h1><p>Loading "
-                          "components</p></body></html>");
+      if(Platform::OS_TYPE == Platform::OS_DARWIN)
+        {
+          webview_navigate(w, "about:blank");
+        }
+      else
+        {
+          webview_navigate(w,
+                           "data:text/html,<!DOCTYPE "
+                           "html><html><body><style>body{text-align:center;} "
+                           "h1{width:100%;} p{width:100%;}</"
+                           "style><h1>Please Wait...</h1><p>Loading "
+                           "components</p></body></html>");
+        }
       webview_run(w);
       Sys::downSys();
     }
