@@ -56,13 +56,16 @@ echo "Press Enter to continue."
 read a
 
 vmake='make'
+mkdir -p build
+
 if [[ $OSTYPE == 'darwin'* ]]; then
 command -v 'gmake' && vmake='gmake'
 chmod +x ./macpb
-sh ./macpb
+cd build
+sh ../macpb
+cd ..
 fi
 
-mkdir -p build
 autoreconf --install
 chmod +x ./configure
 chmod +x ./scansrc
