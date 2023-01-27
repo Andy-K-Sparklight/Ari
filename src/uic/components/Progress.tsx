@@ -32,7 +32,11 @@ export function Progress(_props: {}): JSX.Element {
     const foo = (e: Event) => {
       if (e instanceof CustomEvent) {
         const pst = e.detail;
-        setStep(pst);
+        if (parseInt(pst) > 0) {
+          setStep(pst);
+        } else {
+          setStep("");
+        }
       }
     };
     const kl = (e: KeyboardEvent) => {

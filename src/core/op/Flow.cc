@@ -22,7 +22,7 @@ Flow::run(std::function<void(bool)> cb)
       LOG("All task finished, no errors reported.");
       if(onStep)
         {
-          onStep(0);
+          onStep(-1);
         }
       if(cb != nullptr)
         {
