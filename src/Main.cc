@@ -46,8 +46,8 @@ main(int argc, char **argv)
             vw = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 2));
             vh = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 3));
           }
-        int aw = (960.0 / vw) * scrnW * 0.6;
-        int ah = (540.0 / vh) * scrnH * 0.6;
+        int aw = (960.0 / vw) * scrnW * 0.7;
+        int ah = (540.0 / vh) * scrnH * 0.7;
         webview_set_size(loginWindow, aw, ah, WEBVIEW_HINT_NONE);
         cJSON_Delete(a);
       },
@@ -92,6 +92,24 @@ main(int argc, char **argv)
           },
           w);
       webview_run(w);
+    }
+  else if(args[1] == "modrinth")
+    {
+      // Load modrinth
+      std::ifstream jsf("ModrinthTweak.js");
+      std::stringstream jss;
+      jss << jsf.rdbuf();
+      std::string js = jss.str();
+      webview_set_title(w, "Modrinth");
+      webview_init(
+          w,
+          ("window.onload=function(){window.tellSize(screen.availWidth,screen."
+           "availHeight,window.outerWidth,window.outerHeight);"
+           + js + "}")
+              .c_str());
+      webview_navigate(w, "https://modrinth.com/mods");
+      webview_run(w);
+      return 0;
     }
   else
     {

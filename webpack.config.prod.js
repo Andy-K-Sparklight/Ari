@@ -3,6 +3,7 @@ const path = require("path");
 module.exports = {
   entry: {
     Main: "./src/uic/App.tsx",
+    ModrinthTweak: "./src/uic/ModrinthTweak.ts",
   },
   output: {
     filename: "[name].js",
