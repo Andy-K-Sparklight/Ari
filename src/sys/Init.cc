@@ -23,6 +23,7 @@ initSys()
   LOG("Initializing system.");
 
   // Services
+  srand(time(NULL));
   Sys::loadConfig();
   UIC::loadUserData();
   UIC::bindAllSysCalls();

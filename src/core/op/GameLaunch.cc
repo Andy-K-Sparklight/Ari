@@ -19,6 +19,20 @@ namespace Alicorn
 namespace Op
 {
 
+// Let's fake some IDs
+// You don't know who I am!
+static std::string
+fakeLauncherID()
+{
+  std::vector<std::string> POSSIBLE_NAMES = {
+    "Minecraft Launcher",
+    "MultiMC",
+    "ATLauncher",
+    "Prism Launcher",
+  };
+  return POSSIBLE_NAMES[rand() % POSSIBLE_NAMES.size()];
+}
+
 // Parse rules
 static bool
 parseRule(const std::list<Profile::Rule> &rules,
@@ -177,13 +191,13 @@ genArgs(const Profile::VersionProfile &prof,
   varMap["version_type"] = vType; // Be honest
   varMap["resolution_width"] = flowData[AL_FLOWVAR_WIDTH];
   varMap["resolution_height"] = flowData[AL_FLOWVAR_HEIGHT];
-  varMap["launcher_name"] = "Alicorn The Corrupted Heart";
+  varMap["launcher_name"] = fakeLauncherID();
   varMap["launcher_version"] = "Lost";
   auto classPaths = genClassPath(prof, flowData);
   LOG("Classpaths with length " << classPaths.size() << " generated.");
   varMap["classpath"] = classPaths;
   varMap["natives_directory"]
-      = getStoragePath("versions/" + prof.id + "/.natives");
+      = getStoragePath("versions/" + prof.baseVersion + "/.natives");
   varMap["user_properties"] = "[]";                        // Nothing, for 1.7
   varMap["game_assets"] = getStoragePath("assets/legacy"); // Pre 1.6
 
