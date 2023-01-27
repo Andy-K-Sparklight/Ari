@@ -27,6 +27,7 @@ bindAllSysCalls()
   bindSysCall("LaunchGame", SysCall::implLaunchGame);
   bindSysCall("MonitorGame", SysCall::implMonitorGame);
   bindSysCall("GetLaunchProfiles", SysCall::implGetLaunchProfiles);
+  bindSysCall("OpenFolder", SysCall::implOpenFolder);
 }
 
 }

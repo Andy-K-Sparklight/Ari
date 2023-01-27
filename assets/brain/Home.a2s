@@ -5,12 +5,21 @@ wdg     Title   #Title
 wdg     Text    #Greeting1
 wdg     Text    #Greeting2
 
+pp      Tag     #LaunchTag
 pp      Icon    Launch
 pp      Label   #Launch
 pp      Hint    opt
 ln      launch
 ent
 
+pp      Tag     #OpenFolderTag
+pp      Icon    Folder
+pp      Hint
+pp      Label   #OpenFolder
+ln      openfd
+ent
+
+pp      Tag     #ExitTag
 pp      Icon    PowerOff
 pp      Label   #Exit
 pp      Hint    warn
@@ -20,8 +29,14 @@ ent
 
 uic
 
+::openfd
+run     Launch/ChooseProfile
+sys     OpenFolder
+jmp     head
+
 ::launch
 run     Launch/ChooseProfile
+run     Launch/LaunchGame
 jmp     head
 
 ::ex

@@ -22,6 +22,8 @@ void implMonitorGame(ACH_SC_ARGS);
 
 void implGetLaunchProfiles(ACH_SC_ARGS);
 
+void implOpenFolder(ACH_SC_ARGS);
+
 }
 }
 }

@@ -291,14 +291,18 @@ Home:
     - 那么, 新的冒险, 即刻开启!
     - 生命不息, 探索不止, 出发!
   Launch: 启动游戏
+  LaunchTag: 启动已安装的游戏.
+  OpenFolder: 打开游戏目录
+  OpenFolderTag: 打开游戏目录, 安装 Mod 或材质包.
   Exit: 退出
   ExitWarn: 你确定吗?
+  ExitTag: 退出 A2.
 
 Launch:
   Select:
-    Title: 启动哪个游戏?
+    Title: 选择游戏
     Desc: |
-      选择你想启动的游戏, 或者创建新的游戏!
+      请选择一个游戏, 或者创建新的游戏.
     New:
       Tag: 想来一次新的冒险?
       Btn: 创建新游戏

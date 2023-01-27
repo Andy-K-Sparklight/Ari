@@ -21,6 +21,7 @@
 #include "ach/util/Commons.hh"
 #include "ach/core/runtime/GameInstance.hh"
 #include "ach/sys/Init.hh"
+#include "ach/core/platform/OSType.hh"
 #include <cJSON.h>
 #include <log.hh>
 
@@ -283,6 +284,33 @@ implGetLaunchProfiles(ACH_SC_ARGS)
       prog.stack.push_back(a.displayName);
       prog.stack.push_back(a.baseProfile);
       prog.stack.push_back(a.id);
+    }
+  cb();
+}
+
+void
+implOpenFolder(ACH_SC_ARGS)
+{
+  auto id = (*UIC::getUserData())["$Profile"];
+  for(auto &p : Profile::LAUNCH_PROFILES)
+    {
+      if(p.id == id)
+        {
+          auto pt = Platform::getRuntimePath(p.runtime);
+          LOG(pt);
+          if(Platform::OS_TYPE == Platform::OS_MSDOS)
+            {
+              system(("explorer \"" + pt + "\"").c_str());
+            }
+          else if(Platform::OS_TYPE == Platform::OS_DARWIN)
+            {
+              system(("open \"" + pt + "\"").c_str());
+            }
+          else
+            {
+              system(("xdg-open \"" + pt + "\"").c_str());
+            }
+        }
     }
   cb();
 }
