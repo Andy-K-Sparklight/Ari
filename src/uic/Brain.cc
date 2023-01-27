@@ -1,6 +1,7 @@
 #include "ach/uic/Brain.hh"
 
 #include "ach/util/Commons.hh"
+#include "ach/sys/Init.hh"
 #include <fstream>
 #include <sstream>
 #include <log.hh>
@@ -300,6 +301,7 @@ Program::run(PCallback cb)
             case MOV:
               resolveValueRef(curInstr.a2) = resolveValue(curInstr.a1);
               eip++;
+              Sys::macOSSaveData();
               break;
             case PP:
               frame.props[resolveValue(curInstr.a1)]

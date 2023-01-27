@@ -5,6 +5,7 @@
 #include "ach/core/auth/YggAuth.hh"
 #include "ach/core/profile/AccountProfile.hh"
 #include "ach/sys/Schedule.hh"
+#include "ach/sys/Init.hh"
 #include <lurl.hpp>
 #include <set>
 
@@ -22,6 +23,7 @@ implAddLocalAccount(ACH_SC_ARGS)
   auto ac = Auth::mkLocalAccount(pName);
   Profile::ACCOUNT_PROFILES.push_back(ac);
   cb();
+  Sys::macOSSaveData();
 }
 
 void
@@ -35,6 +37,7 @@ implAddMSAccount(ACH_SC_ARGS)
       {
         prog.stack.push_back(ac->userName);
         Profile::ACCOUNT_PROFILES.push_back(*ac);
+        Sys::macOSSaveData();
         delete ac;
       }
     cb();
@@ -73,6 +76,7 @@ implAddYGAccount(ACH_SC_ARGS)
         prog.carry = true;
         prog.stack.push_back(acc.userName);
         Profile::ACCOUNT_PROFILES.push_back(acc);
+        Sys::macOSSaveData();
       }
     else
       {

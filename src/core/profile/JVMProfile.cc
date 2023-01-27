@@ -4,6 +4,7 @@
 #include "ach/util/Commons.hh"
 #include "ach/util/Proc.hh"
 #include "ach/sys/Schedule.hh"
+#include "ach/sys/Init.hh"
 #include "ach/core/platform/OSType.hh"
 #include <cstdio>
 #include <iostream>
@@ -163,6 +164,7 @@ appendJVM(const std::string &bin, std::function<void(bool)> cb)
                     << (prof.isARM ? " IS ARM" : " NOT ARM") << " from "
                     << bin);
                 cb(true);
+                Sys::macOSSaveData();
               },
               2);
         },

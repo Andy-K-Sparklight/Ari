@@ -20,6 +20,7 @@
 #include "ach/core/op/JVMCheck.hh"
 #include "ach/util/Commons.hh"
 #include "ach/core/runtime/GameInstance.hh"
+#include "ach/sys/Init.hh"
 #include <cJSON.h>
 #include <log.hh>
 
@@ -202,6 +203,7 @@ implInstallProfile(ACH_SC_ARGS)
         prog.stack.push_back(lp.id);
       }
     cb();
+    Sys::macOSSaveData();
     delete flow;
   });
 }

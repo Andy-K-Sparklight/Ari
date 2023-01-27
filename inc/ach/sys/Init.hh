@@ -12,6 +12,8 @@ void saveData();
 
 void downSys();
 
+void macOSSaveData();
+
 }
 }
 

@@ -73,5 +73,13 @@ downSys()
     }
 }
 
+void
+macOSSaveData()
+{
+#ifdef __APPLE__
+  Sys::runOnWorkerThread([]() -> void { saveData(); });
+#endif
+}
+
 }
 }
