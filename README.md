@@ -8,7 +8,7 @@ Originally this is called **Alicorn The Corrupted Heart** in memorizing the prev
 
 ## Motivation
 
-Actually I'm not playing Minecraft any longer. However, haven't left a work good enough is a pity. So I designed this super easy-going launcher. I hope it can solve some problems buy introducting more people into this game.
+Actually I'm not playing Minecraft any longer. However, haven't left a work good enough is a pity. So I designed this super easy-going launcher. I hope it can solve some problems by introducting more people into this game.
 
 ## Features
 
