@@ -28,31 +28,33 @@ main(int argc, char **argv)
 
   webview_t w = webview_create(true, nullptr);
   webview_set_size(w, 960, 540, WEBVIEW_HINT_NONE);
-  webview_bind(
-      w, "tellSize",
-      [](const char *seq, const char *req, void *arg) -> void {
-        webview_t loginWindow = (webview_t)arg;
-        int scrnW = 1920, scrnH = 1080, vw = 960, vh = 540;
-        cJSON *a = cJSON_Parse(req);
-        if(cJSON_IsArray(a))
-          {
-            if(cJSON_GetArraySize(a) != 4)
+  if(Alicorn::Platform::OS_TYPE != Alicorn::Platform::OS_DARWIN)
+    {
+      webview_bind(
+          w, "tellSize",
+          [](const char *seq, const char *req, void *arg) -> void {
+            webview_t loginWindow = (webview_t)arg;
+            int scrnW = 1920, scrnH = 1080, vw = 960, vh = 540;
+            cJSON *a = cJSON_Parse(req);
+            if(cJSON_IsArray(a))
               {
-                cJSON_Delete(a);
-                return;
+                if(cJSON_GetArraySize(a) != 4)
+                  {
+                    cJSON_Delete(a);
+                    return;
+                  }
+                scrnW = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 0));
+                scrnH = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 1));
+                vw = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 2));
+                vh = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 3));
               }
-            scrnW = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 0));
-            scrnH = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 1));
-            vw = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 2));
-            vh = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 3));
-          }
-        int aw = (960.0 / vw) * scrnW * 0.7;
-        int ah = (540.0 / vh) * scrnH * 0.7;
-        webview_set_size(loginWindow, aw, ah, WEBVIEW_HINT_NONE);
-        cJSON_Delete(a);
-      },
-      w);
-
+            int aw = (960.0 / vw) * scrnW * 0.7;
+            int ah = (540.0 / vh) * scrnH * 0.7;
+            webview_set_size(loginWindow, aw, ah, WEBVIEW_HINT_NONE);
+            cJSON_Delete(a);
+          },
+          w);
+    }
   if(args[1] == "mslogin")
     {
       // Start login
@@ -155,6 +157,7 @@ main(int argc, char **argv)
                            "components</p></body></html>");
         }
       webview_run(w);
+      Sys::saveData();
       Sys::downSys();
     }
 
