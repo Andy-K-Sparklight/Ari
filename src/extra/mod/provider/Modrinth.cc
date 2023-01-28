@@ -11,6 +11,7 @@
 #include "ach/core/network/Download.hh"
 #include "ach/core/platform/Tools.hh"
 #include "ach/sys/Schedule.hh"
+#include "ach/util/Proc.hh"
 
 namespace Alicorn
 {
@@ -248,6 +249,26 @@ setupModrinthServer()
                     });
   LOG("Modrinth RPC server is listening.");
   MODRINTH_RPC.listen("127.0.0.1", 46432);
+}
+
+static bool MODRINTH_WINDOW_CTL = false;
+
+void
+showModrinthWindow(std::function<void()> cb)
+{
+  if(!MODRINTH_WINDOW_CTL)
+    {
+      MODRINTH_WINDOW_CTL = true;
+      Commons::runCommand(Commons::argv0, { "modrinth" },
+                          [cb](std::string, int) -> void {
+                            MODRINTH_WINDOW_CTL = false;
+                            cb();
+                          });
+    }
+  else
+    {
+      cb();
+    }
 }
 
 }

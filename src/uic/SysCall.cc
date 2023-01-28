@@ -4,6 +4,7 @@
 #include "ach/uic/syscalls/JVM.hh"
 #include "ach/uic/syscalls/Account.hh"
 #include "ach/uic/syscalls/Game.hh"
+#include "ach/uic/syscalls/Mod.hh"
 
 namespace Alicorn
 {
@@ -28,6 +29,7 @@ bindAllSysCalls()
   bindSysCall("MonitorGame", SysCall::implMonitorGame);
   bindSysCall("GetLaunchProfiles", SysCall::implGetLaunchProfiles);
   bindSysCall("OpenFolder", SysCall::implOpenFolder);
+  bindSysCall("OpenModrinth", SysCall::implOpenModrinth);
 }
 
 }

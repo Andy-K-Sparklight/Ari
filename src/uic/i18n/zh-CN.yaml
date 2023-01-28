@@ -295,10 +295,29 @@ Home:
   Launch: 启动游戏
   LaunchTag: 启动已安装的游戏.
   OpenFolder: 打开游戏目录
-  OpenFolderTag: 打开游戏目录, 安装 Mod 或材质包.
+  OpenFolderTag: 打开游戏目录以访问游戏文件.
+  OpenFolderWarn: 我知道我在做什么!
+  ModManage: 模组管理
+  ModManageTag: 浏览和安装游戏模组.
   Exit: 退出
   ExitWarn: 你确定吗?
   ExitTag: 退出 Ari.
+
+ModManage:
+  ModIndex:
+    Title: 你希望做什么?
+    Desc: |
+      Ari 可为你安装和更新模组. 你需要做什么?
+    Optn:
+      Add:
+        Tag: 在模组平台 Modrinth 探索数以千计的游戏模组!
+        Label: 探索模组
+      AddFile:
+        Tag: 如果你已有模组文件, 在这里安装它!
+        Label: 我有模组文件
+      Install:
+        Tag: 将模组安装到游戏中!
+        Label: 安装模组
 
 Launch:
   Select:

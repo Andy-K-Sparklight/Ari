@@ -21,6 +21,8 @@ void dlModVersion(const std::string &v, std::function<void(bool)> cb);
 
 void setupModrinthServer();
 
+void showModrinthWindow(std::function<void()> cb);
+
 }
 }
 }

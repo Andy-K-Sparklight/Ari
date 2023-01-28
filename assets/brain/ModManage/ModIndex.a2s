@@ -1,0 +1,32 @@
+.aka    #       ModManage.ModIndex.
+
+::head
+wdg     Icon    Extension
+wdg     Title   #Title
+wdg     Text    #Desc
+
+pp      Tag     #Optn.Add.Tag
+pp      Label   #Optn.Add.Label
+pp      Hint    opt
+pp      Icon    StoreAdd
+ln      add
+ent
+
+pp      Tag     #Optn.AddFile.Tag
+pp      Label   #Optn.AddFile.Label
+pp      Hint
+pp      Icon    File
+ln      addfile
+ent
+
+pp      Tag     #Optn.Install.Tag
+pp      Label   #Optn.Install.Label
+pp      Icon    Setup
+ln      install
+ent
+
+uic
+
+::add
+sys     OpenModrinth
+jmp     head

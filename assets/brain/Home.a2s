@@ -12,9 +12,17 @@ pp      Hint    opt
 ln      launch
 ent
 
+pp      Tag     #ModManageTag
+pp      Icon    Extension
+pp      Label   #ModManage
+pp      Hint
+ln      modmgr
+ent
+
 pp      Tag     #OpenFolderTag
 pp      Icon    Folder
-pp      Hint
+pp      Hint    warn
+pp      Warn    #OpenFolderWarn
 pp      Label   #OpenFolder
 ln      openfd
 ent
@@ -32,6 +40,10 @@ uic
 ::openfd
 run     Launch/ChooseProfile
 sys     OpenFolder
+jmp     head
+
+::modmgr
+run     ModManage/ModIndex
 jmp     head
 
 ::launch
