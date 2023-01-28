@@ -48,7 +48,9 @@ jmp     head
 
 ::launch
 run     Launch/ChooseProfile
+jnc     f1      ;If already launched
 run     Launch/LaunchGame
+::f1
 jmp     head
 
 ::ex

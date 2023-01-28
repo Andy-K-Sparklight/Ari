@@ -39,6 +39,7 @@ pp      Tag
 pp      Hint    opt
 pp      Icon    Launch
 pp      Label   *Play
+ln      launch
 ent
 
 pp      Icon    ArrowRight
@@ -52,6 +53,8 @@ uic
 ::launch
 
 run     Launch/LaunchGame
+cr      0       ;Prevent another launch
 
 ::noLaunch
+cr      1
 ret

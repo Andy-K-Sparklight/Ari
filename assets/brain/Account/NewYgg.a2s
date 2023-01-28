@@ -1,5 +1,6 @@
 .aka    #       Account.NewAccount.Ygg
 .aka    \*       Account.NewAccount.
+
 ::head
 wdg     Icon    UserAdd
 wdg     Title   #Server.Title
@@ -62,6 +63,7 @@ uic
 
 pop     %Pwd
 pop     %UserName
+pop
 
 wdg     Icon    UserAdd
 wdg     Title   #Auth.Title

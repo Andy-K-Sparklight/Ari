@@ -23,7 +23,7 @@ wdg     Text    ^Desc
 ent     Progress
 uip
 sys     MonitorGame
-jc     end
+jc      end
 
 
 
