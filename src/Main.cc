@@ -23,16 +23,22 @@ main(int argc, char **argv)
   std::vector<std::string> args;
   for(int i = 0; i < argc; i++)
     {
-      args.push_back(argv[i]);
+      std::string xi = argv[i];
+      args.push_back(xi);
+    }
+  if(argc <= 1)
+    {
+      args.push_back("");
     }
 
   webview_t w = webview_create(true, nullptr);
   webview_set_size(w, 960, 540, WEBVIEW_HINT_NONE);
-  if(Alicorn::Platform::OS_TYPE != Alicorn::Platform::OS_DARWIN)
-    {
-      webview_bind(
-          w, "tellSize",
-          [](const char *seq, const char *req, void *arg) -> void {
+
+  webview_bind(
+      w, "tellSize",
+      [](const char *seq, const char *req, void *arg) -> void {
+        if(Alicorn::Platform::OS_TYPE != Alicorn::Platform::OS_DARWIN)
+          {
             webview_t loginWindow = (webview_t)arg;
             int scrnW = 1920, scrnH = 1080, vw = 960, vh = 540;
             cJSON *a = cJSON_Parse(req);
@@ -52,10 +58,11 @@ main(int argc, char **argv)
             int ah = (540.0 / vh) * scrnH * 0.7;
             webview_set_size(loginWindow, aw, ah, WEBVIEW_HINT_NONE);
             cJSON_Delete(a);
-          },
-          w);
-    }
-  if(args[1] == "mslogin")
+          }
+      },
+      w);
+
+  if(args[1] == std::string("mslogin"))
     {
       // Start login
       webview_init(
@@ -95,7 +102,7 @@ main(int argc, char **argv)
           w);
       webview_run(w);
     }
-  else if(args[1] == "modrinth")
+  else if(args[1] == std::string("modrinth"))
     {
       // Load modrinth
       std::ifstream jsf("ModrinthTweak.js");
