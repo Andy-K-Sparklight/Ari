@@ -182,7 +182,7 @@ renameForge(const std::string &originName)
       if(mid.starts_with("Forge"))
         {
           mid = mid.substr(5);
-          nn = verSplit[0] + "-Forge-" + mid;
+          nn = verSplit[0] + "(Forge)" + mid;
         }
     }
   if(nn.size() == 0)
@@ -190,20 +190,22 @@ renameForge(const std::string &originName)
       if(verSplit.size() == 3)
         {
           // New Forge name
-          nn = verSplit[0] + "-Forge-" + verSplit[2];
+          nn = verSplit[0] + "(Forge)" + verSplit[2];
         }
       else
         {
           return; // Cannot touch
         }
     }
-
-  auto profilePt = Platform::getInstallPath("versions/" + originName + "/"
-                                            + originName + ".json");
-  std::ifstream f(profilePt);
   std::stringstream ss;
-  ss << f.rdbuf();
-  f.close();
+  {
+    auto profilePt = Platform::getInstallPath("versions/" + originName + "/"
+                                              + originName + ".json");
+    std::ifstream f(profilePt);
+
+    ss << f.rdbuf();
+    f.close(); // Make sure to close the file
+  }
   cJSON *dat = cJSON_Parse(ss.str().c_str());
   if(cJSON_IsObject(dat))
     {
@@ -212,12 +214,20 @@ renameForge(const std::string &originName)
     }
   auto nProfilePt
       = Platform::getInstallPath("versions/" + nn + "/" + nn + ".json");
+  LOG("Renamed Forge location at " << nProfilePt);
   Platform::mkParentDirs(nProfilePt);
   std::ofstream nf(nProfilePt);
   nf << cJSON_Print(dat);
+  nf.close();
   cJSON_Delete(dat);
-  std::filesystem::remove_all(
-      Platform::getInstallPath("versions/" + originName));
+  try
+    {
+      std::filesystem::remove_all(
+          Platform::getInstallPath("versions/" + originName));
+    }
+  catch(std::exception &e)
+    {
+    }
 }
 
 static void
@@ -252,7 +262,13 @@ finalizeForgeRun(Network::DownloadPack lpack, std::string installerPath,
             runForgeInstaller(getJavaForForge(), installerPath,
                               [=](std::string name) -> void {
                                 LOG("Forge installer run completed.");
-                                std::filesystem::remove_all(installerPath);
+                                try
+                                  {
+                                    std::filesystem::remove_all(installerPath);
+                                  }
+                                catch(std::exception &e)
+                                  {
+                                  }
                                 if(name.size() > 0)
                                   {
                                     renameForge(name);
@@ -485,7 +501,13 @@ autoForge(const std::string &url, std::function<void(bool)> cb)
                       }
                   }
                 cJSON_Delete(install); // We no longer need it
-                std::filesystem::remove_all(fgWorkFolder);
+                try
+                  {
+                    std::filesystem::remove_all(fgWorkFolder);
+                  }
+                catch(std::exception &e)
+                  {
+                  }
                 finalizeForgeRun(lpack, installerPath, cb);
                 return;
               }

@@ -68,7 +68,13 @@ collectNatives(Flow *flow, FlowCallback cb)
           }
       }
     LOG("Collected " << natives << " extracted native libraries.");
-    std::filesystem::remove_all(unpackwd);
+    try
+      {
+        std::filesystem::remove_all(unpackwd);
+      }
+    catch(std::exception &e)
+      {
+      }
     cb(AL_OK);
   });
 }

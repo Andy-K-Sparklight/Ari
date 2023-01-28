@@ -22,7 +22,13 @@ mirrorDir(const std::string &name)
   auto target = Platform::getInstallPath(name);
   if(std::filesystem::exists(target))
     {
-      std::filesystem::remove_all(target);
+      try
+        {
+          std::filesystem::remove_all(target);
+        }
+      catch(std::exception &e)
+        {
+        }
     }
   Platform::mkParentDirs(target);
   std::filesystem::copy(base, target,
@@ -53,7 +59,7 @@ autoProfile(Flow *flow, FlowCallback cb)
         }
       LOG("Installed Fabric " << ldv);
       flow->data[AL_FLOWVAR_PROFILEID]
-          = mcv + "-" + variant + "-" + ldv; // In favor for profile installing
+          = mcv + "(" + variant + ")" + ldv; // In favor for profile installing
       cb(AL_OK);
       return;
     }
@@ -67,7 +73,7 @@ autoProfile(Flow *flow, FlowCallback cb)
           return;
         }
       LOG("Installed Quilt " << ldv);
-      flow->data[AL_FLOWVAR_PROFILEID] = mcv + "-" + variant + "-" + ldv;
+      flow->data[AL_FLOWVAR_PROFILEID] = mcv + "(" + variant + ")" + ldv;
       cb(AL_OK);
       return;
     }
@@ -82,7 +88,7 @@ autoProfile(Flow *flow, FlowCallback cb)
             LOG("Installed Forge " << ldv);
             // Hello Forge
             flow->data[AL_FLOWVAR_PROFILEID]
-                = mcv + "-" + variant + "-"
+                = mcv + "(" + variant + ")"
                   + Commons::splitStr(Commons::splitStr(ldv, "/")[6], "-")[1];
 
             cb(AL_OK);

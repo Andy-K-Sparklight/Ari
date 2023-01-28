@@ -65,7 +65,7 @@ installLoader(const std::string &mcVersion, const std::string &ldVersion,
   auto res = cli.Get(u.pathName_);
   if(res != nullptr && res->status == 200)
     {
-      std::string name = mcVersion + "-" + detail.name + "-" + ldVersion;
+      std::string name = mcVersion + "(" + detail.name + ")" + ldVersion;
       auto target = Platform::getInstallPath("versions/" + name + "/" + name
                                              + ".json");
       Platform::mkParentDirs(target);

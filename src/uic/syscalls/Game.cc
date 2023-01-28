@@ -194,7 +194,7 @@ implInstallProfile(ACH_SC_ARGS)
           ldv = Commons::splitStr(Commons::splitStr(ldv, "/")[6],
                                   "-")[1]; // Get version from URL
         }
-      lp.baseProfile = mcv + "-" + type + "-" + ldv;
+      lp.baseProfile = mcv + "(" + type + ")" + ldv;
     }
   lp.isDemo = false;
   lp.runtime = lp.id; // Use this
