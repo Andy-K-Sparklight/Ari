@@ -68,11 +68,6 @@ export function Button(props: ButtonProps): JSX.Element {
         onMouseUp={() => {
           mouseDown.current = false;
         }}
-        onClick={() => {
-          if (props.hint == "warn") {
-            window.dispatchEvent(new CustomEvent("-A2WarnMask"));
-          }
-        }}
         className={cname}
         onMouseEnter={() => {
           if (props.hint == "warn") {
@@ -95,7 +90,7 @@ export function Button(props: ButtonProps): JSX.Element {
             position: "absolute",
             backgroundColor: "#89898950",
             width: confirmProgDisplay + 5 + "%",
-            height: "6px",
+            height: "100%",
             bottom: 0,
             left: "-5%",
             overflow: "hidden",
