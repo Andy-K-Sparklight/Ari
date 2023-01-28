@@ -7,9 +7,12 @@ interface ButtonProps {
   text?: string;
   hint?: string;
   warn?: string;
+  sub?: string;
   img?: string;
   tag?: string;
   compact?: boolean;
+  multiSelect?: boolean; // Multiple select mode
+  selected?: boolean;
 }
 
 export function Button(props: ButtonProps): JSX.Element {
@@ -27,12 +30,18 @@ export function Button(props: ButtonProps): JSX.Element {
   if (props.compact) {
     cname += " a2btncompact";
   }
+  if (props.multiSelect && props.selected) {
+    cname += " hv";
+  }
   const confirmProg = useRef(0);
   const [confirmProgDisplay, setProg] = useState(0);
   const mouseDown = useRef(false);
 
   useEffect(() => {
     const interval = setInterval(() => {
+      if (props.multiSelect) {
+        return;
+      }
       if (mouseDown.current) {
         confirmProg.current += 2;
         setProg(confirmProg.current);
@@ -65,6 +74,11 @@ export function Button(props: ButtonProps): JSX.Element {
         onMouseDown={() => {
           mouseDown.current = true;
         }}
+        onClick={() => {
+          if (props.multiSelect && props.onClick) {
+            props.onClick();
+          }
+        }}
         onMouseUp={() => {
           mouseDown.current = false;
         }}
@@ -84,6 +98,9 @@ export function Button(props: ButtonProps): JSX.Element {
         <div>
           {" " + (props.text || "") + " "}
           <span className={"a2hint" + (props.hint || "")}>{hintContent}</span>
+          <span className={"a2sub" + (props.hint || "")}>
+            {props.sub || ""}
+          </span>
         </div>
         <div
           style={{

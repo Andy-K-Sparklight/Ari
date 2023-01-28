@@ -77,6 +77,10 @@ UIFrame::run(PCallback cb, bool wait)
             if(cJSON_IsArray(userInput))
               {
                 auto sz = cJSON_GetArraySize(userInput);
+                if(sz > 1)
+                  {
+                    this->prog->stack.push_back(""); // END identifier
+                  }
                 for(int i = 0; i < sz; i++)
                   {
                     auto cur = cJSON_GetArrayItem(userInput, i);

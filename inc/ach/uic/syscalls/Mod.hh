@@ -12,6 +12,8 @@ namespace SysCall
 
 void implOpenModrinth(ACH_SC_ARGS);
 
+void implGetMods(ACH_SC_ARGS);
+
 }
 }
 }

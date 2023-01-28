@@ -30,6 +30,7 @@ bindAllSysCalls()
   bindSysCall("GetLaunchProfiles", SysCall::implGetLaunchProfiles);
   bindSysCall("OpenFolder", SysCall::implOpenFolder);
   bindSysCall("OpenModrinth", SysCall::implOpenModrinth);
+  bindSysCall("GetMods", SysCall::implGetMods);
 }
 
 }

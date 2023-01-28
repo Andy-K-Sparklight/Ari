@@ -30,3 +30,10 @@ uic
 ::add
 sys     OpenModrinth
 jmp     head
+
+::addfile
+hlt
+
+::install
+run     ModManage/SelectMods
+hlt

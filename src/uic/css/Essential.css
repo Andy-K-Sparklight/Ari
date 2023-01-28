@@ -45,7 +45,8 @@ body {
   background-color: var(--a2-bg);
 }
 
-.a2btn:hover {
+.a2btn:hover,
+.hv {
   transform: translateX(-2%);
   box-shadow: 3px 3px var(--a2-shadow-highligh);
   background-color: var(--a2-highlight);
@@ -76,7 +77,12 @@ body {
 
 .a2hintopt {
   color: var(--a2-opt);
-  font-size: 1.5rem;
+  font-size: 1.6rem;
+}
+.a2sub {
+  color: var(--a2-shadow);
+  font-weight: normal;
+  font-size: 1rem;
 }
 
 .a2img {
@@ -290,7 +296,7 @@ body {
 
 .a2submit {
   text-align: center;
-  line-height: 5rem;
+  line-height: 3rem;
   font-size: 1.2rem;
   height: 3rem;
   cursor: pointer;

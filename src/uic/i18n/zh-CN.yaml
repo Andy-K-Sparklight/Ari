@@ -127,6 +127,8 @@ GameProfile:
         正在获取加载器版本列表.
         请放心, 这不会需要太久的.
 
+        (如果是 Forge, 可能会需要更长时间)
+
     SelectLoaderVersion:
       Title: 需要哪个加载器版本?
       Desc: |
@@ -318,6 +320,16 @@ ModManage:
       Install:
         Tag: 将模组安装到游戏中!
         Label: 安装模组
+  LoadingMods:
+    Title: 请稍等...
+    Desc: |
+      正在读取已安装模组列表.
+      请放心, 这不会需要太久的.
+  SelectMods:
+    Title: 选择模组
+    Desc: |
+      选择要添加到游戏中的模组.
+      请注意: 本页支持多项选择! 单击即可选中.
 
 Launch:
   Select:

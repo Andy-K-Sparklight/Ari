@@ -66,7 +66,6 @@ bool addVersionFromFile(const std::string &filePt);
 // Pick a proper version for specified game version and loader version
 std::string pickVersion(const std::string &mid, const std::string &gv,
                         const std::string &ld);
-
 }
 }
 }

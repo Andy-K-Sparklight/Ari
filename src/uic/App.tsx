@@ -114,21 +114,38 @@ function App() {
             return (
               <Button
                 key={i}
-                compact={e.props["Compact"]?.length > 0}
+                selected={!!dataStack[i] && dataStack[i] != "0"}
+                multiSelect={(e.props["Multi"] || "").length > 0}
+                compact={(e.props["Compact"] || "").length > 0}
+                sub={tr(e.props["Sub"] || "")}
                 tag={tr(e.props["Tag"], e.props)}
                 text={tr(e.props["Label"], e.props)}
                 hint={e.props["Hint"]}
                 warn={tr(e.props["Warn"], e.props)}
                 img={e.props["Icon"]}
                 onClick={() => {
-                  if (!submitLock) {
-                    setSubmitLock(true);
-                    setTimeout(() => {
-                      sendMessage(
-                        "UIResponse",
-                        JSON.stringify({ userChoice: e.jmpLabel })
-                      );
-                    }, 200);
+                  if (e.props["Multi"]?.length > 0) {
+                    const p = dataStack.concat();
+                    console.log(dataStack);
+                    p[i] = p[i] == "0" ? e.jmpLabel : "0";
+                    setDataStack(p);
+                    for (const s of p) {
+                      if (s && s !== "0") {
+                        setDataErrStack([false]);
+                        return;
+                      }
+                    }
+                    setDataErrStack([true]);
+                  } else {
+                    if (!submitLock) {
+                      setSubmitLock(true);
+                      setTimeout(() => {
+                        sendMessage(
+                          "UIResponse",
+                          JSON.stringify({ userChoice: e.jmpLabel })
+                        );
+                      }, 200);
+                    }
                   }
                 }}
               />

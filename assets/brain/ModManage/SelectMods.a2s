@@ -1,0 +1,46 @@
+.aka    #       ModManage.SelectMods.
+.aka    \*      ModManage.LoadingMods.
+
+wdg     Icon    Extension
+wdg     Title   *Title
+wdg     Text    *Desc
+ent     Progress
+uip
+sys     GetMods
+
+wdg     Icon    Extension
+wdg     Title   #Title
+wdg     Text    #Desc
+
+ent     Submit
+
+::lp
+
+pop     %bid
+cmp     %bid
+jc      end
+
+pop     %name
+pop     %slug
+pp      Multi   1
+pp      Compact 1
+pp      Hint
+pp      Icon    Pkg
+pp      Sub     %slug
+pp      Label   %name
+ln      %bid
+ent
+
+jmp     lp
+
+::end
+
+uic
+::e1
+pop     %sel
+cmp     %sel
+jc      e0
+put     %sel
+jmp     e1
+
+::e0
