@@ -47,8 +47,9 @@ run     ModManage/ModIndex
 jmp     head
 
 ::launch
+cr      0
 run     Launch/ChooseProfile
-jnc     f1      ;If already launched
+jc      f1      ;If already launched
 run     Launch/LaunchGame
 ::f1
 jmp     head
