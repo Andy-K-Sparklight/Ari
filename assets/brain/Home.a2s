@@ -49,6 +49,7 @@ jmp     head
 ::launch
 cr      0
 run     Launch/ChooseProfile
+cmp     $AlreadyLaunched        1
 jc      f1      ;If already launched
 run     Launch/LaunchGame
 ::f1

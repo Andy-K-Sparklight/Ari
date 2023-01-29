@@ -53,8 +53,9 @@ uic
 ::launch
 
 run     Launch/LaunchGame
-cr      1       ;Prevent another launch
+mov     1       $AlreadyLaunched
+ret
 
 ::noLaunch
-cr      0
+mov     0       $AlreadyLaunched
 ret
