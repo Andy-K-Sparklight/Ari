@@ -80,7 +80,8 @@ runOnUVThread(std::function<void()> func)
 void
 runOnWorkerThread(std::function<void()> func, bool join)
 {
-  std::thread *tx = new std::thread([func, tx]() -> void {
+  std::thread *tx = nullptr;
+  tx = new std::thread([func, tx]() -> void {
     func();
     delete tx;
   });
@@ -123,7 +124,8 @@ runOnWorkerThreadMulti(std::function<std::function<void()>(int)> gen,
   for(; i < times; i++)
     {
       auto exec = gen(i);
-      std::thread *tx = new std::thread([tx, exec]() -> void {
+      std::thread *tx = nullptr;
+      tx = new std::thread([tx, exec]() -> void {
         exec();
         delete tx;
       });
