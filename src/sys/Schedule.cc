@@ -4,6 +4,7 @@
 #include <functional>
 #include <iostream>
 #include <log.hh>
+#include <thread>
 #define WEBVIEW_HEADER
 #include <wv.hh>
 
@@ -76,28 +77,20 @@ runOnUVThread(std::function<void()> func)
   uv_rwlock_wrunlock(&carry->lock);
 }
 
-typedef struct
-{
-  uv_thread_t tid;
-  std::function<void()> x;
-} WorkerData;
-
 void
 runOnWorkerThread(std::function<void()> func, bool join)
 {
-  auto tx = new WorkerData;
-  tx->x = func;
-  uv_thread_create(
-      &tx->tid,
-      [](void *a) -> void {
-        auto t = (WorkerData *)a;
-        t->x();
-        delete t;
-      },
-      tx);
+  std::thread *tx = new std::thread([func, tx]() -> void {
+    func();
+    delete tx;
+  });
   if(join)
     {
-      uv_thread_join(&tx->tid);
+      tx->join();
+    }
+  else
+    {
+      tx->detach();
     }
 }
 
@@ -125,26 +118,21 @@ void
 runOnWorkerThreadMulti(std::function<std::function<void()>(int)> gen,
                        int times)
 {
-  WorkerData *threads[times];
+  std::thread *threads[times];
   int i = 0;
-  for(i = 0; i < times; i++)
+  for(; i < times; i++)
     {
-      auto wd = new WorkerData;
-      wd->x = gen(i);
-      uv_thread_create(
-          &wd->tid,
-          [](void *arg) -> void {
-            auto t = (WorkerData *)arg;
-            t->x();
-            delete t;
-          },
-          wd);
-      threads[i] = wd;
+      auto exec = gen(i);
+      std::thread *tx = new std::thread([tx, exec]() -> void {
+        exec();
+        delete tx;
+      });
+      threads[i] = tx;
     }
   i--;
   for(; i >= 0; i--)
     {
-      uv_thread_join(&threads[i]->tid);
+      threads[i]->join();
     }
 }
 
