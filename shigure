@@ -95,7 +95,8 @@ fi
 
 if [[ $1 == "test" ]]
 then
-./build/AlicornCH
+cd build
+./AlicornCH
 fi
 
 echo    "Finished."
