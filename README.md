@@ -1,5 +1,11 @@
 # Ari Launcher
 
+This is the English version of README.
+
+本文档也提供 [简体中文版本](./docs/README-CN.md).
+
+本文檔也提供 [繁體中文版本](./docs/README-TW.md).
+
 ## About
 
 Ari is a third-party Minecraft Launcher which is SUPER EASY to use.
@@ -49,3 +55,5 @@ This program is distributed under the GNU General Public License (Version 3). If
 This program is free software: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version.
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
+
+# 
