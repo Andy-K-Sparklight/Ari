@@ -77,7 +77,7 @@ genUUID(const std::string &name)
   return uuids::to_string(id);
 }
 
-size_t
+ssize_t
 getFileSize(const std::string &path)
 {
   struct stat stat_buf;

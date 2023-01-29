@@ -71,7 +71,7 @@ DownloadPack::addTask(const DownloadMeta &meta)
   if(meta.size > 0)
     {
       auto esz = Commons::getFileSize(meta.path);
-      if(meta.size == esz)
+      if((ssize_t)meta.size == esz)
         {
           return std::numeric_limits<unsigned int>::max(); // Skipped
         }

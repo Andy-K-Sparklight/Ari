@@ -26,7 +26,7 @@ std::string genUUID();
 std::string genUUID(const std::string &name);
 
 // Check the size of a file
-size_t getFileSize(const std::string &path);
+ssize_t getFileSize(const std::string &path);
 
 }
 }
