@@ -36,31 +36,27 @@ export function Button(props: ButtonProps): JSX.Element {
   const confirmProg = useRef(0);
   const [confirmProgDisplay, setProg] = useState(0);
   const mouseDown = useRef(false);
+  const interval = useRef(-1);
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      if (props.multiSelect) {
-        return;
-      }
-      if (mouseDown.current) {
-        confirmProg.current += 2;
-        setProg(confirmProg.current);
-        if (confirmProg.current >= 100) {
-          confirmProg.current = 0;
-          if (props.onClick) {
-            mouseDown.current = false;
-            props.onClick();
-          }
-        }
-      } else {
+  const progress = () => {
+    if (props.multiSelect) {
+      return;
+    }
+    if (mouseDown.current) {
+      confirmProg.current += 2;
+      setProg(confirmProg.current);
+      if (confirmProg.current >= 100) {
         confirmProg.current = 0;
-        setProg(confirmProg.current);
+        if (props.onClick) {
+          mouseDown.current = false;
+          props.onClick();
+        }
       }
-    }, 10);
-    return () => {
-      clearInterval(interval);
-    };
-  });
+    } else {
+      confirmProg.current = 0;
+      setProg(confirmProg.current);
+    }
+  };
 
   return (
     <>
@@ -73,14 +69,19 @@ export function Button(props: ButtonProps): JSX.Element {
         }}
         onMouseDown={() => {
           mouseDown.current = true;
+          interval.current = setInterval(progress, 10) as unknown as number;
         }}
         onClick={() => {
           if (props.multiSelect && props.onClick) {
             props.onClick();
           }
+          clearInterval(interval.current);
+          setProg(0);
         }}
         onMouseUp={() => {
           mouseDown.current = false;
+          clearInterval(interval.current);
+          setProg(0);
         }}
         className={cname}
         onMouseEnter={() => {
