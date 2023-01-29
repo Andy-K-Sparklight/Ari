@@ -15,7 +15,6 @@ namespace Aria2
 class Aria2Daemon
 {
 protected:
-  uv_loop_t *uvLoop;
   uv_process_t proc; // The data member carries the stop flag
   uv_process_options_t optn = { 0 };
   unsigned int port = 6800;
@@ -43,7 +42,7 @@ public:
       const std::list<std::pair<std::string, std::list<cJSON *>>> &commands);
 };
 
-extern Aria2Daemon ARIA2_DAEMON; // The global unique one
+extern Aria2Daemon *ARIA2_DAEMON; // The global unique one
 
 }
 }

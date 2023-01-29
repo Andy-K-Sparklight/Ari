@@ -104,7 +104,7 @@ DownloadPack::commit()
       return;
     }
   using namespace AlicornDrivers;
-  Aria2::Aria2Daemon daemon = Aria2::ARIA2_DAEMON;
+  Aria2::Aria2Daemon *daemon = Aria2::ARIA2_DAEMON;
   std::list<std::pair<std::string, std::list<cJSON *>>> batchOps;
   // Collect commands
   for(auto &p : procs)
@@ -144,7 +144,7 @@ DownloadPack::commit()
       args.push_back(options);
       batchOps.push_back({ "addUri", args });
     }
-  std::string res = daemon.invokeMulti(batchOps);
+  std::string res = daemon->invokeMulti(batchOps);
   for(auto &b : batchOps)
     {
       for(auto &j : b.second)
@@ -183,7 +183,7 @@ void
 DownloadPack::sync()
 {
   using namespace AlicornDrivers;
-  Aria2::Aria2Daemon daemon = AlicornDrivers::Aria2::ARIA2_DAEMON;
+  auto daemon = AlicornDrivers::Aria2::ARIA2_DAEMON;
   std::list<std::pair<std::string, std::list<cJSON *>>> batchOps;
   for(auto &p : procs)
     {
@@ -195,7 +195,7 @@ DownloadPack::sync()
 
   std::string res;
 
-  res = daemon.invokeMulti(batchOps);
+  res = daemon->invokeMulti(batchOps);
   if(res.size() == 0)
     {
       return; // Abort

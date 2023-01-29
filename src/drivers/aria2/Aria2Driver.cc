@@ -32,8 +32,7 @@ randToken()
   return str;
 }
 
-Aria2Daemon::Aria2Daemon()
-    : uvLoop(uv_default_loop()), optn({ 0 }), token(randToken())
+Aria2Daemon::Aria2Daemon() : optn({ 0 }), token(randToken())
 {
   // Hold the pointer
   proc.data = this;
@@ -105,7 +104,7 @@ Aria2Daemon::run()
   optn.args = args;
   LOG("Starting aria2 daemon with port " << port);
   int r;
-  if((r = uv_spawn(uvLoop, &proc, &optn)))
+  if((r = uv_spawn(uv_default_loop(), &proc, &optn)))
     {
       LOG("Could not start aria2 daemon: " << uv_strerror(r));
       return false;
@@ -189,7 +188,7 @@ Aria2Daemon::invokeMulti(
   return sendRPCCall(arrStr, port);
 }
 
-Aria2Daemon ARIA2_DAEMON; // The global unique one
+Aria2Daemon *ARIA2_DAEMON; // The global unique one
 
 }
 }

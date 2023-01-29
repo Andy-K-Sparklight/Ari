@@ -38,8 +38,10 @@ initSys()
       Sys::loadGlobalData(Profile::LAUNCH_PROFILES, ACH_LAUNCH_PROFILE);
       Sys::loadGlobalData(Profile::ACCOUNT_PROFILES, ACH_ACCOUNT_PROFILE);
       Network::setupDownloadsSync();
-      Sys::runOnUVThread(
-          []() -> void { AlicornDrivers::Aria2::ARIA2_DAEMON.run(); });
+      // During startup we can run on main thread
+      AlicornDrivers::Aria2::ARIA2_DAEMON
+          = new AlicornDrivers::Aria2::Aria2Daemon;
+      AlicornDrivers::Aria2::ARIA2_DAEMON->run();
       Sys::runOnWorkerThread(
           []() -> void { Extra::Mod::Modrinth::setupModrinthServer(); });
       LOG("Finished system initializing.")
@@ -68,8 +70,7 @@ downSys()
     {
       LOG("Stopping system.");
       Network::stopDownloadsSync();
-      Sys::runOnUVThread(
-          []() -> void { AlicornDrivers::Aria2::ARIA2_DAEMON.stop(); });
+      AlicornDrivers::Aria2::ARIA2_DAEMON->stop();
       Sys::stopUVThread();
       LOG("System stopped.");
       UP = false;
