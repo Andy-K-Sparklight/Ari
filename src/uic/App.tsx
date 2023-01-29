@@ -34,12 +34,16 @@ function App() {
   const [submitLock, setSubmitLock] = useState(false);
   const [dataStack, setDataStack] = useState<string[]>([]);
   const [dataErrStack, setDataErrStack] = useState<boolean[]>([true]);
+  const [choices, setChoices] = useState<Set<string>>(new Set());
   useEffect(() => {
     window.addEventListener("UIDraw", (e) => {
       if (e instanceof CustomEvent) {
         const ins = e.detail;
         const draw = () => {
           setDrawInstr(ins);
+          setDataErrStack([true]);
+          setChoices(new Set());
+          setDataStack([]);
           setSubmitLock(false);
           window.dispatchEvent(new CustomEvent("HTTPReq", { detail: "" })); // Reset host
           setTimeout(() => {
@@ -114,7 +118,7 @@ function App() {
             return (
               <Button
                 key={i}
-                selected={!!dataStack[i] && dataStack[i] != "0"}
+                selected={choices.has(e.jmpLabel)}
                 multiSelect={(e.props["Multi"] || "").length > 0}
                 compact={(e.props["Compact"] || "").length > 0}
                 sub={tr(e.props["Sub"] || "")}
@@ -125,17 +129,13 @@ function App() {
                 img={e.props["Icon"]}
                 onClick={() => {
                   if (e.props["Multi"]?.length > 0) {
-                    const p = dataStack.concat();
-                    console.log(dataStack);
-                    p[i] = p[i] == "0" ? e.jmpLabel : "0";
-                    setDataStack(p);
-                    for (const s of p) {
-                      if (s && s !== "0") {
-                        setDataErrStack([false]);
-                        return;
-                      }
+                    const ch = new Set(choices);
+                    if (ch.has(e.jmpLabel)) {
+                      ch.delete(e.jmpLabel);
+                    } else {
+                      ch.add(e.jmpLabel);
                     }
-                    setDataErrStack([true]);
+                    setChoices(ch);
                   } else {
                     if (!submitLock) {
                       setSubmitLock(true);
@@ -180,22 +180,31 @@ function App() {
           } else if (e.variant == "Submit") {
             return (
               <Submit
-                ok={ok}
+                ok={e.props["Mode"] == "Select" || ok}
                 key={i}
+                count={e.props["Mode"] == "Select" ? choices.size : undefined}
                 onClick={() => {
-                  if (!ok) {
-                    return;
-                  }
-                  if (!submitLock) {
+                  if (e.props["Mode"] == "Select") {
                     setSubmitLock(true);
-                    setDataStack([]);
-                    setDataErrStack([true]);
                     setTimeout(() => {
                       sendMessage(
                         "UIResponse",
-                        JSON.stringify({ userInput: dataStack })
+                        JSON.stringify({ userInput: [...choices] })
                       );
                     }, 200);
+                  } else {
+                    if (!ok) {
+                      return;
+                    }
+                    if (!submitLock) {
+                      setSubmitLock(true);
+                      setTimeout(() => {
+                        sendMessage(
+                          "UIResponse",
+                          JSON.stringify({ userInput: dataStack })
+                        );
+                      }, 200);
+                    }
                   }
                 }}
               />

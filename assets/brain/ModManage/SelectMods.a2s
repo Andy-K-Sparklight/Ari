@@ -12,6 +12,7 @@ wdg     Icon    Extension
 wdg     Title   #Title
 wdg     Text    #Desc
 
+pp      Mode    Select
 ent     Submit
 
 ::lp

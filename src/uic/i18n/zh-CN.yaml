@@ -376,8 +376,9 @@ Launch:
       Btn: 重新启动
 
 Commons:
-  Submit: 点击这里以继续
+  Submit: 点击这里继续
   SubmitFail: 检查你的输入...
+  SubmitCount: 点击这里继续 ({Count} 已选)
   Connecting: 正在连接 {Host}
   Cancel: |
     <b>取消操作可能会丢失数据!</b>

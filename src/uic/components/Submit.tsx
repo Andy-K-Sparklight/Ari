@@ -4,6 +4,7 @@ import { tr } from "./TP";
 interface SubmitProps {
   onClick?: () => void;
   ok?: boolean;
+  count?: number;
 }
 
 export function Submit(props: SubmitProps): JSX.Element {
@@ -19,7 +20,9 @@ export function Submit(props: SubmitProps): JSX.Element {
         color: props.ok ? "var(--a2-base)" : "var(--a2-warn)",
       }}
     >
-      {tr(props.ok ? "Commons.Submit" : "Commons.SubmitFail")}
+      {props.count !== undefined
+        ? tr("Commons.SubmitCount", { Count: props.count?.toString() || "0" })
+        : tr(props.ok ? "Commons.Submit" : "Commons.SubmitFail")}
     </div>
   );
 }

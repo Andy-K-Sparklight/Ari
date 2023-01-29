@@ -48,7 +48,7 @@ export function NetSpeed(_props: {}): JSX.Element {
           bottom: "2px",
         }}
       >
-        {"Alicorn: The Corrupted Heart // Insider"}
+        {"Ari // Indev"}
       </div>
       <div
         style={{
