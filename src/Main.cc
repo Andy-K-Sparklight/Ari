@@ -142,6 +142,7 @@ main(int argc, char **argv)
       // Run init
       tsd->scale = 0.6; // Application
       using namespace Alicorn;
+      Sys::initSys();
       UIC::initMainWindow(w);
       webview_set_title(w, "A2 | GREAT A2");
       UIC::bindListener("Ping",
@@ -165,7 +166,6 @@ main(int argc, char **argv)
       std::stringstream jss;
       jss << jsf.rdbuf();
       std::string js = jss.str();
-      Sys::initSys();
       auto boot = "window.addEventListener('load', ()=>{" + js + "});";
       webview_init(w, boot.c_str());
       if(Platform::OS_TYPE == Platform::OS_DARWIN)

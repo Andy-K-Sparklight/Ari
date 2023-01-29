@@ -58,10 +58,11 @@ void
 setupUVThread()
 {
   LOG("Setting up UV thread.");
+  uv_loop_init(uv_default_loop());
   ACH_UV_ASYNC_HANDLER.data = new UVAsyncCallerCarry;
   uv_rwlock_init(&((UVAsyncCallerCarry *)ACH_UV_ASYNC_HANDLER.data)->lock);
-  uv_thread_create(&ACH_UV_THREAD, uvMain, (void *)NULL);
   uv_async_init(uv_default_loop(), &ACH_UV_ASYNC_HANDLER, uvAsyncCaller);
+  uv_thread_create(&ACH_UV_THREAD, uvMain, (void *)NULL);
   LOG("UV thread created.");
 }
 

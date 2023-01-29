@@ -3,6 +3,7 @@
 #include <uv.h>
 #include <cstring>
 #include <iostream>
+#include "ach/sys/Schedule.hh"
 
 namespace Alicorn
 {
@@ -32,7 +33,10 @@ static void
 onExit(uv_process_t *p, int64_t code, int sig)
 {
   auto pc = (ProcData *)p->data;
-  pc->cb(pc->data, (int)code);
+  std::function<void(std::string, int)> xcb;
+  xcb = pc->cb;
+  std::string dat = pc->data;
+  Sys::runOnWorkerThread([xcb, code, dat]() -> void { xcb(dat, (int)code); });
   uv_close((uv_handle_t *)p, [](uv_handle_t *h) -> void {
     auto p = (ProcData *)h->data;
     delete p;
@@ -63,52 +67,54 @@ void
 runCommand(const std::string &bin, const std::list<std::string> &args,
            std::function<void(std::string, int)> cb, int pipe)
 {
-  ProcData *p = new ProcData;
-  p->cb = cb;
-  uv_pipe_init(uv_default_loop(), &p->pipe, 0);
-  p->optn = { 0 };
-  p->cont[0].flags = UV_IGNORE;
-  p->cont[pipe].flags = (uv_stdio_flags)(UV_CREATE_PIPE | UV_WRITABLE_PIPE);
-  p->cont[3 - pipe].flags = UV_IGNORE;
-  p->cont[pipe].data.stream = (uv_stream_t *)&p->pipe;
-  p->optn.stdio = p->cont;
-  p->optn.stdio_count = 3;
-  p->optn.file = bin.c_str();
-  p->optn.exit_cb = onExit;
+  Sys::runOnUVThread([=]() -> void {
+    ProcData *p = new ProcData;
+    p->cb = cb;
+    uv_pipe_init(uv_default_loop(), &p->pipe, 0);
+    p->optn = { 0 };
+    p->cont[0].flags = UV_IGNORE;
+    p->cont[pipe].flags = (uv_stdio_flags)(UV_CREATE_PIPE | UV_WRITABLE_PIPE);
+    p->cont[3 - pipe].flags = UV_IGNORE;
+    p->cont[pipe].data.stream = (uv_stream_t *)&p->pipe;
+    p->optn.stdio = p->cont;
+    p->optn.stdio_count = 3;
+    p->optn.file = bin.c_str();
+    p->optn.exit_cb = onExit;
 
-  char *argsChar[args.size() + 2];
-  argsChar[0] = new char[bin.length() + 1];
-  strncpy(argsChar[0], bin.c_str(), bin.length() + 1);
-  int i = 1;
-  for(auto &a : args)
-    {
-      size_t len = a.length();
-      argsChar[i] = new char[len + 1];
-      strncpy(argsChar[i], a.c_str(), len + 1);
-      i++;
-    }
-  argsChar[i] = NULL;
-  p->optn.args = argsChar;
+    char *argsChar[args.size() + 2];
+    argsChar[0] = new char[bin.length() + 1];
+    strncpy(argsChar[0], bin.c_str(), bin.length() + 1);
+    int i = 1;
+    for(auto &a : args)
+      {
+        size_t len = a.length();
+        argsChar[i] = new char[len + 1];
+        strncpy(argsChar[i], a.c_str(), len + 1);
+        i++;
+      }
+    argsChar[i] = NULL;
+    p->optn.args = argsChar;
 
-  p->proc.data = p; // Binding
-  p->pipe.data = p;
+    p->proc.data = p; // Binding
+    p->pipe.data = p;
 
-  int r = uv_spawn(uv_default_loop(), &p->proc, &p->optn);
-  if(r < 0)
-    {
-      cb("", 1);
-      uv_close((uv_handle_t *)&p->pipe, [](uv_handle_t *pipe) -> void {
-        ProcData *pd = (ProcData *)pipe->data;
-        delete pd;
-      });
-      return;
-    }
+    int r = uv_spawn(uv_default_loop(), &p->proc, &p->optn);
+    if(r < 0)
+      {
+        Sys::runOnWorkerThread([cb]() -> void { cb("", 1); });
+        uv_close((uv_handle_t *)&p->pipe, [](uv_handle_t *pipe) -> void {
+          ProcData *pd = (ProcData *)pipe->data;
+          delete pd;
+        });
+        return;
+      }
 
-  for(i -= 1; i >= 0; i--)
-    {
-      delete[] argsChar[i];
-    }
-  uv_read_start((uv_stream_t *)&p->pipe, onAlloc, onRead);
+    for(i -= 1; i >= 0; i--)
+      {
+        delete[] argsChar[i];
+      }
+    uv_read_start((uv_stream_t *)&p->pipe, onAlloc, onRead);
+  });
 }
 
 }

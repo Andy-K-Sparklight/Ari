@@ -317,7 +317,7 @@ setupDownloadsSync()
     uv_timer_start(
         &syncTimer,
         [](uv_timer_t *t) -> void {
-          if(downloadsSyncing)
+          if(downloadsSyncing || ALL_DOWNLOADS.size() == 0)
             {
               return;
             }
