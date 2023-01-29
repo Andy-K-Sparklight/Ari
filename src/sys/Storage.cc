@@ -11,8 +11,7 @@ namespace Alicorn
 namespace Sys
 {
 
-#define ACH_CONFIG_DIR ".alicorn-ch"
-#define ACH_CONFIG_FILE "Main.kv"
+#define ACH_CONFIG_DIR ".arimc"
 
 std::map<std::string, std::string> ACH_CONFIG;
 
@@ -41,65 +40,12 @@ getCfgPath(const std::string &name)
 static void
 mkConfigDir()
 {
-  std::filesystem::create_directories(
-      std::filesystem::path(getCfgPath(ACH_CONFIG_FILE)).parent_path());
-}
-
-void
-loadConfig()
-{
-  auto f = getCfgPath(ACH_CONFIG_FILE);
-  LOG("Loading config from " << f);
-  std::ifstream file(f);
-  std::stringstream ss;
-  ss << file.rdbuf();
-  auto s = ss.str();
-  auto splits = Commons::splitStr(s, "\n\n");
-  for(auto &l : splits)
-    {
-      auto kv = Commons::splitStr(l, "\n");
-      if(kv.size() == 2)
-        {
-          ACH_CONFIG[kv[0]] = kv[1];
-        }
-    }
-  file.close();
-}
-
-std::string
-getValue(const std::string &k, const std::string &dv)
-{
-  auto s = ACH_CONFIG[k];
-  if(s.size() == 0)
-    {
-      return dv;
-    }
-  return s;
-}
-
-void
-setValue(const std::string &k, const std::string &v)
-{
-  ACH_CONFIG[k] = v;
+  std::filesystem::create_directories(std::filesystem::path(getCfgPath(".")));
 }
 
 #define ACH_CFG_LINESPLIT "\n\t\a\x06%LN%\x06\a\t\n"
 #define ACH_CFG_KVSPLIT "\t\a\x11==\x11\a\t"
 #define ACH_CFG_SECSPLIT "\t\a\n\x16=%MSIEKCU%=\x16\n\a\t"
-
-void
-saveConfig()
-{
-  mkConfigDir();
-  auto f = getCfgPath(ACH_CONFIG_FILE);
-  LOG("Saving config to " << f);
-  std::ofstream file(f);
-  for(auto &p : ACH_CONFIG)
-    {
-      file << p.first << ACH_CFG_KVSPLIT << p.second << ACH_CFG_LINESPLIT;
-    }
-  file.close();
-}
 
 std::vector<std::map<std::string, std::string>>
 loadKVG(const std::string &rel)

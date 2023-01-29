@@ -29,7 +29,6 @@ initSys()
 
       // Services
       srand(time(NULL));
-      Sys::loadConfig();
       UIC::loadUserData();
       UIC::bindAllSysCalls();
       Sys::setupUVThread();
@@ -59,7 +58,6 @@ saveData()
       Sys::saveGlobalData(Profile::LAUNCH_PROFILES, ACH_LAUNCH_PROFILE);
       Sys::saveGlobalData(Profile::JVM_PROFILES, ACH_JVM_PROFILE);
       UIC::saveUserData();
-      Sys::saveConfig();
     }
 }
 

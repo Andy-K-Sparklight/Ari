@@ -13,16 +13,6 @@ namespace Alicorn
 namespace Sys
 {
 
-extern std::map<std::string, std::string> ACH_CONFIG;
-
-void loadConfig();
-
-std::string getValue(const std::string &k, const std::string &dv);
-
-void setValue(const std::string &k, const std::string &v);
-
-void saveConfig();
-
 // Load KV Group
 std::vector<std::map<std::string, std::string>>
 loadKVG(const std::string &rel);

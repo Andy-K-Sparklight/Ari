@@ -77,17 +77,11 @@ DownloadPack::addTask(const DownloadMeta &meta)
         }
     }
 
-  if(Sys::getValue(ACH_CFG_DLM, ACH_CFG_DLM_ACC) == ACH_CFG_DLM_ACC)
+  // Apply mirrors
+  auto mirrors = getMirrors(meta.baseURL);
+  for(auto &m : mirrors)
     {
-      auto mirrors = getMirrors(meta.baseURL);
-      for(auto &m : mirrors)
-        {
-          p.urls.push_back(m);
-        }
-    }
-  else
-    {
-      p.urls.push_back(meta.baseURL);
+      p.urls.push_back(m);
     }
   p.totalLength = meta.size;
   procs.push_back(p);

@@ -12,7 +12,7 @@ namespace Alicorn
 namespace Platform
 {
 
-#define ACH_ROOT_NAME ".alicorn-ch"
+#define ACH_ROOT_NAME ".arimc"
 #define ACH_STORAGE_PATH "storage"
 #define ACH_INSTALL_PATH "installing"
 #define ACH_GAME_PATH "gamemd"

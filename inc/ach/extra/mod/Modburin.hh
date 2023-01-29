@@ -14,7 +14,7 @@ namespace Mod
 {
 
 // Burin Structure
-// .alicorn-ch/burin/
+// .arimc/burin/
 //   - metas
 //     - AAAAAA
 //   - versions
