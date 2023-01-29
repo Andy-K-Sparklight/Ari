@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 # Script to download essential files and setup environment
 echo "Shigure | Simple build script for A2"
