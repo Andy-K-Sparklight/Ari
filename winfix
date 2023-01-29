@@ -4,7 +4,7 @@ BASEDIR=$(dirname "$0")
 cp -f /mingw64/bin/libssl-1_1-x64.dll ./
 cp -f /mingw64/bin/libcrypto-1_1-x64.dll ./
 cp -f $BASEDIR/libs/*.dll ./
-strip ./AlicornCH.exe
+strip ./Ari.exe
 strip ./*.dll
-command -v upx && upx --ultra-brute ./AlicornCH.exe
+command -v upx && upx --ultra-brute ./Ari.exe
 command -v upx && upx --ultra-brute ./*.dll

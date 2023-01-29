@@ -2,7 +2,7 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ([2.71])
-AC_INIT([AlicornCH], [1.0], [skjsjhb@outlook.com])
+AC_INIT([Ari], [1.0], [skjsjhb@outlook.com])
 AC_CONFIG_SRCDIR([src/Main.cc])
 AC_CONFIG_FILES([Makefile])
 AM_INIT_AUTOMAKE([subdir-objects])
