@@ -16,6 +16,13 @@
 #include "ach/uic/UserData.hh"
 #include "ach/core/platform/OSType.hh"
 
+typedef struct
+{
+  bool lock;
+  double scale;
+  webview_t window;
+} TellSizeData;
+
 int
 main(int argc, char **argv)
 {
@@ -34,12 +41,19 @@ main(int argc, char **argv)
   webview_t w = webview_create(true, nullptr);
   webview_set_size(w, 960, 540, WEBVIEW_HINT_NONE);
 
+  auto tsd = new TellSizeData;
+  tsd->window = w;
+  tsd->scale = 0.7;
+  tsd->lock = true;
   webview_bind(
       w, "tellSize",
       [](const char *seq, const char *req, void *arg) -> void {
-        if(Alicorn::Platform::OS_TYPE != Alicorn::Platform::OS_DARWIN)
+        auto ts = (TellSizeData *)arg;
+        if(ts->lock
+           && Alicorn::Platform::OS_TYPE != Alicorn::Platform::OS_DARWIN)
           {
-            webview_t loginWindow = (webview_t)arg;
+            ts->lock = false;
+            webview_t loginWindow = ts->window;
             int scrnW = 1920, scrnH = 1080, vw = 960, vh = 540;
             cJSON *a = cJSON_Parse(req);
             if(cJSON_IsArray(a))
@@ -54,16 +68,18 @@ main(int argc, char **argv)
                 vw = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 2));
                 vh = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 3));
               }
-            int aw = (960.0 / vw) * scrnW * 0.7;
-            int ah = (540.0 / vh) * scrnH * 0.7;
+            int aw = (960.0 / vw) * scrnW * ts->scale;
+            int ah = (540.0 / vh) * scrnH * ts->scale;
             webview_set_size(loginWindow, aw, ah, WEBVIEW_HINT_NONE);
             cJSON_Delete(a);
+            delete ts;
           }
       },
-      w);
+      tsd);
 
   if(args[1] == std::string("mslogin"))
     {
+      tsd->scale = 0.8; // Make larger
       // Start login
       webview_init(
           w,
@@ -104,6 +120,7 @@ main(int argc, char **argv)
     }
   else if(args[1] == std::string("modrinth"))
     {
+      tsd->scale = 0.8; // Webpages
       // Load modrinth
       std::ifstream jsf("ModrinthTweak.js");
       std::stringstream jss;
@@ -123,6 +140,7 @@ main(int argc, char **argv)
   else
     {
       // Run init
+      tsd->scale = 0.6; // Application
       using namespace Alicorn;
       UIC::initMainWindow(w);
       webview_set_title(w, "A2 | GREAT A2");
