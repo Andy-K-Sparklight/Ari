@@ -174,8 +174,14 @@ DownloadPack::commit()
     }
 
   cJSON_Delete(stat);
-  Network::ALL_DOWNLOADS.push_back(*this);
-  LOG("Commited one download task with " << procs.size() << " procs.");
+  DownloadPack dpx;
+  dpx = *this;
+  Sys::runOnUVThread([dpx]() -> void {
+    // UV thread is unique
+    Network::ALL_DOWNLOADS.push_back(dpx);
+    LOG("Commited one download task with " << dpx.procs.size() << " procs.");
+  });
+
   return;
 }
 

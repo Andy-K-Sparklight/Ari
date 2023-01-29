@@ -75,24 +75,28 @@ runOnUVThread(std::function<void()> func)
   uv_rwlock_wrunlock(&carry->lock);
 }
 
+typedef struct
+{
+  uv_thread_t tid;
+  std::function<void()> x;
+} WorkerData;
+
 void
 runOnWorkerThread(std::function<void()> func, bool join)
 {
-  // The tid won't be used by uv again, we can safely use a local one
-  uv_thread_t tid;
-  std::function<void()> *funcCpy = new std::function<void()>;
-  *funcCpy = func;
+  auto tx = new WorkerData;
+  tx->x = func;
   uv_thread_create(
-      &tid,
+      &tx->tid,
       [](void *a) -> void {
-        auto f = (std::function<void()> *)a;
-        (*f)();
-        delete f; // It was copied
+        auto t = (WorkerData *)a;
+        t->x();
+        delete t;
       },
-      (void *)funcCpy);
+      tx);
   if(join)
     {
-      uv_thread_join(&tid);
+      uv_thread_join(&tx->tid);
     }
 }
 
@@ -120,27 +124,26 @@ void
 runOnWorkerThreadMulti(std::function<std::function<void()>(int)> gen,
                        int times)
 {
-  uv_thread_t *threads[times];
+  WorkerData *threads[times];
   int i = 0;
   for(i = 0; i < times; i++)
     {
-      auto fn = new std::function<void()>;
-      *fn = gen(i);
-      auto th = new uv_thread_t;
+      auto wd = new WorkerData;
+      wd->x = gen(i);
       uv_thread_create(
-          th,
+          &wd->tid,
           [](void *arg) -> void {
-            auto f = (std::function<void()> *)arg;
-            (*f)();
-            delete f;
+            auto t = (WorkerData *)arg;
+            t->x();
+            delete t;
           },
-          fn);
-      threads[i] = th;
+          wd);
+      threads[i] = wd;
     }
   i--;
   for(; i >= 0; i--)
     {
-      uv_thread_join(threads[i]);
+      uv_thread_join(&threads[i]->tid);
     }
 }
 
@@ -152,7 +155,9 @@ runOnMainThread(std::function<void()> func, void *window)
   webview_dispatch(
       window,
       [](webview_t w, void *fpa) -> void {
-        (*(std::function<void()> *)fpa)();
+        auto fx = (std::function<void()> *)fpa;
+        (*fx)();
+        delete fx;
       },
       (void *)fp);
 }
