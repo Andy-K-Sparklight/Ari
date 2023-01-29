@@ -145,7 +145,7 @@ main(int argc, char **argv)
       using namespace Alicorn;
       Sys::initSys();
       UIC::initMainWindow(w);
-      webview_set_title(w, "A2 | GREAT A2");
+      webview_set_title(w, "Ari 2023");
       UIC::bindListener("Ping",
                         [](const std::string &s, UIC::Callback cb) -> void {
                           cb("\"...It's courage.\"");
