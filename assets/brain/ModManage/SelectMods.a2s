@@ -23,10 +23,11 @@ jc      end
 
 pop     %name
 pop     %slug
+pop     %icon
 pp      Multi   1
 pp      Compact 1
 pp      Hint
-pp      Icon    Pkg
+pp      Icon    %icon
 pp      Sub     %slug
 pp      Label   %name
 ln      %bid

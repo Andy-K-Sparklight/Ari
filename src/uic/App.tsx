@@ -92,19 +92,39 @@ function App() {
           } else if (w.variant == "Text") {
             return <UIText key={i} text={tr(def || w.props["Msg"], w.props)} />;
           } else if (w.variant == "Icon") {
-            return (
-              <div
-                key={i}
-                className={"a2img a2glowing"}
-                style={{ width: "4rem", height: "4rem" }}
-              >
-                {IMAGES[def || w.props["Icon"]]}
-              </div>
-            );
+            const k = def || w.props["Icon"];
+            if (IMAGES[k] !== undefined) {
+              return (
+                <div
+                  key={i}
+                  className={"a2img a2glowing"}
+                  style={{ width: "4rem", height: "4rem" }}
+                >
+                  {IMAGES[k]}
+                </div>
+              );
+            } else {
+              return (
+                <div
+                  key={i}
+                  className={"a2img a2glowing"}
+                  style={{ width: "4rem", height: "4rem" }}
+                >
+                  <img src={"data:image;base64," + k} />
+                </div>
+              );
+            }
           } else if (w.variant == "Img") {
             return (
               <React.Fragment key={i}>
-                {IMAGES[def || w.props["Image"]]}
+                {(() => {
+                  const k = def || w.props["Image"];
+                  if (IMAGES[k] !== undefined) {
+                    return IMAGES[k];
+                  } else {
+                    return <img src={"data:image;base64," + k} />;
+                  }
+                })()}
                 <br />
                 <br />
               </React.Fragment>

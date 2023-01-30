@@ -36,6 +36,7 @@ implGetMods(ACH_SC_ARGS)
             if(meta.size() != 0)
               {
                 ModMeta mt(meta[0]);
+                prog.stack.push_back(mt.icon);
                 prog.stack.push_back(mt.slug);
                 prog.stack.push_back(mt.displayName);
                 prog.stack.push_back(mt.bid);

@@ -95,7 +95,16 @@ export function Button(props: ButtonProps): JSX.Element {
           }
         }}
       >
-        <div className={"a2img"}>{IMAGES[props.img || ""]}</div>
+        <div className={"a2img"}>
+          {(() => {
+            const k = props.img || "";
+            if (IMAGES[k] !== undefined) {
+              return IMAGES[k];
+            } else {
+              return <img src={"data:image;base64," + k} />;
+            }
+          })()}
+        </div>
         <div>
           {" " + (props.text || "") + " "}
           <span className={"a2hint" + (props.hint || "")}>{hintContent}</span>
