@@ -15,12 +15,6 @@ export async function initProtocol() {
   return new Promise((res) => {
     const p = setInterval(() => {
       if (window.SYS) {
-        window.tellSize(
-          screen.availWidth,
-          screen.availHeight,
-          window.outerWidth,
-          window.outerHeight
-        );
         res();
         clearInterval(p);
       }
