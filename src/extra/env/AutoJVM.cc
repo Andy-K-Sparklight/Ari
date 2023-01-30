@@ -262,6 +262,12 @@ configureJVM(Op::Flow *flow, Op::FlowCallback cb)
     LOG("Scanning for JVM installation.");
     cb(AL_SCANJVM);
     scanJVM([=](std::list<std::string> jvms) -> void {
+      if(jvms.size() == 0)
+        {
+          // Nothing to do
+          cb(AL_OK);
+          return;
+        }
       int *completed = new int(0);
       int *total = new int(jvms.size());
       for(auto &j : jvms)
