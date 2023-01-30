@@ -1,0 +1,19 @@
+name: Check Code Formatting
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+jobs:
+  clang-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Clang Format Github Action
+        uses: RafikFarhad/clang-format-github-action@v3
+        with:
+          style: "file"
+          sources: "inc/ach/**/*.h,src/core/**/*.cc,src/drivers/**/*.cc,src/extra/**/*.cc,src/sys/**/*.cc,src/uic/**/*.cc,src/util/**/*.cc,src/Main.cc"

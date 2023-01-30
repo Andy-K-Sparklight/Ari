@@ -1,0 +1,4 @@
+BasedOnStyle: GNU
+SortIncludes: false
+SpaceBeforeParens: Never
+Standard: Auto
