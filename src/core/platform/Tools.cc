@@ -253,32 +253,29 @@ zipDir(const std::string &prefix, const std::string &fileName)
       LOG("Failed to open zip file for writing, path: " << fileName);
       return false;
     }
+  bool err = false;
   for(auto &f : files)
     {
       auto relPt = std::filesystem::relative(f, prefix);
       zip_entry_open(zip, relPt.string().c_str());
       if(zip_entry_fwrite(zip, f.c_str()) < 0)
         {
-          goto undo; // Failed to compress, we are going to undo changes
+          err = true;
+          break;
         }
       zip_entry_close(zip);
     }
   zip_close(zip);
-  return true;
 
-undo:
-  zip_close(zip);
+  if (!err) {
+    return true;
+  }
+  LOG("Failed to zip " << prefix);
   try
     {
-      if (!std::filesystem::remove(fileName))
-        {
-          LOG("Failied to remove zip file after failed compression, path: " << fileName);
-        }
+      std::filesystem::remove(fileName);
     }
-  catch (std::exception &ex) // Removing may fail on filesystems which does not support it, such as UDF
-    {
-      LOG("Failied to remove zip file after failed compression, path: " << fileName << ", error: " << ex.what());
-    }
+  catch (std::exception &ex) {}
   return false;
 }
 
