@@ -25,7 +25,8 @@ static std::map<std::string, unsigned int> VERBS = {
   { "sys", SYS }, { "wdg", WDG }, { "cmp", CMP }, { "jc", JC },
   { "jnc", JNC }, { "ent", ENT }, { "uic", UIC }, { "uip", UIP },
   { "ln", LN },   { "psh", PSH }, { "pop", POP }, { "mov", MOV },
-  { "pp", PP },   { "cr", CR },   { "hlt", HLT }, { "put", PUT },
+  { "clr", CLR }, { "pp", PP },   { "cr", CR },   { "hlt", HLT },
+  { "put", PUT },
 };
 
 static unsigned int
@@ -133,6 +134,8 @@ Program::resolveValue(const std::string &label)
     }
 }
 
+static std::string nilRef = "";
+
 std::string &
 Program::resolveValueRef(const std::string &label)
 {
@@ -149,7 +152,7 @@ Program::resolveValueRef(const std::string &label)
   else
     {
       // Fallback, actually nothing
-      return locals[label];
+      return nilRef;
     }
 }
 
@@ -229,7 +232,8 @@ Program::run(PCallback cb)
                 }
               break;
             case WDG:
-              frame.props["Argv0"] = curInstr.a2; // Fallback parameter
+              frame.props["Argv0"]
+                  = resolveValue(curInstr.a2); // Fallback parameter
               frame.mkWidget(curInstr.a1);
               eip++;
               break;
@@ -300,6 +304,11 @@ Program::run(PCallback cb)
               break;
             case MOV:
               resolveValueRef(curInstr.a2) = resolveValue(curInstr.a1);
+              eip++;
+              Sys::macOSSaveData();
+              break;
+            case CLR:
+              resolveValueRef(curInstr.a1) = "";
               eip++;
               Sys::macOSSaveData();
               break;

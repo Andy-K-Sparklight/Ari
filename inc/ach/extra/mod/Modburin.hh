@@ -49,6 +49,7 @@ public:
   std::string slug;                            // Inherited From Meta
   std::set<std::string> urls;                  // All files, usually one
   std::set<std::string> gameVersions, loaders; // Supported
+  std::string date;
 
   ModVersion(std::map<std::string, std::string> &slice);
   ModVersion();

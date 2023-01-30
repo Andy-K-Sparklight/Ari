@@ -13,7 +13,7 @@ namespace Commons
 extern std::string argv0;
 
 std::vector<std::string> splitStr(const std::string &str,
-                                  const std::string &del);
+                                  const std::string &del, int max = -1);
 
 std::string normalizePath(const std::filesystem::path &pt);
 

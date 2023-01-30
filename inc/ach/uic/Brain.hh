@@ -33,6 +33,7 @@ enum InstrVerb
   PSH, // Push into stack
   POP, // Pop from stack
   MOV, // Copy data
+  CLR, // Clear data
   PP,  // Assign property
   CR,  // Set carry flag
   HLT, // Halt, no more ops

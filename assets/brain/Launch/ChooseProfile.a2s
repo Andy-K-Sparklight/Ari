@@ -4,7 +4,11 @@
 wdg     Icon    Launch
 wdg     Title   #Title
 wdg     Text    #Desc
+cmp     $ExHint
+jc      a
+wdg     Text    $ExHint
 
+::a
 sys     GetLaunchProfiles
 
 ::lp

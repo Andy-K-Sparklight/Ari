@@ -1,5 +1,6 @@
 .aka    #       ModManage.SelectMods.
 .aka    \*      ModManage.LoadingMods.
+.aka    \^      ModManage.Installing.
 
 wdg     Icon    Extension
 wdg     Title   *Title
@@ -38,11 +39,16 @@ jmp     lp
 ::end
 
 uic
-::e1
-pop     %sel
-cmp     %sel
-jc      e0
-put     %sel
-jmp     e1
 
-::e0
+
+wdg     Icon    Extension
+wdg     Title   ^Title
+wdg     Text    ^Desc
+
+ent     Progress
+uip
+
+sys     ConfigureMods
+hlt
+
+ret

@@ -4,7 +4,7 @@
 #include <functional>
 #include <iostream>
 #include <log.hh>
-#include <thread>
+#include <pthread.h>
 #define WEBVIEW_HEADER
 #include <wv.hh>
 
@@ -80,14 +80,24 @@ runOnUVThread(std::function<void()> func)
 void
 runOnWorkerThread(std::function<void()> func, bool join)
 {
-  std::thread tx(func);
+  pthread_t tx;
+  auto xc = new std::function<void()>(func);
+  pthread_create(
+      &tx, NULL,
+      [](void *arg) -> void * {
+        auto fx = (std::function<void()> *)arg;
+        (*fx)();
+        delete fx;
+        return NULL;
+      },
+      xc);
   if(join)
     {
-      tx.join();
+      pthread_join(tx, NULL);
     }
   else
     {
-      tx.detach();
+      pthread_detach(tx);
     }
 }
 
@@ -113,19 +123,38 @@ stopUVThread()
 
 void
 runOnWorkerThreadMulti(std::function<std::function<void()>(int)> gen,
-                       int times)
+                       int times, int limit)
 {
-  std::thread *threads[times];
-  int i = 0;
-  for(; i < times; i++)
+  std::vector<pthread_t *> threads;
+  for(int i = 0; i < times; i++)
     {
-      threads[i] = new std::thread(gen(i));
+      auto exec = gen(i);
+      auto tx = new pthread_t;
+      threads.push_back(tx);
+      auto xc = new std::function<void()>(exec);
+      pthread_create(
+          tx, NULL,
+          [](void *arg) -> void * {
+            auto fx = (std::function<void()> *)arg;
+            (*fx)();
+            delete fx;
+            return NULL;
+          },
+          xc);
+      if((i + 1) % limit == 0)
+        {
+          for(auto &th : threads)
+            {
+              pthread_join(*th, NULL);
+              delete th;
+            }
+        }
+      threads.clear();
     }
-  i--;
-  for(; i >= 0; i--)
+  for(auto &th : threads)
     {
-      threads[i]->join();
-      delete threads[i];
+      pthread_join(*th, NULL);
+      delete th;
     }
 }
 

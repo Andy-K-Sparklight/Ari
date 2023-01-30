@@ -120,6 +120,9 @@ typedef struct
 
 std::list<Asset> loadAssetIndex(const std::string &src);
 
+// Can be: quilt/forge/fabric/none/unknown
+std::string canonicalLoader(const std::string &name);
+
 }
 
 }

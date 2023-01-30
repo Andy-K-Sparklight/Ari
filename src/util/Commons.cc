@@ -14,7 +14,7 @@ namespace Commons
 std::string argv0;
 
 std::vector<std::string>
-splitStr(const std::string &s, const std::string &delimiter)
+splitStr(const std::string &s, const std::string &delimiter, int max)
 {
 
   size_t pos_start = 0, pos_end, delim_len = delimiter.length();
@@ -25,12 +25,14 @@ splitStr(const std::string &s, const std::string &delimiter)
       res.push_back(s);
       return res;
     }
-
-  while((pos_end = s.find(delimiter, pos_start)) != std::string::npos)
+  int i = 0;
+  while((pos_end = s.find(delimiter, pos_start)) != std::string::npos
+        && i != max)
     {
       token = s.substr(pos_start, pos_end - pos_start);
       pos_start = pos_end + delim_len;
       res.push_back(token);
+      i++;
     }
 
   res.push_back(s.substr(pos_start));

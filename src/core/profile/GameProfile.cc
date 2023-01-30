@@ -437,6 +437,26 @@ loadAssetIndex(const std::string &src)
   cJSON_Delete(dat);
   return out;
 }
+
+static std::vector<std::string> TRUSTED_LOADERS
+    = { "fabric", "quilt", "forge", "rift", "liteloader" };
+
+std::string
+canonicalLoader(const std::string &name)
+{
+  std::string k = name;
+  std::transform(k.begin(), k.end(), k.begin(),
+                 [](unsigned char c) { return std::tolower(c); });
+  for(auto &l : TRUSTED_LOADERS)
+    {
+      if(k.contains(l))
+        {
+          return l;
+        }
+    }
+  return "unknown";
+}
+
 }
 
 }

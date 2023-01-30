@@ -33,11 +33,11 @@ void stopUVThread();
 // Run multiple thread using an action generator.
 // This will join all threads before continuing.
 void runOnWorkerThreadMulti(std::function<std::function<void()>(int)> gen,
-                            int times);
+                            int times, int limit = 8);
 
 // Run on main thread
 // Be careful, do not block the main thread!
-void runOnMainThread(std::function<void()> func, void* window);
+void runOnMainThread(std::function<void()> func, void *window);
 
 }
 }

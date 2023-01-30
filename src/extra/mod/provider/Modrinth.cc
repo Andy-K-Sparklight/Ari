@@ -31,6 +31,9 @@ apiRequest(const std::string rel)
   auto url = ACH_MOD_MR_APIROOT + rel;
   auto u = LUrlParser::ParseURL::parseURL(url);
   httplib::Client cli(u.connectionName_);
+  cli.set_connection_timeout(60, 0);
+  cli.set_read_timeout(60, 0);
+  cli.set_write_timeout(60, 0);
   cli.set_follow_location(true);
   auto res = cli.Get(u.pathName_);
   if(res == nullptr || res->status != 200)
@@ -123,17 +126,28 @@ syncModVersions(const std::string &pid)
   ModMeta mt(v[0]);
   std::vector<std::pair<std::string, std::string>> results;
   std::vector<std::string> vers;
+  std::string arrParam = "?ids=[";
+  if(mt.versions.size() == 0)
+    {
+      // This won't happen
+      return true;
+    }
   for(auto &vid : mt.versions)
     {
       vers.push_back(vid);
+      arrParam += "%22" + vid + "%22,";
     }
-  Sys::runOnWorkerThreadMulti(
-      [vers, mt](int ind) -> std::function<void()> {
-        auto vid = vers[ind];
-        return [vid, mt]() -> void {
-          LOG("Resolving version " << vid);
-          auto res = apiRequest("version/" + vid);
-          cJSON *obj = cJSON_Parse(res.c_str());
+  arrParam.pop_back();
+  arrParam += "]";
+  auto res = apiRequest("versions" + arrParam);
+  cJSON *arr = cJSON_Parse(res.c_str());
+
+  if(cJSON_IsArray(arr))
+    {
+      int sz = cJSON_GetArraySize(arr);
+      for(int i = 0; i < sz; i++)
+        {
+          auto obj = cJSON_GetArrayItem(arr, i);
           if(cJSON_IsObject(obj))
             {
               ModVersion vs;
@@ -160,46 +174,50 @@ syncModVersions(const std::string &pid)
                 }
               arrDump(cJSON_GetObjectItem(obj, "game_versions"),
                       vs.gameVersions);
+              vs.date = cJSON_GetStringValue(
+                  cJSON_GetObjectItem(obj, "date_published"));
               arrDump(cJSON_GetObjectItem(obj, "loaders"), vs.loaders);
               auto target = getBurinBase() / "versions" / vs.bid;
               Platform::mkParentDirs(target);
               Sys::saveKVG(target.string(), { vs.toMap() });
               LOG("Saved mod version as " << vs.bid);
             }
-          cJSON_Delete(obj);
-        };
-      },
-      vers.size());
+        }
+    }
+  cJSON_Delete(arr);
   LOG("Resolved versions for " << pid);
   return true;
 }
 
 void
-dlModVersion(const std::string &v, std::function<void(bool)> cb)
+dlModVersion(const std::set<std::string> &vers, std::function<void(bool)> cb)
 {
-  LOG("Downloading mod version " << v);
-  auto target = getBurinBase() / "versions" / v;
-  auto vec = Sys::loadKVG(target.string());
-  if(vec.size() == 0)
-    {
-      LOG("No version meta found for " << v << ", have you installed it?");
-      cb(false);
-      return;
-    }
-  ModVersion mv(vec[0]);
-  auto dlTarget = getBurinBase() / "files" / v;
-  Platform::mkParentDirs(dlTarget);
   Network::DownloadPack pk;
-  for(auto &u : mv.urls)
+  std::filesystem::create_directories(getBurinBase() / "files");
+  for(auto &v : vers)
     {
-      auto ux = Commons::splitStr(u, "+");
-      if(ux.size() == 2)
+      LOG("Downloading mod version " << v);
+      auto target = getBurinBase() / "versions" / v;
+      auto vec = Sys::loadKVG(target.string());
+      if(vec.size() == 0)
         {
-          Network::DownloadMeta mt;
-          mt.baseURL = ux[0];
-          // Assume it always ends with the filename
-          mt.path = (dlTarget / ux[1]).string();
-          pk.addTask(mt);
+          LOG("No version meta found for " << v << ", have you installed it?");
+          cb(false);
+          return;
+        }
+      ModVersion mv(vec[0]);
+      auto dlTarget = getBurinBase() / "files" / v;
+      for(auto &u : mv.urls)
+        {
+          auto ux = Commons::splitStr(u, "+", 1);
+          if(ux.size() >= 2)
+            {
+              Network::DownloadMeta mt;
+              mt.baseURL = ux[0];
+              // Assume it always ends with the filename
+              mt.path = (dlTarget / ux[1]).string();
+              pk.addTask(mt);
+            }
         }
     }
   pk.assignUpdateCallback([=](const Network::DownloadPack *pak) -> void {
@@ -208,18 +226,19 @@ dlModVersion(const std::string &v, std::function<void(bool)> cb)
       {
         if(stat.failed == 0)
           {
-            LOG("Successfully downloaded mod version for " << v);
+            LOG("Successfully downloaded " << stat.completed
+                                           << " mod versions.");
             cb(true);
           }
         else
           {
-            LOG("Some files failed to download for " << v);
+            LOG("Some files failed to download.");
             cb(false);
           }
       }
   });
   pk.commit();
-  LOG("Started downloading mod version for " << v);
+  LOG("Started downloading mod versions.");
 }
 
 static httplib::Server MODRINTH_RPC;

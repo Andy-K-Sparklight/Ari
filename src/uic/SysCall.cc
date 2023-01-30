@@ -31,6 +31,7 @@ bindAllSysCalls()
   bindSysCall("OpenFolder", SysCall::implOpenFolder);
   bindSysCall("OpenModrinth", SysCall::implOpenModrinth);
   bindSysCall("GetMods", SysCall::implGetMods);
+  bindSysCall("ConfigureMods", SysCall::implConfigureMods);
 }
 
 }

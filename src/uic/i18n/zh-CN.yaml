@@ -306,6 +306,15 @@ Home:
   ExitTag: 退出 Ari.
 
 ModManage:
+  ChooseProfileEx: |
+    选择的模组将安装到你指定的游戏中.
+    注意: 原版游戏不可添加模组! Fabric 与 Forge 不兼容!
+  Installing:
+    Title: 请稍等...
+    Desc: |
+      正在配置所选模组.
+      如遇无法安装的模组, Ari 会跳过它.
+      这可能需要几分钟, 请等一会儿.
   ModIndex:
     Title: 你希望做什么?
     Desc: |

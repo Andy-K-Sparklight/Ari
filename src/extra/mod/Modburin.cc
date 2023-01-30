@@ -91,6 +91,7 @@ ModVersion::ModVersion(std::map<std::string, std::string> &slice)
   slug = dat["slug"];
   provider = dat["provider"];
   mid = dat["mid"];
+  date = dat["date"];
   strset(urls, dat["urls"], true);
   strset(gameVersions, dat["gameVersions"], true);
   strset(loaders, dat["loaders"], true);
@@ -108,6 +109,7 @@ ModVersion::toMap()
   dat["slug"] = slug;
   dat["provider"] = provider;
   dat["mid"] = mid;
+  dat["date"] = date;
   strset(urls, dat["urls"], false);
   strset(gameVersions, dat["gameVersions"], false);
   strset(loaders, dat["loaders"], false);
@@ -118,6 +120,8 @@ bool
 collectVersions(const std::set<std::string> vers, std::string lpid)
 {
   LOG("Collecting mods for " << lpid);
+  auto remoteModsRoot = Platform::getRuntimePath(lpid + "/mods");
+  std::filesystem::create_directories(remoteModsRoot);
   for(auto &v : vers)
     {
       auto src = getBurinBase() / "files" / v;
@@ -125,11 +129,12 @@ collectVersions(const std::set<std::string> vers, std::string lpid)
       for(auto &f : files)
         {
           auto rel = std::filesystem::relative(f, src);
-          auto target = getBurinBase() / "dynamics" / lpid / rel;
-          Platform::mkParentDirs(target);
+          auto target = remoteModsRoot / rel;
           try
             {
-              std::filesystem::copy_file(f, target);
+              std::filesystem::copy_file(
+                  f, target,
+                  std::filesystem::copy_options::overwrite_existing);
             }
           catch(std::exception &e)
             {
@@ -138,30 +143,7 @@ collectVersions(const std::set<std::string> vers, std::string lpid)
             }
         }
     }
-  auto localModsRoot = getBurinBase() / "dynamics" / lpid;
-  auto remoteModsRoot = Platform::getRuntimePath(lpid + "/mods");
-  // It's managed by us
-  if(std::filesystem::exists(remoteModsRoot))
-    {
-      try
-        {
-          std::filesystem::remove_all(remoteModsRoot);
-        }
-      catch(std::exception &e)
-        {
-        }
-    }
-  LOG("Linking mod directory: " << remoteModsRoot << " <- " << localModsRoot);
-  try
-    {
-      std::filesystem::create_symlink(localModsRoot, remoteModsRoot);
-    }
-  catch(std::exception &e)
-    {
-      LOG("Could not link mod directory.");
-      return false;
-    }
-  LOG("Finished linking mod directory.");
+  LOG("Finished mods collecting.");
   return true;
 }
 
@@ -193,10 +175,17 @@ addVersionFromFile(const std::string &filePt)
   return true;
 }
 
+static bool
+isNewer(const std::string &n, const std::string &o)
+{
+  return n.compare(o) > 0;
+}
+
 std::string
 pickVersion(const std::string &mid, const std::string &gv,
             const std::string &ld)
 {
+  std::string selectedVer, recentDate;
   LOG("Picking version for " << mid << " with game version " << gv
                              << " and loader " << ld);
   auto target = getBurinBase() / "metas" / mid;
@@ -216,11 +205,15 @@ pickVersion(const std::string &mid, const std::string &gv,
           ModVersion mv(vMeta[0]);
           if(mv.loaders.contains(ld) && mv.gameVersions.contains(gv))
             {
-              return mv.bid;
+              if(selectedVer.size() == 0 || isNewer(mv.date, recentDate))
+                {
+                  selectedVer = mv.bid;
+                  recentDate = mv.date;
+                }
             }
         }
     }
-  return "";
+  return selectedVer;
 }
 
 }

@@ -14,6 +14,8 @@ void implOpenModrinth(ACH_SC_ARGS);
 
 void implGetMods(ACH_SC_ARGS);
 
+void implConfigureMods(ACH_SC_ARGS);
+
 }
 }
 }
