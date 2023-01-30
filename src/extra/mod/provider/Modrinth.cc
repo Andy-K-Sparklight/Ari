@@ -31,6 +31,7 @@ apiRequest(const std::string rel)
   auto url = ACH_MOD_MR_APIROOT + rel;
   auto u = LUrlParser::ParseURL::parseURL(url);
   httplib::Client cli(u.connectionName_);
+  cli.set_follow_location(true);
   auto res = cli.Get(u.pathName_);
   if(res == nullptr || res->status != 200)
     {
@@ -45,6 +46,7 @@ getIconBin(const std::string &url)
 {
   auto u = LUrlParser::ParseURL::parseURL(url);
   httplib::Client cli(u.connectionName_);
+  cli.set_follow_location(true);
   auto res = cli.Get(u.pathName_);
   if(res == nullptr || res->status != 200)
     {

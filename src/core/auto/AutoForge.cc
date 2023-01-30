@@ -33,6 +33,7 @@ getForgeVersions(const std::string &mcVersion)
   std::list<std::string> urls;
   LOG("Fetching Forge versions for " << mcVersion);
   httplib::Client cli("https://files.minecraftforge.net");
+  cli.set_follow_location(true);
   auto res = cli.Get("/net/minecraftforge/forge/index_" + mcVersion + ".html");
   if(res != nullptr && res->status == 200)
     {

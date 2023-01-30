@@ -27,6 +27,7 @@ installAssetIndex(Flow *flow, FlowCallback cb)
   LOG("Getting asset index " << profile.assetIndexArtifact.path);
   auto u = LUrlParser::ParseURL::parseURL(profile.assetIndexArtifact.url);
   httplib::Client cli(u.connectionName_);
+  cli.set_follow_location(true);
   auto res = cli.Get(u.pathName_);
   if(res == nullptr || res->status != 200)
     {

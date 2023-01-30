@@ -151,6 +151,7 @@ sendRPCCall(const std::string &call, unsigned int port)
 {
   httplib::Client rpcClient(std::string("http://localhost:")
                             + std::to_string(port));
+  rpcClient.set_follow_location(true);
   auto res = rpcClient.Post("/jsonrpc", call, "application/json");
   if(res == nullptr || res->status != 200)
     {

@@ -61,6 +61,7 @@ getALIPath(const std::string &origin)
 {
   auto u = LUrlParser::ParseURL::parseURL(origin);
   httplib::Client cli(u.connectionName_);
+  cli.set_follow_location(true);
   auto res = cli.Get(u.pathName_);
   if(res != nullptr)
     {
@@ -111,6 +112,7 @@ yggAuth(Profile::AccountProfile &acc, const std::string &pp)
     {
       LOG("Trying refresh token.");
       // First try refresh
+      cli.set_follow_location(true);
       auto res = cli.Post(u.pathName_ + "/refresh",
                           "{\"accessToken\": \"" + acc.mcToken
                               + "\",\"requestUser\":true}",
@@ -122,6 +124,7 @@ yggAuth(Profile::AccountProfile &acc, const std::string &pp)
     }
   // Let's continue
   LOG("Authenticating using name and password.");
+  cli.set_follow_location(true);
   auto res = cli.Post(
       u.pathName_ + "/authenticate",
       "{\"agent\": {\"name\":\"Minecraft\",\"version\":1},\"username\":\""

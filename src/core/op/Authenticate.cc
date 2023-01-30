@@ -96,6 +96,7 @@ authlibPrefetch(Flow *flow, FlowCallback cb)
     {
       auto u = LUrlParser::ParseURL::parseURL(server);
       httplib::Client cli(u.connectionName_);
+      cli.set_follow_location(true);
       auto res = cli.Get(u.pathName_);
       if(res != nullptr)
         {

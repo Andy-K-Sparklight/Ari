@@ -24,6 +24,7 @@ std::string
 fetchVersionManifest()
 {
   httplib::Client cli(ACH_MOJANG_VERSION_MANIFEST_HOST);
+  cli.set_follow_location(true);
   auto res = cli.Get(ACH_MOJANG_VERSION_MANIFEST_PATH);
   if(res == nullptr || res->status != 200)
     {
@@ -129,6 +130,7 @@ installProfile(Flow *flow, FlowCallback sender)
     // Download profile
     sender(AL_GETPROF);
     httplib::Client cli(u.connectionName_);
+    cli.set_follow_location(true);
     auto res = cli.Get(u.pathName_);
     if(res->status != 200)
       {

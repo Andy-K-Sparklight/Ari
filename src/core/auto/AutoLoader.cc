@@ -27,6 +27,7 @@ getLoaderVersions(const std::string &mcVersion, LoaderSuite detail)
   auto rootURL = detail.baseURL + "/versions/loader/" + mcVersion;
   auto u = LUrlParser::ParseURL::parseURL(rootURL);
   httplib::Client cli(u.connectionName_);
+  cli.set_follow_location(true);
   auto res = cli.Get(u.pathName_);
   if(res != nullptr || res->status == 200)
     {
@@ -62,6 +63,7 @@ installLoader(const std::string &mcVersion, const std::string &ldVersion,
                  + ldVersion + "/profile/json";
   auto u = LUrlParser::ParseURL::parseURL(rootURL);
   httplib::Client cli(u.connectionName_);
+  cli.set_follow_location(true);
   auto res = cli.Get(u.pathName_);
   if(res != nullptr && res->status == 200)
     {

@@ -38,6 +38,7 @@ completeAuth(Profile::AccountProfile &acc, const std::string &msToken)
         + msToken
         + "\"},\"RelyingParty\":"
           "\"http://auth.xboxlive.com\",\"TokenType\":\"JWT\"}";
+  xblCli.set_follow_location(true);
   auto xblRes = xblCli.Post("/user/authenticate", xblHeaders, xblBody,
                             "application/json");
   if(xblRes == nullptr || xblRes->status != 200)
@@ -80,6 +81,7 @@ completeAuth(Profile::AccountProfile &acc, const std::string &msToken)
         + xblToken
         + "\"]},\"RelyingParty\":\"http://xboxlive.com"
           "\",\"TokenType\":\"JWT\"}";
+  xboxCli.set_follow_location(true);
   auto xboxRes = xboxCli.Post("/xsts/authorize", xboxHeaders, xboxBody,
                               "application/json");
   if(xboxRes == nullptr || xboxRes->status != 200)
@@ -116,6 +118,7 @@ completeAuth(Profile::AccountProfile &acc, const std::string &msToken)
         + xblToken
         + "\"]},\"RelyingParty\":\"rp://api.minecraftservices.com/"
           "\",\"TokenType\":\"JWT\"}";
+  xstsCli.set_follow_location(true);
   auto xstsRes = xstsCli.Post("/xsts/authorize", xstsHeaders, xstsBody,
                               "application/json");
   if(xstsRes == nullptr || xstsRes->status != 200)
@@ -144,6 +147,7 @@ completeAuth(Profile::AccountProfile &acc, const std::string &msToken)
   httplib::Headers mojangHeaders = xstsHeaders; // Reuse
   std::string mojangBody
       = "{\"identityToken\":\"XBL3.0 x=" + xblUhs + ";" + xstsToken + "\"}";
+  mojangCli.set_follow_location(true);
   auto mojangRes
       = mojangCli.Post("/authentication/login_with_xbox", mojangHeaders,
                        mojangBody, "application/json");
@@ -173,6 +177,7 @@ completeAuth(Profile::AccountProfile &acc, const std::string &msToken)
   httplib::Headers mcHeaders
       = { { "Content-Type", "application/json" },
           { "Authorization", "Bearer " + acc.mcToken } };
+  mcCli.set_follow_location(true);
   auto mcRes = mcCli.Get("/minecraft/profile", mcHeaders);
   if(mcRes == nullptr || mcRes->status != 200)
     {
@@ -208,6 +213,7 @@ msAuth(Profile::AccountProfile &acc, std::function<void(bool)> cb)
       // Let's try refreshing
       LOG("Try refreshing token.")
       httplib::Client refreshCli("https://login.live.com");
+      refreshCli.set_follow_location(true);
       auto refreshRes = refreshCli.Post(
           "/oauth20_token.srf",
           "client_id=00000000402b5328&refresh_token=" + acc.refreshToken
@@ -245,6 +251,7 @@ msAuth(Profile::AccountProfile &acc, std::function<void(bool)> cb)
     // First, finish the 2nd part of MSA
     LOG("Authenticating with MSA.")
     httplib::Client tokenCli("https://login.live.com");
+    tokenCli.set_follow_location(true);
     auto tokenRes = tokenCli.Post(
         "/oauth20_token.srf",
         "client_id=00000000402b5328&code=" + code
