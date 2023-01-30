@@ -8,6 +8,7 @@
 #include "ach/sys/Schedule.hh"
 #include <zip.h>
 #include "ach/util/Commons.hh"
+#include "log.hh"
 
 namespace Alicorn
 {
@@ -247,18 +248,35 @@ zipDir(const std::string &prefix, const std::string &fileName)
 {
   auto files = scanDirectory(prefix);
   auto zip = zip_open(fileName.c_str(), ZIP_DEFAULT_COMPRESSION_LEVEL, 'w');
+  if (zip == NULL)
+    {
+      LOG("Failed to open zip file for writing, path: " << fileName);
+      return false;
+    }
+  bool err = false;
   for(auto &f : files)
     {
       auto relPt = std::filesystem::relative(f, prefix);
       zip_entry_open(zip, relPt.string().c_str());
       if(zip_entry_fwrite(zip, f.c_str()) < 0)
         {
-          return false; // Broken
+          err = true;
+          break;
         }
       zip_entry_close(zip);
     }
   zip_close(zip);
-  return true;
+
+  if (!err) {
+    return true;
+  }
+  LOG("Failed to zip " << prefix);
+  try
+    {
+      std::filesystem::remove(fileName);
+    }
+  catch (std::exception &ex) {}
+  return false;
 }
 
 std::list<std::string>
