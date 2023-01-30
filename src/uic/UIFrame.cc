@@ -21,7 +21,10 @@ UIFrame::run(PCallback cb, bool wait)
       auto pp = cJSON_CreateObject();
       for(auto &p : w.second)
         {
-          cJSON_AddStringToObject(pp, p.first.c_str(), p.second.c_str());
+          if(p.second.size() > 0)
+            {
+              cJSON_AddStringToObject(pp, p.first.c_str(), p.second.c_str());
+            }
         }
       cJSON_AddItemToObject(o, "props", pp);
       cJSON_AddItemToArray(wgs, o);
@@ -35,7 +38,10 @@ UIFrame::run(PCallback cb, bool wait)
       auto pp = cJSON_CreateObject();
       for(auto &p : e.props)
         {
-          cJSON_AddStringToObject(pp, p.first.c_str(), p.second.c_str());
+          if(p.second.size() > 0)
+            {
+              cJSON_AddStringToObject(pp, p.first.c_str(), p.second.c_str());
+            }
         }
       cJSON_AddItemToObject(o, "props", pp);
       cJSON_AddItemToArray(ets, o);
