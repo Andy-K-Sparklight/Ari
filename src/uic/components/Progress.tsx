@@ -63,9 +63,9 @@ export function Progress(_props: {}): JSX.Element {
   return (
     <div style={{ width: "15rem", overflow: "visible", marginRight: "4vw" }}>
       <CircularProgressbar
-        value={progress >= 0 ? progress : 33}
-        text={progress >= 0 ? Math.floor(progress) + "%" : ""}
-        className={progress < 0 ? "a2progindef" : undefined}
+        value={progress > 0 ? progress : 33}
+        text={progress > 0 ? Math.floor(progress) + "%" : ""}
+        className={progress <= 0 ? "a2progindef" : undefined}
         styles={buildStyles({
           pathColor: "var(--a2-base)",
           textColor: "var(--a2-text)",
