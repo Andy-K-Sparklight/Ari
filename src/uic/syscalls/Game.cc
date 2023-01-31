@@ -316,11 +316,16 @@ void
 implOpenFolder(ACH_SC_ARGS)
 {
   auto id = (*UIC::getUserData())["$Profile"];
+  auto sub = (*UIC::getUserData())["$Sub"];
   for(auto &p : Profile::LAUNCH_PROFILES)
     {
       if(p.id == id)
         {
           auto pt = Platform::getRuntimePath(p.runtime);
+          if(sub.size() > 0)
+            {
+              pt += "/" + sub;
+            }
           LOG(pt);
           if(Platform::OS_TYPE == Platform::OS_MSDOS)
             {

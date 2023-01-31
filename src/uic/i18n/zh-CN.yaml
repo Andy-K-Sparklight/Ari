@@ -306,6 +306,9 @@ Home:
   ExitTag: 退出 Ari.
 
 ModManage:
+  OpenModsDirEx: |
+    我们会打开模组文件夹, 请将模组文件放进里面.
+    注意: 原版游戏不可添加模组! Fabric 与 Forge 不兼容!
   ChooseProfileEx: |
     选择的模组将安装到你指定的游戏中.
     注意: 原版游戏不可添加模组! Fabric 与 Forge 不兼容!
@@ -324,8 +327,8 @@ ModManage:
         Tag: 在模组平台 Modrinth 探索数以千计的游戏模组!
         Label: 探索模组
       AddFile:
-        Tag: 如果你已有模组文件, 在这里安装它!
-        Label: 我有模组文件
+        Tag: 如果你有下载好的模组, 将它们放进模组文件夹!
+        Label: 打开模组文件夹
       Install:
         Tag: 将模组安装到游戏中!
         Label: 安装模组

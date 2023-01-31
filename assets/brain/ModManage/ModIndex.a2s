@@ -32,7 +32,13 @@ sys     OpenModrinth
 jmp     head
 
 ::addfile
-hlt
+mov     ModManage.OpenModsDirEx         $ExHint
+run     Launch/ChooseProfile
+clr     $ExHint
+mov     mods    $Sub
+sys     OpenFolder
+clr     $Sub
+ret
 
 ::install
 mov     ModManage.ChooseProfileEx       $ExHint

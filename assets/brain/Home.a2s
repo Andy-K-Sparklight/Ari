@@ -39,6 +39,7 @@ uic
 
 ::openfd
 run     Launch/ChooseProfile
+clr     $Sub
 sys     OpenFolder
 jmp     head
 
