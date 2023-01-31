@@ -60,6 +60,8 @@ UIFrame::run(PCallback cb, bool wait)
             fcb("");
             auto res = cJSON_Parse(data.c_str());
             auto userChoice = cJSON_GetObjectItem(res, "userChoice");
+            this->prog->stack.clear();
+            this->prog->stack.push_back(""); // END identifier
             if(cJSON_IsString(userChoice))
               {
                 std::string jl = cJSON_GetStringValue(userChoice);
@@ -68,14 +70,8 @@ UIFrame::run(PCallback cb, bool wait)
                     // Do jump if contains, else will just continue from 'uic'
                     this->prog->eip = this->prog->labels[jl];
                   }
-                else
-                  {
-                    if(jl.size() > 0)
-                      {
-                        // As variable
-                        this->prog->stack.push_back(jl);
-                      }
-                  }
+                // Also push the value
+                this->prog->stack.push_back(jl);
                 cb();
                 return;
               }
@@ -83,8 +79,7 @@ UIFrame::run(PCallback cb, bool wait)
             if(cJSON_IsArray(userInput))
               {
                 auto sz = cJSON_GetArraySize(userInput);
-                this->prog->stack.clear();       // Reset stack
-                this->prog->stack.push_back(""); // END identifier
+
                 for(int i = 0; i < sz; i++)
                   {
                     auto cur = cJSON_GetArrayItem(userInput, i);
@@ -107,6 +102,7 @@ UIFrame::run(PCallback cb, bool wait)
           true);
     }
   UIC::sendMessage("UIDraw", cJSON_Print(obj));
+  props.clear(); // Clean props
   cJSON_Delete(obj);
 }
 void
@@ -123,6 +119,7 @@ UIFrame::mkEntry(const std::string &var)
 {
   Entry ent;
   ent.jmpLabel = linkLabel;
+  linkLabel = ""; // Reset it
   ent.props = props;
   ent.variant = var;
   entries.push_back(ent);
