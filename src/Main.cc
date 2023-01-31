@@ -1,5 +1,3 @@
-#define ACH_USE_TERMINALUI
-
 #include <iostream>
 #include <string>
 #include <vector>
