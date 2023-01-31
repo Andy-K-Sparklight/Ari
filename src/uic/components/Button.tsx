@@ -69,7 +69,7 @@ export function Button(props: ButtonProps): JSX.Element {
         }}
         onMouseDown={() => {
           mouseDown.current = true;
-          interval.current = setInterval(progress, 10) as unknown as number;
+          interval.current = setInterval(progress, 15) as unknown as number;
         }}
         onClick={() => {
           if (props.multiSelect && props.onClick) {
