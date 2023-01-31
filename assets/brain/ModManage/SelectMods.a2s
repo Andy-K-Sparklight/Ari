@@ -1,6 +1,7 @@
 .aka    #       ModManage.SelectMods.
 .aka    \*      ModManage.LoadingMods.
 .aka    \^      ModManage.Installing.
+.aka    &       ModManage.Finish.
 
 wdg     Icon    Extension
 wdg     Title   *Title
@@ -49,6 +50,21 @@ ent     Progress
 uip
 
 sys     ConfigureMods
-hlt
+
+wdg     Icon    Extension
+wdg     Title   &Title
+wdg     Text    &Desc
+jc      noWarn
+wdg     Text    &Warn
+
+::noWarn
+
+pp      Icon    ArrowRight
+pp      Hint    opt
+pp      Label   &Btn
+pp      Tag
+ent
+
+uic
 
 ret

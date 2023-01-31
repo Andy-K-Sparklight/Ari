@@ -53,9 +53,9 @@ uic
 ::launch
 
 run     Launch/LaunchGame
-mov     1       $AlreadyLaunched
-ret
 
 ::noLaunch
-mov     0       $AlreadyLaunched
+; Though technically user came here from 'Launch Game' in main menu
+; As they've chosen skip so we'd better skip it anyway
+mov     1       $AlreadyLaunched
 ret

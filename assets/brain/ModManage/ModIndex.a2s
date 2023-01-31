@@ -39,5 +39,4 @@ mov     ModManage.ChooseProfileEx       $ExHint
 run     Launch/ChooseProfile
 clr     $ExHint
 run     ModManage/SelectMods
-
-hlt
+ret
