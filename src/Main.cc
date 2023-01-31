@@ -21,6 +21,7 @@ typedef struct
   bool lock;
   double scale;
   webview_t window;
+  std::string token;
 } TellSizeData;
 
 int
@@ -40,11 +41,13 @@ main(int argc, char **argv)
 
   webview_t w = webview_create(true, nullptr);
   webview_set_size(w, 960, 540, WEBVIEW_HINT_NONE);
-
+  std::string apiToken
+      = Alicorn::Commons::getNameHash(Alicorn::Commons::genUUID());
   auto tsd = new TellSizeData;
   tsd->window = w;
   tsd->scale = 0.7;
   tsd->lock = true;
+  tsd->token = apiToken;
   webview_bind(
       w, "tellSize",
       [](const char *seq, const char *req, void *arg) -> void {
@@ -58,19 +61,28 @@ main(int argc, char **argv)
             cJSON *a = cJSON_Parse(req);
             if(cJSON_IsArray(a))
               {
-                if(cJSON_GetArraySize(a) != 4)
+                if(cJSON_GetArraySize(a) != 5)
                   {
                     cJSON_Delete(a);
+                    delete ts;
                     return;
                   }
-                scrnW = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 0));
-                scrnH = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 1));
-                vw = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 2));
-                vh = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 3));
+                std::string vToken
+                    = cJSON_GetStringValue(cJSON_GetArrayItem(a, 0));
+                if(vToken != ts->token)
+                  {
+                    cJSON_Delete(a);
+                    delete ts;
+                    return;
+                  }
+                scrnW = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 1));
+                scrnH = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 2));
+                vw = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 3));
+                vh = cJSON_GetNumberValue(cJSON_GetArrayItem(a, 4));
+                int aw = (960.0 / vw) * scrnW * ts->scale;
+                int ah = (540.0 / vh) * scrnH * ts->scale;
+                webview_set_size(loginWindow, aw, ah, WEBVIEW_HINT_NONE);
               }
-            int aw = (960.0 / vw) * scrnW * ts->scale;
-            int ah = (540.0 / vh) * scrnH * ts->scale;
-            webview_set_size(loginWindow, aw, ah, WEBVIEW_HINT_NONE);
             cJSON_Delete(a);
             delete ts;
           }
@@ -82,12 +94,14 @@ main(int argc, char **argv)
       tsd->scale = 0.8; // Make larger
       // Start login
       webview_init(
-          w,
-          "window.onload=function(){window.tellSize(screen.availWidth,screen."
-          "availHeight,window.outerWidth,window.outerHeight);var "
-          "u=window.location.href;if(u.includes(\"code=\")){u=u.split(\"code="
-          "\")[1];if(u.includes(\"&lc=\"))u=u.split(\"&lc=\")[0];window."
-          "tellCode(u);}}");
+          w, ("window.onload=function(){window.tellSize(\"" + apiToken
+              + "\",screen.availWidth,screen."
+                "availHeight,window.outerWidth,window.outerHeight);var "
+                "u=window.location.href;if(u.includes(\"code=\")){u=u.split("
+                "\"code="
+                "\")[1];if(u.includes(\"&lc=\"))u=u.split(\"&lc=\")[0];window."
+                "tellCode(u);}}")
+                 .c_str());
       webview_navigate(
           w, "https://login.live.com/"
              "oauth20_authorize.srf?client_id=00000000402b5328&response_type="
@@ -128,12 +142,11 @@ main(int argc, char **argv)
       jss << jsf.rdbuf();
       std::string js = jss.str();
       webview_set_title(w, "Modrinth");
-      webview_init(
-          w,
-          ("window.onload=function(){window.tellSize(screen.availWidth,screen."
-           "availHeight,window.outerWidth,window.outerHeight);"
-           + js + "}")
-              .c_str());
+      webview_init(w, ("window.onload=function(){window.tellSize(\"" + apiToken
+                       + "\",screen.availWidth,screen."
+                         "availHeight,window.outerWidth,window.outerHeight);"
+                       + js + "}")
+                          .c_str());
       webview_navigate(w, "https://modrinth.com/mods");
       webview_run(w);
       return 0;
@@ -167,7 +180,11 @@ main(int argc, char **argv)
       std::stringstream jss;
       jss << jsf.rdbuf();
       std::string js = jss.str();
-      auto boot = "window.addEventListener('load', ()=>{" + js + "});";
+      auto boot = "window.addEventListener('load', ()=>{window.tellSize(\""
+                  + apiToken
+                  + "\",screen.availWidth,screen.availHeight,window."
+                    "outerWidth,window.outerHeight);"
+                  + js + "});";
       webview_init(w, boot.c_str());
       if(Platform::OS_TYPE == Platform::OS_DARWIN)
         {
