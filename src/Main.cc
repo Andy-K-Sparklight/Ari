@@ -34,7 +34,8 @@ main(int argc, char **argv)
   webview_t w = webview_create(true, nullptr);
 
   // Configure size
-  if(args[1] != "configure")
+  if(args[1] != "configure"
+     && Alicorn::Platform::OS_TYPE != Alicorn::Platform::OS_DARWIN)
     {
       for(;;)
         {
@@ -151,10 +152,11 @@ main(int argc, char **argv)
             cJSON_Delete(a);
           },
           w);
-      webview_init(
-          w, "window.onload=()=>{requestIdleCallback(()=>{window.cfgSize("
-             "screen.availWidth,screen."
-             "availHeight,window.outerWidth,window.outerHeight);});}");
+      webview_init(w,
+                   "window.onload=()=>{(window.requestIdleCallback||window."
+                   "setTimeout)(()=>{window.cfgSize("
+                   "screen.availWidth,screen."
+                   "availHeight,window.outerWidth,window.outerHeight);});}");
       webview_navigate(w, "about:blank");
       webview_run(w);
       return 0;
