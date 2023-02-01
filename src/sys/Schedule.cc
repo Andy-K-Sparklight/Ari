@@ -6,7 +6,7 @@
 #include <log.hh>
 #include <pthread.h>
 #define WEBVIEW_HEADER
-#include <wv.hh>
+#include <webview.h>
 
 namespace Alicorn
 {

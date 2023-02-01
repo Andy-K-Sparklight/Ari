@@ -51,8 +51,6 @@ jobs:
         run: chmod +x ./shigure && ./shigure setup
       - name: Pre Configure
         run: autoreconf --install
-      - name: Pre Build
-        run: chmod +x ./macpb && ./macpb
       - name: Configure
         run: ./configure
       - name: Make

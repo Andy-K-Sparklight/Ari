@@ -6,7 +6,7 @@
 #include <algorithm>
 #include "ach/sys/Schedule.hh"
 #define WEBVIEW_HEADER
-#include <wv.hh>
+#include <webview.h>
 
 namespace Alicorn
 {
