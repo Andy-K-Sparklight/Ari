@@ -6,7 +6,7 @@
 #include "ach/util/Commons.hh"
 #include "ach/sys/Init.hh"
 #include "ach/uic/Protocol.hh"
-#include <wv.hh>
+#include <webview.h>
 #include <cJSON.h>
 #include <log.hh>
 #include "ach/uic/Brain.hh"
@@ -58,6 +58,10 @@ main(int argc, char **argv)
                       .c_str());
             }
         }
+    }
+  else
+    {
+      webview_set_size(w, 960, 540, WEBVIEW_HINT_NONE);
     }
 
   if(args[1] == std::string("mslogin"))
@@ -119,7 +123,7 @@ main(int argc, char **argv)
       using namespace Alicorn;
       UIC::loadUserData();
       webview_set_title(w, "Ari Configurator");
-      webview_set_size(w, 960, 540, WEBVIEW_HINT_NONE);
+
       webview_bind(
           w, "cfgSize",
           [](const char *seq, const char *req, void *arg) -> void {

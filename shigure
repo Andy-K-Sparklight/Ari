@@ -60,10 +60,6 @@ mkdir -p build
 
 if [[ $OSTYPE == 'darwin'* ]]; then
 command -v 'gmake' && vmake='gmake'
-chmod +x ./macpb
-cd build
-sh ../macpb
-cd ..
 fi
 
 autoreconf --install

@@ -1,6 +1,0 @@
-#!/bin/sh
-# Prebuild webview.h
-BASEDIR=$(dirname "$0")
-test -f webview.cc && rm -f webview.cc
-echo '#include <webview.h>' >> webview.cc
-clang -dynamiclib -O2 webview.cc -I$BASEDIR/inc -framework WebKit -std=c++11 -o libwebview.dylib -lstdc++
