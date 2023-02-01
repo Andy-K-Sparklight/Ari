@@ -56,7 +56,7 @@ jobs:
       - name: Configure
         run: ./configure
       - name: Make
-        run: gmake -j6 CC=gcc-12 CXX=g++-12 LD=g++-12 CPP=g++-12 LDFLAGS="-L/usr/local/opt/openssl@1.1/lib" CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
+        run: gmake -j6 LDFLAGS="-L/usr/local/opt/openssl@1.1/lib" CPPFLAGS="-I/usr/local/opt/openssl@1.1/include"
       - name: Build Frontend
         run: chmod +x ./jsbuild && ./jsbuild
       - name: Run Tests
