@@ -1,29 +1,31 @@
 AUTOMAKE_OPTIONS=foreign
 bin_PROGRAMS=Ari
 CommonFlags=-I$(top_srcdir)/inc -O2 -Wall -Wno-unknown-pragmas -Wno-enum-compare -Wno-deprecated-declarations -fmacro-prefix-map=$(top_srcdir)/src/=
-AM_CXXFLAGS=-std=gnu++23
+
 AM_CFLAGS=-std=gnu17
-AM_CXXFLAGS+=$(CommonFlags)
+AM_CXXFLAGS=$(CommonFlags)
 AM_CFLAGS+=$(CommonFlags)
 Ari_LDFLAGS=-L$(top_srcdir)/libs
 
 Ari_LDADD=-luv -lssl -lcrypto -lz
 
 if WINDOWS
+AM_CXXFLAGS+=-std=gnu++23
 Ari_LDADD+=-lws2_32 -lWebView2Loader.dll -lole32 -lshell32 -lshlwapi -luser32 -lcrypt32
 Ari_LDFLAGS+=-static-libgcc -static-libstdc++ -Wl,-Bstatic -lpthread
 endif
 
 if LINUX
-AM_CXXFLAGS+=$(GTK_CFLAGS) $(WEBKIT_CFLAGS)
+AM_CXXFLAGS+=$(GTK_CFLAGS) $(WEBKIT_CFLAGS) -std=gnu++23
 AM_CFLAGS+=$(GTK_CFLAGS) $(WEBKIT_CFLAGS)
 Ari_LDFLAGS+=$(GTK_LDFLAGS) $(WEBKIT_LDFLAGS)
 Ari_LDADD+=$(GTK_LIBS) $(WEBKIT_LIBS)
 endif
 
 if OSX
+AM_CXXFLAGS+=-std=c++2b
 Ari_LDADD+=-lwebview
-Ari_LDFLAGS+=-L.
+Ari_LDFLAGS+=-L. -framework Webkit
 if ARM
 # Flags for macOS ARM
 AM_CXXFLAGS+=-I/opt/homebrew/include

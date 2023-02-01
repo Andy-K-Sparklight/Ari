@@ -73,8 +73,10 @@ Aria2Daemon::run()
   auto cPort = std::to_string(port);
   char name[] = ACH_DRV_ARIA2_PROG_NAME;
   char enableRPC[] = "--enable-rpc=true";
-  char rpcToken[14 + ACH_DRV_ARIA2_TOKEN_LENGTH] = "--rpc-secret=";
-  char rpcPort[19 + cPort.size()] = "--rpc-listen-port=";
+  char rpcToken[14 + ACH_DRV_ARIA2_TOKEN_LENGTH];
+  strcpy(rpcToken, "--rpc-secret=");
+  char rpcPort[19 + cPort.size()];
+  strcpy(rpcPort, "--rpc-listen-port=");
   char maxConcurrent[] = "-j32";
   char memCache[] = "--disk-cache=32M";
   char downloadResult[] = "--max-download-result=32767";
