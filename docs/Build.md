@@ -2,7 +2,7 @@
 
 ## Important Notes
 
-**NOTE:** Ari only supports Autotools and GCC currently. Make sure your compiler supports C++23 before continuing.
+**NOTE:** Ari only supports Autotools currently. Make sure your compiler supports C++23 before continuing.
 
 Basically, the build of Ari contains two parts: the JS part and the C++ part. Please bear that in mind.
 
@@ -41,7 +41,7 @@ Keep yourself in this terminal and we're ready.
 To build on macOS, you need the following packages:
 
 ```bash
-brew install libuv gcc@12 autoconf openssl@1.1
+brew install libuv autoconf openssl@1.1
 ```
 
 If you are building for ARM64, please also link openssl:
@@ -50,9 +50,9 @@ If you are building for ARM64, please also link openssl:
 brew link openssl@1.1 --force
 ```
 
-Make sure you've also got `clang` installed to compile some codebase with Apple's extensions.
+Make sure you've also got the latest `clang` installed.
 
-According to our CI, you also need to install Xcode version 14.1 beta 3 or any newer version to avoid LD bugs.
+According to our CI, you also need to install Xcode version 14.1 beta 3 or any newer version to avoid linker bugs.
 
 Then we're ready.
 
@@ -72,21 +72,21 @@ Make sure also to update your other packages to the latest version, including `g
 
 ## Build Automatically
 
-Since commit [9e963cf](https://github.com/Andy-K-Sparklight/Ari/commit/9e963cf1776827fcf37450e181591cd58f157c42) an automatic build script has been added. What it does are just the manually build steps.
+Since commit [9e963cf](https://github.com/Andy-K-Sparklight/Ari/commit/9e963cf1776827fcf37450e181591cd58f157c42) an automatic build script `shigure` has been added. It runs all the build steps for you but with no checks.
 
-Before using it, please make sure all requirements (compilers, node, libraries, etc.) have been satisfied, or the script will not work.
+So, before using it, please make sure all requirements (compilers, Node.js, libraries, etc.) have been satisfied, or the script will not work.
 
-This script is also **bash compatible only**, be aware if your `/bin/sh` is not bash compatible.
+This script is also **bash compatible only**, make sure you've got `/bin/bash` available. If not, use `bash shigure` instead of `./shigure`.
 
-1. First, clone the repository:
-
+1. Clone the repository:
+   
    ```shell
    git clone https://github.com/Andy-K-Sparklight/Ari.git --depth 1
    cd Ari
    ```
 
 2. Give permission to `./shigure` and run the build.
-
+   
    ```shell
    chmod +x ./shigure
    ./shigure setup
@@ -100,66 +100,49 @@ If something seems to be wrong, continue to read the following section and build
 
 ## Build Manually
 
-1. First, clone the repository:
-
+1. Clone the repository:
+   
    ```bash
    git clone https://github.com/Andy-K-Sparklight/Ari.git --depth 1
    cd Ari
    ```
 
 2. Download some binaries:
-
+   
    Some files need to be downloaded during build time. Make sure you've got `wget` or `curl` available in your `PATH` to do so.
-
+   
    ```bash
    chmod +x ./shigure
    ./shigure setup
    ```
 
 3. Run the configure script:
-
-   For macOS please first run:
-
-   ```bash
-   chmod +x ./macpb
-   ./macpb
-   ```
-
-   Then for all platforms, run:
-
+   
    ```bash
    autoreconf --install
    ./configure
    ```
-
+   
    If you are using macOS, `configure` might complain about the built-in `make`. If this is the case, run `./configure MAKE=gmake` as the output says.
 
-4. Run the build.
-
-   For macOS:
-
-   ```bash
-   gmake CC=gcc-12 CPP=g++-12 CXX=g++-12 LD=g++-12
-   ```
-
-   If you've got a later gcc version available, just change the suffix to the proper one.
-
-   For other systems, just:
-
+4. Run the build:
+   
    ```bash
    make
    ```
-
+   
    If you want the build to be faster, append flag `-jX` where X is the same as the count of your CPU cores.
+   
+   If you're on macOS, use `gmake` if any complaints occurred.
 
 5. If building for Windows, run:
-
+   
    ```bash
    ./winfix
    ```
 
 6. Now build the JS part:
-
+   
    ```bash
    yarn install
    chmod +x ./jsbuild
@@ -168,7 +151,7 @@ If something seems to be wrong, continue to read the following section and build
    ```
 
 7. Make sure to copy the assets we needed:
-
+   
    ```
    cp -r ./assets/* ./
    ```
