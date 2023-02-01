@@ -52,7 +52,10 @@ main(int argc, char **argv)
           else
             {
               system(
-                  ("\"" + Alicorn::Commons::argv0 + "\" configure").c_str());
+                  ("\""
+                   + Alicorn::Commons::normalizePath(Alicorn::Commons::argv0)
+                   + "\" configure")
+                      .c_str());
             }
         }
     }
