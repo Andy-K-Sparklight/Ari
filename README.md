@@ -50,31 +50,7 @@ To build from source, please see [this page](./docs/Build.md).
 
 ## Contributing
 
-Ari is a community-driven project. So we're glad you want to help.
-
-Please read the guidelines below, so that we can get things done faster. This is the simple **E.S.P.** rule.
-
-- **E**: All issues and pull requests MUST be written in **English**.
-
-  - You can also provide a translated version.
-
-  - This also applies to code comments.
-
-  - This is for standardizing. Or you'll see a messy issue section.
-
-- **S**: **Search** for existing issues or PRs before opening any.
-
-  - If the previous issue or PR was **closed but not locked** and you want to comment, feel free to do that. It will be reopened if necessary.
-
-  - If the previous issue or PR was **locked**, it means it won't be continued anymore. **Don't** open a new one. E-mail us instead if there are special circumstances.
-
-- **P**: Be polite to other contributors and collaborators.
-
-  - We're here to launch the world, not to argue. Getting things done quickly is better than wasting each other's time.
-
-  - Being polite shows your good quality as a Minecraft player.
-
-_We as members, contributors, and leaders pledge to make participation in our community a harassment-free experience for everyone, regardless of age, body size, visible or invisible disability, ethnicity, sex characteristics, gender identity and expression, level of experience, education, socio-economic status, nationality, personal appearance, race, caste, color, religion, or sexual identity and orientation._
+We're glad that you want to help! Please see [this page](CONTRIBUTING.md) about how to correctly open issues and pull requests.
 
 ## Licensing
 
@@ -86,4 +62,4 @@ This program is free software: you can redistribute it and/or modify it under th
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-#
+# 
