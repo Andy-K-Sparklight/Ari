@@ -198,6 +198,16 @@ implInstallProfile(ACH_SC_ARGS)
     }
   lp.isDemo = false;
   lp.runtime = lp.id; // Use this
+  try
+    {
+      std::filesystem::create_directories(
+          Platform::getRuntimePath(lp.runtime));
+    }
+  catch(std::exception &e)
+    {
+      LOG("Failed to create directory for "
+          << lp.id << ", will try again during launch.");
+    }
 
   flow->data[AL_FLOWVAR_LOADERTYPE] = type;
   flow->addTask(Op::installProfile);
