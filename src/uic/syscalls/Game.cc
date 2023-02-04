@@ -326,7 +326,6 @@ implOpenFolder(ACH_SC_ARGS)
             {
               pt += "/" + sub;
             }
-          LOG(pt);
           if(Platform::OS_TYPE == Platform::OS_MSDOS)
             {
               system(("explorer \"" + pt + "\"").c_str());
