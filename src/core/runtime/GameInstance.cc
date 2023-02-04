@@ -3,12 +3,36 @@
 #include <cstring>
 #include <csignal>
 #include <iostream>
+#include <cstdlib>
 #include <log.hh>
+#include <filesystem>
+#include <list>
+#include <vector>
+
+extern char **environ;
 
 namespace Alicorn
 {
 namespace Runtime
 {
+
+#define ACH_NVENV_COUNT 3
+static std::vector<std::string> nvEnv
+    = { "__NV_PRIME_RENDER_OFFLOAD=1", "__VK_LAYER_NV_optimus=NVIDIA_only",
+        "__GLX_VENDOR_LIBRARY_NAME=nvidia" };
+
+// Get all environment variables as list
+
+static std::list<std::string>
+getAllEnvs()
+{
+  std::list<std::string> o;
+  for(char **current = environ; *current; current++)
+    {
+      o.push_back(std::string(*current));
+    }
+  return o;
+}
 
 // Alloc helper
 static void
@@ -31,7 +55,9 @@ onRead(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
   if(nread > 0)
     {
       GameInstance *self = (GameInstance *)stream->data;
-      self->outputBuf << std::string(buf->base, nread);
+      std::string ln = std::string(buf->base, nread);
+      self->outputBuf << ln;
+      std::cout << ln;
     }
   if(buf->len > 0)
     {
@@ -113,28 +139,58 @@ GameInstance::run()
   // Args processing
 
   char *argsChar[args.size() + 2]; // One reserved for argv0, one for NULL
-  argsChar[0] = new char[bin.length() + 1];
+  argsChar[0] = new char[bin.size() + 1];
   strncpy(argsChar[0], bin.c_str(), bin.length() + 1);
   int i = 1;
   for(auto &a : args)
     {
-      size_t len = a.length();
+      size_t len = a.size();
       argsChar[i] = new char[len + 1];
       strncpy(argsChar[i], a.c_str(), len + 1);
       i++;
     }
   argsChar[i] = NULL;
   LOG(args.size() << " args applied.");
-
   options.args = argsChar;
+
+  auto envs = getAllEnvs();
+  char *envChar[envs.size() + 4]; // 3 more vars, 1 NULL
+  int t = 0;
+  if(std::filesystem::exists("/usr/bin/prime-run"))
+    {
+      int j = 0;
+      size_t k = 0;
+      for(auto &v : envs)
+        {
+          size_t len = v.size();
+          envChar[j] = new char[len + 1];
+          strncpy(envChar[j], v.c_str(), len + 1);
+          j++;
+        }
+      for(; k < nvEnv.size(); k++)
+        {
+          auto va = nvEnv[k];
+          size_t len = va.size();
+          envChar[j + k] = new char[len + 1];
+          strncpy(envChar[j + k], va.c_str(), len + 1);
+        }
+      envChar[j + k] = NULL;
+      options.env = envChar;
+      t = j + k;
+    }
+
   // Spawning
+  LOG("Spawning process.");
   int r = uv_spawn(uv_default_loop(), &proc, &options);
 
   // Cleanup
-
   for(i -= 1; i >= 0; i--)
     {
       delete[] argsChar[i];
+    }
+  for(t -= 1; t >= 0; t--)
+    {
+      delete[] envChar[t];
     }
   if(r != 0)
     {
