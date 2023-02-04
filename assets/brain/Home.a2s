@@ -54,6 +54,7 @@ cmp     $AlreadyLaunched        1
 jc      f1      ;If already launched
 run     Launch/LaunchGame
 ::f1
+clr     $AlreadyLaunched
 jmp     head
 
 ::ex
