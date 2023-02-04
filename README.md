@@ -1,6 +1,6 @@
 # Ari Launcher
 
-[![Build CI](https://github.com/Andy-K-Sparklight/Ari/actions/workflows/build.yml/badge.svg)](https://github.com/Andy-K-Sparklight/Ari/actions/workflows/build.yml) [![CodeQL](https://github.com/Andy-K-Sparklight/Ari/actions/workflows/codeql.yml/badge.svg)](https://github.com/Andy-K-Sparklight/Ari/actions/workflows/codeql.yml)
+[![Build CI](https://github.com/Andy-K-Sparklight/Ari/actions/workflows/build.yml/badge.svg)](https://github.com/Andy-K-Sparklight/Ari/actions/workflows/build.yml) [![CodeQL](https://github.com/Andy-K-Sparklight/Ari/actions/workflows/codeql.yml/badge.svg)](https://github.com/Andy-K-Sparklight/Ari/actions/workflows/codeql.yml) ![](https://img.shields.io/github/license/Andy-K-Sparklight/Ari)
 
 This is the English version of README.
 
@@ -62,4 +62,4 @@ This program is free software: you can redistribute it and/or modify it under th
 
 This program is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License for more details.
 
-# 
+#
