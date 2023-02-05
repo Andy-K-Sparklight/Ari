@@ -12,7 +12,7 @@ export function OpPanel(props: OpPanelProps): JSX.Element {
     <div
       className={"a2ops"}
       style={{
-        transform: props.show ? undefined : "translateX(200%)",
+        opacity: props.show ? undefined : "0",
       }}
     >
       <div className={"a2opsin"}>

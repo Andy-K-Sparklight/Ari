@@ -10,7 +10,7 @@ export function DisPanel(props: DisPanelProps): JSX.Element {
     <div
       className={"a2dispanel"}
       style={{
-        transform: props.show ? undefined : "translateX(-200%)",
+        opacity: props.show ? undefined : "0",
       }}
     >
       {props.children}
