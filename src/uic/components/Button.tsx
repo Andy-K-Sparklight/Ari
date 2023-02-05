@@ -43,7 +43,7 @@ export function Button(props: ButtonProps): JSX.Element {
             props.hint == "warn" ? "var(--a2-warn)" : "var(--a2-base)",
           overflow: "hidden",
         }}
-        onClick={() => {
+        onMouseDown={() => {
           if (props.onClick) {
             props.onClick();
           }
