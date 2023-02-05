@@ -58,6 +58,7 @@ onRead(uv_stream_t *stream, ssize_t nread, const uv_buf_t *buf)
       std::string ln = std::string(buf->base, nread);
       self->outputBuf << ln;
       std::cout << ln;
+      std::flush(std::cout);
     }
   if(buf->len > 0)
     {
