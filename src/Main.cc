@@ -177,17 +177,16 @@ main(int argc, char **argv)
                         [](const std::string &s, UIC::Callback cb) -> void {
                           cb("\"...It's courage.\"");
                         });
-      UIC::bindListener(
-          "Ready",
-          [w](const std::string &dat, UIC::Callback cb) -> void {
-            LOG("Start executing main entry script.");
-            Sys::runOnWorkerThread([w]() -> void {
-              UIC::runProgram(
-                  "Main", []() -> void {}, UIC::getUserData());
-            });
-            cb("");
-          },
-          true);
+      auto xc = [w](const std::string &dat, UIC::Callback cb) -> void {
+        LOG("Start executing main entry script.");
+        Sys::runOnWorkerThread([w]() -> void {
+          UIC::runProgram(
+              "Main", [](bool) -> void {}, UIC::getUserData());
+        });
+        cb("");
+      };
+      UIC::bindListener("Ready", xc, true);
+      UIC::bindListener("Restart", xc);
 
       // Load Script
       std::ifstream jsf("Main.js");

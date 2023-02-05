@@ -1,9 +1,11 @@
 .aka    #       Home.
 
 ::head
+wdg     Icon    Diamond
 wdg     Title   #Title
 wdg     Text    #Greeting1
 wdg     Text    #Greeting2
+wdg     Text    #GuideHome
 
 pp      Tag     #LaunchTag
 pp      Icon    Launch

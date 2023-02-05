@@ -13,6 +13,7 @@ namespace UIC
 {
 
 static std::map<std::string, PSysCall> SYSCALLCTL;
+static std::string CURRENTCTL;
 
 static std::string
 resolveName(const std::string &name)
@@ -157,13 +158,18 @@ Program::resolveValueRef(const std::string &label)
 }
 
 void
-Program::run(PCallback cb)
+Program::run(PTCallback cb)
 {
   bool running = true;
   while(running)
     {
       if(eip >= bin.size())
         {
+          break;
+        }
+      if(CURRENTCTL != name)
+        {
+          cb(true);
           break;
         }
       else
@@ -177,7 +183,7 @@ Program::run(PCallback cb)
               break;
             case RET:
               running = false;
-              cb();
+              cb(false);
               break;
             case JMP:
               if(!labels.contains(curInstr.a1))
@@ -194,7 +200,17 @@ Program::run(PCallback cb)
               eip++;
               running = false;
               runProgram(
-                  curInstr.a1, [cb, this]() -> void { this->run(cb); },
+                  curInstr.a1,
+                  [cb, this](bool term) -> void {
+                    if(!term)
+                      {
+                        this->run(cb);
+                      }
+                    else
+                      {
+                        cb(term);
+                      }
+                  },
                   storage);
               break;
             case SYS:
@@ -342,13 +358,13 @@ Program::run(PCallback cb)
 }
 
 void
-runProgram(const std::string &name, PCallback cb, DataPool *d)
+runProgram(const std::string &name, PTCallback cb, DataPool *d)
 {
   auto fp = resolveName(name);
   std::ifstream f(fp);
   if(f.fail())
     {
-      cb();
+      cb(false);
     }
   else
     {
@@ -356,9 +372,10 @@ runProgram(const std::string &name, PCallback cb, DataPool *d)
       ss << f.rdbuf();
       auto src = ss.str();
       Program *pg = new Program(src, name, d);
-      pg->run([cb, pg]() -> void {
+      CURRENTCTL = name;
+      pg->run([cb, pg](bool term) -> void {
         delete pg;
-        cb();
+        cb(term);
       });
     }
 }

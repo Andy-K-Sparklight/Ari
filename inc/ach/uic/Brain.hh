@@ -64,10 +64,10 @@ public:
   std::string &resolveValueRef(const std::string &label);
 
   Program(const std::string &src, const std::string &name, DataPool *storage);
-  void run(PCallback cb);
+  void run(PTCallback cb);
 };
 
-void runProgram(const std::string &name, PCallback cb, DataPool *data);
+void runProgram(const std::string &name, PTCallback cb, DataPool *data);
 
 typedef std::function<void(Program &, PCallback cb)> PSysCall;
 

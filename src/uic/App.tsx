@@ -96,6 +96,9 @@ function App() {
             if (IMAGES[k] !== undefined) {
               return (
                 <div
+                  onClick={() => {
+                    sendMessage("Restart", "");
+                  }}
                   key={i}
                   className={"a2img a2glowing"}
                   style={{ width: "4rem", height: "4rem" }}

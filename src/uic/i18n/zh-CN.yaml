@@ -294,6 +294,7 @@ Home:
   Greeting2:
     - 那么, 新的冒险, 即刻开启!
     - 生命不息, 探索不止, 出发!
+  GuideHome: <b><br/>在任何地方, 按下标题上方的图标就可以回到这里!</b>
   Launch: 启动游戏
   LaunchTag: 启动已安装的游戏.
   OpenFolder: 打开游戏目录

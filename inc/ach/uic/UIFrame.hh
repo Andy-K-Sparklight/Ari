@@ -9,6 +9,7 @@
 typedef std::map<std::string, std::string> UIProps;
 typedef std::pair<std::string, UIProps> Widget;
 typedef std::function<void()> PCallback;
+typedef std::function<void(bool)> PTCallback;
 
 namespace Alicorn
 {
